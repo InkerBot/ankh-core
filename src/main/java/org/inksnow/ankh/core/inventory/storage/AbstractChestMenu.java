@@ -2,6 +2,7 @@ package org.inksnow.ankh.core.inventory.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,7 +22,13 @@ import java.util.Objects;
 public abstract class AbstractChestMenu implements InventoryMenu {
   private final DcLazy<Inventory> inventory = DcLazy.of(this::createInventory);
 
-  protected abstract Inventory createInventory();
+  protected boolean safeMode(){
+    return false;
+  }
+
+  protected Inventory createInventory(){
+    return Bukkit.createInventory(this, 54);
+  }
 
   @Override
   public final @Nonnull Inventory getInventory() {
@@ -34,17 +41,29 @@ public abstract class AbstractChestMenu implements InventoryMenu {
     }
   }
 
-  protected abstract void canDropFromCursor(@Nonnull StorageDropFromCursorEvent event, @Nonnull Cancellable cancelToken);
+  protected void canDropFromCursor(@Nonnull StorageDropFromCursorEvent event, @Nonnull Cancellable cancelToken){
+    cancelToken.setCancelled(true);
+  }
 
-  protected abstract void canPickup(@Nonnull StoragePickupEvent event, @Nonnull Cancellable cancelToken);
+  protected void canPickup(@Nonnull StoragePickupEvent event, @Nonnull Cancellable cancelToken){
+    cancelToken.setCancelled(true);
+  }
 
-  protected abstract void canPlace(@Nonnull StoragePlaceEvent event, @Nonnull Cancellable cancelToken);
+  protected void canPlace(@Nonnull StoragePlaceEvent event, @Nonnull Cancellable cancelToken){
+    cancelToken.setCancelled(true);
+  }
 
-  protected abstract void acceptDropFromCursor(@Nonnull StorageDropFromCursorEvent event);
+  protected void acceptDropFromCursor(@Nonnull StorageDropFromCursorEvent event){
+    //
+  }
 
-  protected abstract void acceptPickup(@Nonnull StoragePickupEvent event);
+  protected void acceptPickup(@Nonnull StoragePickupEvent event){
+    //
+  }
 
-  protected abstract void acceptPlace(@Nonnull StoragePlaceEvent event);
+  protected void acceptPlace(@Nonnull StoragePlaceEvent event){
+    //
+  }
 
 
   @Override
@@ -74,6 +93,9 @@ public abstract class AbstractChestMenu implements InventoryMenu {
     val player = (Player) event.getWhoClicked();
     switch (event.getAction()) {
       case NOTHING: {
+        if(safeMode()){
+          event.setCancelled(true);
+        }
         break;
       }
       case PICKUP_ALL: {
@@ -89,6 +111,10 @@ public abstract class AbstractChestMenu implements InventoryMenu {
       }
       case PICKUP_SOME:
       case PICKUP_HALF: {
+        if(safeMode()){
+          event.setCancelled(true);
+          return;
+        }
         val currentItem = event.getCurrentItem();
         Objects.requireNonNull(currentItem, "action=PICKUP_(SOME|HALF), currentItem=null");
         val pickupEvent = new StoragePickupEvent(player, event.getRawSlot(), currentItem, -1);
@@ -122,6 +148,10 @@ public abstract class AbstractChestMenu implements InventoryMenu {
         break;
       }
       case PLACE_SOME: {
+        if(safeMode()){
+          event.setCancelled(true);
+          return;
+        }
         val cursorItem = event.getCursor();
         Objects.requireNonNull(cursorItem, "action=PLACE_SOME, cursorItem=null");
         val placeEvent = new StoragePlaceEvent(player, event.getRawSlot(), cursorItem, -1);

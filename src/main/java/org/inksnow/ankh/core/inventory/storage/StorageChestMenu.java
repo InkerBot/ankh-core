@@ -22,6 +22,9 @@ import javax.annotation.Nonnull;
 @Slf4j
 public final class StorageChestMenu extends AbstractChestMenu {
   @lombok.Builder.Default
+  private final boolean safeMode = false;
+
+  @lombok.Builder.Default
   private final ActionCreateInventory createInventory = ActionCreateInventory.BIG_CHEST;
 
   @lombok.Builder.Default
@@ -50,6 +53,11 @@ public final class StorageChestMenu extends AbstractChestMenu {
 
   @lombok.Builder.Default
   private final ActionAcceptEvent<StoragePlaceEvent> acceptPlaceAction = ActionAcceptEvent.nop();
+
+  @Override
+  protected boolean safeMode() {
+    return safeMode;
+  }
 
   @Override
   protected Inventory createInventory() {

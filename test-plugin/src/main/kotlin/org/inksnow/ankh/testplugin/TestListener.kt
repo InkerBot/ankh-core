@@ -45,10 +45,6 @@ class TestListener @Inject private constructor(
       }
 
       "b" -> {
-        AbstractChestMenu().openForPlayer(player)
-      }
-
-      "c" -> {
         StorageChestMenu.builder().apply {
           createInventory {
             Bukkit.createInventory(it, 54, Component.text("Hello, world.", NamedTextColor.RED)).apply {
