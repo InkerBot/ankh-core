@@ -1,9 +1,14 @@
 package org.inksnow.ankh.core.plugin.scanner.event
 
 import org.bukkit.Bukkit
+import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
+import org.bukkit.event.EventException
 import org.bukkit.event.EventPriority
+import org.bukkit.event.Listener
+import org.bukkit.plugin.EventExecutor
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
+import org.inksnow.ankh.core.common.EnsureIgnoreCancelledEventExecutor
 import org.inksnow.ankh.core.common.util.AnnotationUtil
 import org.inksnow.ankh.core.plugin.AnkhPluginContainerImpl
 import org.inksnow.ankh.core.plugin.scanner.PluginClassScanner
@@ -15,6 +20,7 @@ import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodNode
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SubscriptEventProcessor @Inject private constructor(
@@ -47,7 +53,7 @@ class SubscriptEventProcessor @Inject private constructor(
         )
       val eventClass =
         Class.forName(methodType.argumentTypes[0].className, true, ankhClassLoader) as Class<out Event>
-      val executor =
+      var executor =
         if ((classNode.access and Opcodes.ACC_PUBLIC == 0) || (methodNode.access and Opcodes.ACC_PUBLIC) == 0) {
           AsmEventExecutorFactory.generateDynamicExecutor(
             listenerClass,
@@ -63,6 +69,10 @@ class SubscriptEventProcessor @Inject private constructor(
             methodType
           )
         }
+      // https://github.com/PaperMC/Paper/pull/9099
+      if (annotation.ignoreCancelled && Cancellable::class.java.isAssignableFrom(eventClass)) {
+        executor = EnsureIgnoreCancelledEventExecutor(executor)
+      }
       Bukkit.getPluginManager().registerEvent(
         eventClass,
         ankhPluginContainer.bukkitPlugin,

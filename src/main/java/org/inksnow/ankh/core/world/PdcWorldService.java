@@ -454,17 +454,11 @@ public class PdcWorldService implements WorldService {
     val blockStatus = getBlockImpl(event.getBlock().getLocation());
     if (!blockStatus.first()) {
       event.setCancelled(true);
+      event.setDropItems(false);
+      event.setExpToDrop(0);
     } else if (blockStatus.second() != null) {
       event.setDropItems(false);
       event.setExpToDrop(0);
-    }
-  }
-
-  @SubscriptEvent(ignoreCancelled = true)
-  private void onBlockBreak(BlockBreakEvent event) {
-    val ankhBlock = getBlock(event.getBlock().getLocation());
-    if (ankhBlock != null) {
-      ankhBlock.onBlockBreak(event);
     }
   }
 
@@ -473,7 +467,10 @@ public class PdcWorldService implements WorldService {
     val location = event.getBlock().getLocation();
     val ankhBlock = getBlock(location);
     if (ankhBlock != null) {
-      removeBlock(location);
+      ankhBlock.onBlockBreak(event);
+      if(event.isCancelled()) {
+        removeBlock(location);
+      }
     }
   }
 
