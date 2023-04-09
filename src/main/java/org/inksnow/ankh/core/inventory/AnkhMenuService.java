@@ -1,4 +1,4 @@
-package org.inksnow.ankh.core.inventory.menu;
+package org.inksnow.ankh.core.inventory;
 
 import lombok.val;
 import org.bukkit.entity.Player;
