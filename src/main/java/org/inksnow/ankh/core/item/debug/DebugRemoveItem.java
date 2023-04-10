@@ -1,5 +1,6 @@
 package org.inksnow.ankh.core.item.debug;
 
+import com.google.common.collect.Lists;
 import lombok.val;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -23,7 +24,7 @@ public class DebugRemoveItem extends AbstractAnkhItem {
       .append(AnkhCore.PLUGIN_NAME_COMPONENT)
       .append(Component.text("remove util", NamedTextColor.RED))
       .build();
-  private static final List<Component> ITEM_LORE = List.of(
+  private static final List<Component> ITEM_LORE = Lists.newArrayList(
       Component.text("left click to remove ankh-block and block", NamedTextColor.WHITE),
       Component.text("right click to remove ankh-block only", NamedTextColor.WHITE),
       Component.empty(),

@@ -1,4 +1,9 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
+
+import com.google.common.collect.Lists;
+import mx.kenzie.centurion.Argument;
+import mx.kenzie.centurion.ArgumentContainer;
+import mx.kenzie.centurion.Command;
 
 import java.util.*;
 
@@ -17,7 +22,7 @@ public class PatternArgument extends HashedArg<ArgumentContainer> {
       @Override
       protected Map<String, ArgumentContainer> getArguments() {
         if (map != null) return map;
-        return map = this.createMap(List.of(containers));
+        return map = this.createMap(Lists.newArrayList(containers));
       }
     };
   }
@@ -29,7 +34,7 @@ public class PatternArgument extends HashedArg<ArgumentContainer> {
       @Override
       protected Map<String, ArgumentContainer> getArguments() {
         if (map != null) return map;
-        return map = this.createMap(command.behaviour().arguments);
+        return map = this.createMap(command.behaviour().arguments());
       }
     };
   }
@@ -60,25 +65,25 @@ public class PatternArgument extends HashedArg<ArgumentContainer> {
   }
 
   @Override
-  public ParseResult read(String input) {
+  public Argument.ParseResult read(String input) {
     this.model = this.getArguments();
     for (String pattern : model.keySet()) {
       if (!input.startsWith(pattern)) continue;
-      return new ParseResult(input.substring(0, pattern.length()), input.substring(pattern.length()));
+      return new Argument.ParseResult(input.substring(0, pattern.length()), input.substring(pattern.length()));
     }
     return null;
   }
 
   protected Map<String, ArgumentContainer> getArguments() {
     if (model != null) return model;
-    return this.createMap(Command.getContext().getCommand().behaviour().arguments);
+    return this.createMap(Command.getContext().getCommand().behaviour().arguments());
   }
 
   @Override
   public String[] possibilities() {
     final Command<?>.Context context = Command.getContext();
     if (context == null) return new String[0];
-    final Collection<ArgumentContainer> containers = context.getCommand().behaviour().arguments;
+    final Collection<ArgumentContainer> containers = context.getCommand().behaviour().arguments();
     final List<String> list = new ArrayList<>(containers.size());
     for (ArgumentContainer argument : containers) list.add(argument.toString().trim());
     return list.toArray(new String[0]);

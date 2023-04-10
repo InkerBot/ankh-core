@@ -2,13 +2,15 @@ package org.inksnow.ankh.core.plugin.scanner
 
 import com.google.inject.Inject
 import com.google.inject.Injector
-import jakarta.persistence.Entity
 import org.inksnow.ankh.core.api.plugin.annotations.AutoRegistered
 import org.inksnow.ankh.core.api.plugin.annotations.PluginModule
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptLifecycle
 import org.inksnow.ankh.core.plugin.AnkhPluginContainerImpl
-import org.inksnow.ankh.core.plugin.scanner.event.*
+import org.inksnow.ankh.core.plugin.scanner.event.AutoRegisteredProcessor
+import org.inksnow.ankh.core.plugin.scanner.event.PluginModuleProcessor
+import org.inksnow.ankh.core.plugin.scanner.event.SubscriptEventProcessor
+import org.inksnow.ankh.core.plugin.scanner.event.SubscriptLifecycleProcessor
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.ClassNode
@@ -94,7 +96,6 @@ class PluginClassScanner @Inject private constructor(
   companion object {
     private val classProcessors = mapOf<String, Class<out ScannerClassProcessor>>(
       PluginModule::class.java.name to PluginModuleProcessor::class.java,
-      Entity::class.java.name to EntityProcessor::class.java,
       AutoRegistered::class.java.name to AutoRegisteredProcessor::class.java
     )
     private val methodProcessors = mapOf<String, Class<out ScannerMethodProcessor>>(

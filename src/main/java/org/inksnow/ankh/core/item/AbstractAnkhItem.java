@@ -1,17 +1,23 @@
 package org.inksnow.ankh.core.item;
 
+import lombok.val;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.inksnow.ankh.core.api.ioc.IocLazy;
 import org.inksnow.ankh.core.api.item.AnkhItem;
+import org.inksnow.ankh.core.api.item.ItemTagger;
+import org.inksnow.ankh.core.api.util.DcLazy;
+import org.inksnow.ankh.core.common.AdventureAudiences;
 import org.inksnow.ankh.core.libs.nbtapi.NBTItem;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class AbstractAnkhItem implements AnkhItem {
+  private static final DcLazy<ItemTagger> itemTagger = IocLazy.of(ItemTagger.class);
+
   public abstract @Nonnull Material material();
 
   public abstract @Nonnull Component itemName();
@@ -19,7 +25,7 @@ public abstract class AbstractAnkhItem implements AnkhItem {
   public abstract @Nonnull List<Component> lores();
 
   public ItemStack createItem() {
-    ItemStack itemStack = new ItemStack(Material.CLOCK);
+    ItemStack itemStack = new ItemStack(Material.STONE);
     updateItem(itemStack);
     return itemStack;
   }
@@ -27,16 +33,17 @@ public abstract class AbstractAnkhItem implements AnkhItem {
   @Override
   public final void updateItem(ItemStack item) {
     item.setType(material());
+    itemTagger.get().setTag(item, key());
     NBTItem nbtItem = new NBTItem(item);
     onUpdateItemNbt(nbtItem);
     nbtItem.applyNBT(item);
-    item.editMeta(meta -> {
-      meta.getPersistentDataContainer()
-          .set(ITEM_ID_KEY, PersistentDataType.STRING, key().asString());
-      meta.displayName(itemName());
-      meta.lore(lores());
+    {
+      val meta = item.getItemMeta();
+      meta.setDisplayName(AdventureAudiences.serialize(itemName()));
+      meta.setLore(AdventureAudiences.serialize(lores()));
       onUpdateItemMeta(meta);
-    });
+      item.setItemMeta(meta);
+    }
 
     onUpdateItem(item);
   }

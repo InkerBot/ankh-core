@@ -1,5 +1,7 @@
 package mx.kenzie.centurion;
 
+import mx.kenzie.centurion.arguments.TypedArgument;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +45,7 @@ public class ArgumentArgument extends TypedArgument<Argument> {
       protected Map<String, Argument<?>> getArguments() {
         if (map != null) return map;
         this.map = new HashMap<>();
-        for (ArgumentContainer argument : command.behaviour().arguments) this.addAll(argument, map);
+        for (ArgumentContainer argument : command.behaviour().arguments()) this.addAll(argument, map);
         return map;
       }
     };
@@ -69,7 +71,7 @@ public class ArgumentArgument extends TypedArgument<Argument> {
     if (context == null) return map;
     final Command<?> command = Command.getContext().getCommand();
     if (command == null) return map;
-    for (ArgumentContainer container : command.behaviour().arguments) this.addAll(container, map);
+    for (ArgumentContainer container : command.behaviour().arguments()) this.addAll(container, map);
     return map;
   }
 

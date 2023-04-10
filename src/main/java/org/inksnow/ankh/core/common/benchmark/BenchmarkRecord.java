@@ -39,12 +39,13 @@ public class BenchmarkRecord {
   }
 
   public BenchmarkRecord subRecord(final double percent) {
-    int percentInclude = Math.min(length, (int) (length * percent));
-    return new BenchmarkRecord(
-        sortedRecord, sortedOffset,
-        sortedRecord, sortedOffset,
-        percentInclude
-    );
+    if (percent > 0) {
+      int percentInclude = Math.min(length, (int) (length * percent));
+      return subRecord(0, percentInclude);
+    } else {
+      int percentInclude = Math.min(length, (int) (length * (-percent)));
+      return subRecord(percentInclude, length - percentInclude);
+    }
   }
 
   public BenchmarkRecord subRecord(final int offset, final int length) {
@@ -105,8 +106,9 @@ public class BenchmarkRecord {
 
   public void runReport(Consumer<String> output) {
     for (double report : REPORTS) {
-      BenchmarkRecord subRecord = subRecord(report);
-      output.accept(report * 100 + "% max(" + subRecord.max() + " ns) min(" + subRecord.min() + " ns) avg(" + (subRecord.avg()) + " ns)");
+      BenchmarkRecord subTopRecord = subRecord(report);
+      BenchmarkRecord subLowRecord = subRecord(-report);
+      output.accept(report * 100 + "% max(" + subTopRecord.max() + " ns) min(" + subLowRecord.min() + " ns) avg(" + subTopRecord.avg() + " ns)");
     }
   }
 

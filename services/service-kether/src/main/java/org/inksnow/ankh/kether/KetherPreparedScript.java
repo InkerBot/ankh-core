@@ -2,7 +2,7 @@ package org.inksnow.ankh.kether;
 
 import kotlin.Unit;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.inksnow.ankh.core.api.script.PreparedScript;
 import org.inksnow.ankh.core.api.script.ScriptContext;
 import taboolib.library.kether.Quest;
@@ -19,14 +19,14 @@ public class KetherPreparedScript implements PreparedScript {
 
   @Override
   public Object execute(@Nonnull ScriptContext context) throws Exception {
-    final var player = context.get("player");
-    if (player instanceof CommandSender) {
+    Player player = (Player) context.get("player");
+    if (player != null) {
       context.set("@Sender", player);
     } else {
       context.set("@Sender", Bukkit.getConsoleSender());
     }
-    final var contextBinding = new KetherContextBinding(context, quest);
-    final var rawResult = contextBinding
+    KetherContextBinding contextBinding = new KetherContextBinding(context, quest);
+    Object rawResult = contextBinding
         .contextBinding()
         .runActions()
         .join();

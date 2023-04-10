@@ -1,6 +1,7 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
 
 import lombok.Data;
+import mx.kenzie.centurion.Argument;
 
 @Data
 public class LiteralArgument implements Argument<String> {

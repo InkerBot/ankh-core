@@ -3,8 +3,6 @@ package org.inksnow.ankh.core.item.fetcher;
 import lombok.val;
 import net.kyori.adventure.key.InvalidKeyException;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.inksnow.ankh.core.api.item.ItemFetcher;
 import org.inksnow.ankh.core.common.config.AnkhConfig;
@@ -38,12 +36,11 @@ public class LoreItemFetcher implements ItemFetcher {
     if (itemMeta == null || !itemMeta.hasLore()) {
       return Collections.emptyList();
     }
-    val itemLore = itemMeta.lore();
+    val itemLore = itemMeta.getLore();
     if (itemLore == null) {
       return Collections.emptyList();
     }
-    for (Component component : itemLore) {
-      val loreLine = PlainComponentSerializer.plain().serialize(component);
+    for (val loreLine : itemLore) {
       val ankhStart = loreLine.indexOf(tagStart);
       if (ankhStart == -1) {
         continue;

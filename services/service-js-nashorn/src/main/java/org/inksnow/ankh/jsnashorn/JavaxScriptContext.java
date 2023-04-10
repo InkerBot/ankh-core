@@ -1,6 +1,7 @@
 package org.inksnow.ankh.jsnashorn;
 
 import bsh.ConsoleInterface;
+import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
 import org.inksnow.ankh.core.script.engine.console.ScriptLoggerConsole;
 import org.inksnow.ankh.core.script.engine.console.ScriptPlayerConsole;
@@ -15,16 +16,16 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 
-public class JsNashornScriptContext implements ScriptContext {
+public class JavaxScriptContext implements ScriptContext {
   private static final Logger logger = LoggerFactory.getLogger("ankh-js-nashorn");
-  private static final List<Integer> scopes = List.of(ENGINE_SCOPE, GLOBAL_SCOPE);
+  private static final List<Integer> scopes = Lists.newArrayList(ENGINE_SCOPE, GLOBAL_SCOPE);
   protected Writer writer;
   protected Writer errorWriter;
   protected Reader reader;
   protected Bindings engineScope;
   protected Bindings globalScope;
 
-  public JsNashornScriptContext(org.inksnow.ankh.core.api.script.ScriptContext delegate) {
+  public JavaxScriptContext(org.inksnow.ankh.core.api.script.ScriptContext delegate) {
     Player player = delegate.player();
     ConsoleInterface console;
     if (player == null) {

@@ -1,41 +1,34 @@
 package org.inksnow.ankh.core.common.entity;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.bukkit.Chunk;
 import org.inksnow.ankh.core.api.storage.ChunkStorage;
+import org.inksnow.ankh.core.common.util.FastEmbeddedUtil;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.UUID;
 
-@Embeddable
-@Access(AccessType.FIELD)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WorldChunkEmbedded implements ChunkStorage, Serializable {
-  @Nonnull
-  private UUID worldId;
+  private @Nonnull UUID worldId;
   private long chunkId;
 
   @Nonnull
+  public static WorldChunkEmbedded of(UUID worldId, long chunkId) {
+    return new WorldChunkEmbedded(worldId, chunkId);
+  }
+
+  @Nonnull
   public static WorldChunkEmbedded of(UUID worldId, int x, int z) {
-    return of(worldId, chunkKeyFromLocation(x, z));
+    return of(worldId, FastEmbeddedUtil.chunk_chunkId(x, z));
   }
 
   @Nonnull
   public static WorldChunkEmbedded of(@Nonnull Chunk chunk) {
     return of(chunk.getWorld().getUID(), chunk.getX(), chunk.getZ());
-  }
-
-  @Nonnull
-  public static WorldChunkEmbedded of(UUID worldId, long chunkId) {
-    Objects.requireNonNull(worldId);
-    WorldChunkEmbedded worldChunkEmbedded = new WorldChunkEmbedded();
-    worldChunkEmbedded.worldId = worldId;
-    worldChunkEmbedded.chunkId = chunkId;
-    return worldChunkEmbedded;
   }
 
   @Nonnull
@@ -45,20 +38,8 @@ public final class WorldChunkEmbedded implements ChunkStorage, Serializable {
     }
     return WorldChunkEmbedded.of(
         chunk.worldId(),
-        chunkKeyFromLocation(chunk.x(), chunk.z())
+        FastEmbeddedUtil.chunk_chunkId(chunk.x(), chunk.z())
     );
-  }
-
-  private static long chunkKeyFromLocation(int x, int z) {
-    return (((long) x) << 32) | (z & 0xFFFFFFFFL);
-  }
-
-  private static int xFromChunkKey(long chunkKey) {
-    return (int) (chunkKey >> 32);
-  }
-
-  private static int zFromChunkKey(long chunkKey) {
-    return (int) chunkKey;
   }
 
   @Nonnull
@@ -84,24 +65,24 @@ public final class WorldChunkEmbedded implements ChunkStorage, Serializable {
 
   @Override
   public int x() {
-    return xFromChunkKey(chunkId);
+    return FastEmbeddedUtil.chunkX(chunkId);
   }
 
   @Nonnull
   @Override
   public WorldChunkEmbedded x(int x) {
-    return of(worldId, chunkKeyFromLocation(x, z()));
+    return of(worldId, FastEmbeddedUtil.chunk_chunkId(x, z()));
   }
 
   @Override
   public int z() {
-    return zFromChunkKey(chunkId);
+    return FastEmbeddedUtil.chunkZ(chunkId);
   }
 
   @Nonnull
   @Override
   public WorldChunkEmbedded z(int z) {
-    return of(worldId, chunkKeyFromLocation(x(), z));
+    return of(worldId, FastEmbeddedUtil.chunk_chunkId(x(), z));
   }
 
   @Override

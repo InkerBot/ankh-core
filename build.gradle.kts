@@ -36,8 +36,10 @@ allprojects {
   }
 
   java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    if (path != ":services:service-js-nashorn") {
+      sourceCompatibility = JavaVersion.VERSION_1_8
+      targetCompatibility = JavaVersion.VERSION_1_8
+    }
     withSourcesJar()
     withJavadocJar()
   }
@@ -127,12 +129,23 @@ dependencies {
     exclude("org.jetbrains", "annotations")
   }
 
+  // adventure
+  compileOnly("net.kyori:adventure-api:4.13.1") {
+    exclude("org.checkerframework", "checker-qual")
+    exclude("org.jetbrains", "annotations")
+  }
+  compileOnly("net.kyori:adventure-platform-bukkit:4.3.0") {
+    exclude("org.checkerframework", "checker-qual")
+    exclude("org.jetbrains", "annotations")
+  }
+
   // kotlin
   api("org.jetbrains.kotlin:kotlin-stdlib:1.8.10") {
     exclude("org.jetbrains", "annotations")
   }
 
   // base utils
+  api("it.unimi.dsi:fastutil:8.5.12")
   api("com.google.inject:guice:5.1.0") {
     exclude("com.google.guava", "guava")
   }
@@ -143,20 +156,6 @@ dependencies {
   api("org.ow2.asm:asm-commons:9.4")
   api("org.ow2.asm:asm-tree:9.4")
   api("org.ow2.asm:asm-util:9.4")
-  compileOnly("it.unimi.dsi:fastutil:8.5.12")
-
-  // database
-  api("org.hibernate.orm:hibernate-core:6.1.7.Final")
-  api("org.hibernate.orm:hibernate-hikaricp:6.1.7.Final")
-  api("org.hibernate.common:hibernate-commons-annotations:6.0.6.Final")
-
-  // database drivers
-  runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.0.3")
-  runtimeOnly("org.postgresql:postgresql:42.3.8") {
-    exclude("org.checkerframework", "checker-qual")
-  }
-  @Suppress("VulnerableLibrariesLocal") // It's a fake cve
-  runtimeOnly("com.h2database:h2:2.1.214")
 
   // script
   api("org.beanshell:bsh:3.0.0-SNAPSHOT")
@@ -179,7 +178,7 @@ dependencies {
 
 tasks.compileKotlin {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "1.8"
     freeCompilerArgs = listOf("-Xjvm-default=all")
   }
 }

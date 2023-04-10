@@ -9,7 +9,6 @@ taboolib {
   description {
     name = "ankh-kether"
     version = project.version.toString()
-    bukkitApi("1.16")
     dependencies {
       name("ankh-core")
     }
@@ -38,7 +37,7 @@ dependencies {
 
 tasks.compileKotlin {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "1.8"
     freeCompilerArgs = listOf("-Xjvm-default=all")
   }
 }

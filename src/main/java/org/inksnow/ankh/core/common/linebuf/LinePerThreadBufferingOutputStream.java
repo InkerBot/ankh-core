@@ -16,8 +16,9 @@
 
 package org.inksnow.ankh.core.common.linebuf;
 
+import org.inksnow.ankh.core.common.io.NullOutputStream;
+
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Locale;
 
@@ -27,7 +28,7 @@ public class LinePerThreadBufferingOutputStream extends PrintStream {
   private final String lineSeparator = System.lineSeparator();
 
   public LinePerThreadBufferingOutputStream(TextStream handler) {
-    super(OutputStream.nullOutputStream(), true);
+    super(new NullOutputStream(), true);
     this.handler = handler;
   }
 

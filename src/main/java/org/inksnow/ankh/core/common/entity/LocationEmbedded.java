@@ -1,8 +1,7 @@
 package org.inksnow.ankh.core.common.entity;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.bukkit.Location;
 import org.inksnow.ankh.core.api.storage.ChunkStorage;
 import org.inksnow.ankh.core.api.storage.LocationStorage;
@@ -12,18 +11,13 @@ import javax.inject.Singleton;
 import java.io.Serializable;
 import java.util.UUID;
 
-@Embeddable
-@Access(AccessType.FIELD)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LocationEmbedded implements LocationStorage, Serializable {
-  @Nonnull
-  private WorldChunkEmbedded chunk;
+  private @Nonnull WorldChunkEmbedded chunk;
   private long position;
 
   public static @Nonnull LocationEmbedded of(ChunkStorage chunkStorage, long position) {
-    LocationEmbedded locationEmbedded = new LocationEmbedded();
-    locationEmbedded.chunk = WorldChunkEmbedded.warp(chunkStorage);
-    locationEmbedded.position = position;
-    return locationEmbedded;
+    return new LocationEmbedded(WorldChunkEmbedded.warp(chunkStorage), position);
   }
 
   public static @Nonnull LocationEmbedded of(UUID worldId, int x, int y, int z) {

@@ -3,6 +3,7 @@ package org.inksnow.ankh.kether;
 import org.inksnow.ankh.core.api.script.AnkhScriptEngine;
 import org.inksnow.ankh.core.api.script.PreparedScript;
 import org.inksnow.ankh.core.api.util.DcLazy;
+import taboolib.library.kether.Quest;
 import taboolib.module.kether.KetherScriptLoader;
 import taboolib.module.kether.ScriptService;
 
@@ -28,9 +29,9 @@ public class KetherEngine implements AnkhScriptEngine {
 
   @Override
   public @Nonnull PreparedScript prepare(@Nonnull String shell) throws Exception {
-    final var script = shellToScript(shell);
+    String script = shellToScript(shell);
 
-    final var quest = scriptLoader.load(
+    Quest quest = scriptLoader.load(
         ScriptService.INSTANCE,
         "temp_" + UUID.randomUUID(),
         script.getBytes(StandardCharsets.UTF_8)

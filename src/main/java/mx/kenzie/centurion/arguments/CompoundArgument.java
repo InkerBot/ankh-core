@@ -1,4 +1,11 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
+
+import com.google.common.collect.Lists;
+import lombok.Getter;
+import mx.kenzie.centurion.Argument;
+import mx.kenzie.centurion.ArgumentContainer;
+import mx.kenzie.centurion.Arguments;
+import mx.kenzie.centurion.Command;
 
 import java.util.*;
 import java.util.function.Function;
@@ -6,6 +13,7 @@ import java.util.function.Function;
 public class CompoundArgument<Type> extends TypedArgument<Type> implements Argument<Type>, Cloneable {
 
   protected final Map<InnerContainer, Converter<Type>> map;
+  @Getter
   protected final List<InnerContainer> arguments;
   protected boolean sorted;
   protected int lastHash;
@@ -28,19 +36,19 @@ public class CompoundArgument<Type> extends TypedArgument<Type> implements Argum
   }
 
   public CompoundArgument<Type> arg(Object arg1, Converter<Type> result) {
-    return this.arg(List.of(arg1), result);
+    return this.arg(Lists.newArrayList(arg1), result);
   }
 
   public CompoundArgument<Type> arg(Object arg1, Object arg2, Converter<Type> result) {
-    return this.arg(List.of(arg1, arg2), result);
+    return this.arg(Lists.newArrayList(arg1, arg2), result);
   }
 
   public CompoundArgument<Type> arg(Object arg1, Object arg2, Object arg3, Converter<Type> result) {
-    return this.arg(List.of(arg1, arg2, arg3), result);
+    return this.arg(Lists.newArrayList(arg1, arg2, arg3), result);
   }
 
   public CompoundArgument<Type> arg(Object arg1, Object arg2, Object arg3, Object arg4, Converter<Type> result) {
-    return this.arg(List.of(arg1, arg2, arg3, arg4), result);
+    return this.arg(Lists.newArrayList(arg1, arg2, arg3, arg4), result);
   }
 
   public CompoundArgument<Type> arg(Collection<Object> arguments, Converter<Type> result) {
@@ -63,11 +71,6 @@ public class CompoundArgument<Type> extends TypedArgument<Type> implements Argum
     this.lastInputs = result.inputs();
     this.lastContainer = container;
     this.lastParser = map.get(container);
-  }
-
-  public Collection<ArgumentContainer> arguments() {
-    this.sort();
-    return new ArrayList<>(arguments);
   }
 
   @Override
@@ -136,14 +139,14 @@ public class CompoundArgument<Type> extends TypedArgument<Type> implements Argum
 
   }
 
-  protected static class InnerContainer extends ArgumentContainer {
+  public static class InnerContainer extends ArgumentContainer {
     InnerContainer(Argument<?>... arguments) {
       super(arguments);
     }
 
     public List<String> possibilities() {
       if (arguments.length == 0) return Collections.emptyList();
-      if (arguments.length == 1) return List.of(arguments[0].possibilities());
+      if (arguments.length == 1) return Lists.newArrayList(arguments[0].possibilities());
       final String[] strings = arguments[0].possibilities();
       if (strings.length < 1) return Collections.emptyList();
       final List<String> possibilities = new ArrayList<>(24);

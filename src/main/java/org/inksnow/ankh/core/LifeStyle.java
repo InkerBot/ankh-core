@@ -33,7 +33,7 @@ public class LifeStyle {
 
   @SubscriptLifecycle(PluginLifeCycle.DISABLE)
   private void onDisable() {
-    if (!Bukkit.getServer().isStopping()) {
+    if (false) {
       logger.error("====================================================");
       logger.error("AnkhCore is not designed to disable when server running, It's very dangerous");
       logger.error("To protect your saves or data, AnkhCore will stop your server");

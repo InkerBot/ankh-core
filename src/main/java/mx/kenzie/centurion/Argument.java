@@ -1,6 +1,7 @@
 package mx.kenzie.centurion;
 
 import lombok.Data;
+import org.apache.commons.lang.StringUtils;
 
 public interface Argument<Type> extends ArgumentFace, Described {
 
@@ -18,8 +19,14 @@ public interface Argument<Type> extends ArgumentFace, Described {
 
   default ParseResult read(String input) {
     final int space = input.indexOf(' ');
-    if (this.plural() || space < 0) return new ParseResult(input.trim(), "");
-    else return new ParseResult(input.substring(0, space).trim(), input.substring(space + 1).stripLeading());
+    if (this.plural() || space < 0) {
+      return new ParseResult(input.trim(), "");
+    } else {
+      return new ParseResult(
+          input.substring(0, space).trim(),
+          StringUtils.stripStart(input.substring(space + 1), null)
+      );
+    }
   }
 
   @Override

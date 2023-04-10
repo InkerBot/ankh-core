@@ -1,4 +1,4 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-class PlayerArgument extends TypedArgument<Player> {
+public class PlayerArgument extends TypedArgument<Player> {
   public PlayerArgument() {
     super(Player.class);
   }

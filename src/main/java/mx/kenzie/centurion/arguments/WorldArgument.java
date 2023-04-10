@@ -1,4 +1,4 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -6,7 +6,7 @@ import org.bukkit.World;
 import java.util.ArrayList;
 import java.util.List;
 
-class WorldArgument extends TypedArgument<World> {
+public class WorldArgument extends TypedArgument<World> {
   public WorldArgument() {
     super(World.class);
   }

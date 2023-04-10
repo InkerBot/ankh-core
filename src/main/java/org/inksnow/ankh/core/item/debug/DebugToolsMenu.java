@@ -9,6 +9,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.inksnow.ankh.core.api.AnkhCore;
+import org.inksnow.ankh.core.common.AdventureAudiences;
 import org.inksnow.ankh.core.inventory.storage.AbstractChestMenu;
 import org.inksnow.ankh.core.inventory.storage.event.StorageDropFromCursorEvent;
 import org.inksnow.ankh.core.inventory.storage.event.StoragePickupEvent;
@@ -20,10 +21,10 @@ import javax.inject.Singleton;
 
 @Singleton
 public class DebugToolsMenu {
-  private static final Component MENU_TITLE = Component.text()
+  private static final String MENU_TITLE = AdventureAudiences.serialize(Component.text()
       .append(AnkhCore.PLUGIN_NAME_COMPONENT)
       .append(Component.text("debug tools", NamedTextColor.RED))
-      .build();
+      .build());
 
   private final ItemStack[] defaultItems;
 

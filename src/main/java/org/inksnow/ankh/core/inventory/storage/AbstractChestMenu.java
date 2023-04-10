@@ -78,7 +78,7 @@ public abstract class AbstractChestMenu implements InventoryMenu {
     }
     val newItemsEntrySet = event.getNewItems().entrySet();
     val storagePlaceEventList = new StoragePlaceEvent[newItemsEntrySet.size()];
-    var i = 0;
+    int i = 0;
     for (val entry : newItemsEntrySet) {
       val storagePlaceEvent = new StoragePlaceEvent(player, entry.getKey(), entry.getValue(), entry.getValue().getAmount());
       canPlace(storagePlaceEvent, event);

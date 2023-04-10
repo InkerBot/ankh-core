@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.block.AnkhBlock;
+import org.inksnow.ankh.core.common.AdventureAudiences;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +36,8 @@ public class ProtectDataBlock implements AnkhBlock {
     if (player == null) {
       return;
     }
-    player.sendMessage(PROTECT_MESSAGE);
+    AdventureAudiences.player(player)
+        .sendMessage(PROTECT_MESSAGE);
   }
 
   @Override

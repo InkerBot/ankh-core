@@ -1,4 +1,4 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
 
 public class EnumArgument<Type extends Enum<Type>> extends HashedArg<Type> {
   public EnumArgument(Class<Type> type) {

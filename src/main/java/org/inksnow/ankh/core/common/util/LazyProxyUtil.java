@@ -120,7 +120,7 @@ public class LazyProxyUtil {
           delegateMethodDescriptor,
           false
       );
-      var varId = 1;
+      int varId = 1;
       for (Type argumentType : methodType.getArgumentTypes()) {
         val loadOpcode = argumentType.getOpcode(Opcodes.ILOAD);
         methodVisitor.visitVarInsn(loadOpcode, varId);

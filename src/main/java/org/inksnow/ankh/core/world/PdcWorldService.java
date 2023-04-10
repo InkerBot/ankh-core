@@ -1,6 +1,5 @@
 package org.inksnow.ankh.core.world;
 
-import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectRBTreeMap;
@@ -323,7 +322,7 @@ public class PdcWorldService implements WorldService {
   }
 
   @SubscriptEvent
-  private void onWorldLoad(WorldLoadEvent event) {
+  private void onWorldLoad(WorldInitEvent event) {
     worldMap.computeIfAbsent(event.getWorld().getUID(), PdcWorldService.WorldStorage.create);
   }
 
@@ -352,10 +351,10 @@ public class PdcWorldService implements WorldService {
 
   @SubscriptEvent
   private void onChunkLoad(ChunkLoadEvent event) {
-    val worldStorage = worldMap.get(event.getWorld().getUID());
+    WorldStorage worldStorage = worldMap.get(event.getWorld().getUID());
     if (worldStorage == null) {
       logger.warn("call ChunkLoadEvent at unloaded world");
-      return;
+      worldStorage = worldMap.computeIfAbsent(event.getWorld().getUID(), PdcWorldService.WorldStorage.create);
     }
     val chunkId = FastEmbeddedUtil.chunk_chunkId(event.getChunk().getX(), event.getChunk().getZ());
     val chunkStorage = worldStorage.chunks.computeIfAbsent(chunkId, ChunkStorage.create);
@@ -474,6 +473,7 @@ public class PdcWorldService implements WorldService {
     }
   }
 
+  /*
   @SubscriptEvent(priority = EventPriority.LOWEST, ignoreCancelled = true)
   private void onBlockDestroyLowest(BlockDestroyEvent event) {
     val blockStatus = getBlockImpl(event.getBlock().getLocation());
@@ -498,6 +498,7 @@ public class PdcWorldService implements WorldService {
       removeBlock(location);
     }
   }
+   */
 
   @SubscriptEvent(priority = EventPriority.MONITOR, ignoreCancelled = true)
   private void onBlockRedstone(BlockRedstoneEvent event) {

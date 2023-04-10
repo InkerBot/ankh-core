@@ -1,4 +1,6 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
+
+import mx.kenzie.centurion.RelativeNumber;
 
 public class LocalNumberArgument extends HashedArg<RelativeNumber> {
 

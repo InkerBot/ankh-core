@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.item.AnkhItem;
+import org.inksnow.ankh.core.common.AdventureAudiences;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +32,7 @@ public class ProtectDataItem implements AnkhItem {
 
   private static void sendProtectMessage(Player player) {
     if (player != null) {
-      player.sendMessage(PROTECT_MESSAGE);
+      AdventureAudiences.player(player).sendMessage(PROTECT_MESSAGE);
     }
   }
 

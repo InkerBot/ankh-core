@@ -1,6 +1,5 @@
 package org.inksnow.ankh.core.common.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,11 +12,9 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Singleton
 public class AnkhConfig {
@@ -28,8 +25,6 @@ public class AnkhConfig {
   @Getter
   private final int tickRate;
   @Getter
-  private final DatabaseConfig database;
-  @Getter
   private final PlayerShellConfig playerShell;
   @Getter
   private final ItemConfig item;
@@ -39,9 +34,17 @@ public class AnkhConfig {
   private AnkhConfig() throws IOException {
     val configFile = new File("plugins/" + AnkhCore.PLUGIN_ID + "/config.yml");
     if (!configFile.exists()) {
+      configFile.getParentFile().mkdirs();
       try (val in = this.getClass().getClassLoader().getResourceAsStream("config.yml")) {
         try (val out = new FileOutputStream(configFile)) {
-          in.transferTo(out);
+          byte[] buf = new byte[4096];
+          while (true) {
+            int r = in.read(buf);
+            if (r == -1) {
+              break;
+            }
+            out.write(buf, 0, r);
+          }
         }
       }
     }
@@ -49,7 +52,6 @@ public class AnkhConfig {
     val configuration = YamlConfiguration.loadConfiguration(configFile);
 
     this.tickRate = loadTickRate(configuration);
-    this.database = new DatabaseConfig(required(configuration.getConfigurationSection("database"), "database"));
     this.playerShell = new PlayerShellConfig(required(configuration.getConfigurationSection("player-shell"), "player-shell"));
     this.item = new ItemConfig(required(configuration.getConfigurationSection("item"), "item"));
     this.service = new ServiceConfig(required(configuration.getConfigurationSection("service"), "service"));
@@ -69,46 +71,6 @@ public class AnkhConfig {
 
   private int loadTickRate(ConfigurationSection configuration) {
     return configuration.getInt("tick-rate", 1);
-  }
-
-  public static class DatabaseConfig {
-    @Getter
-    private final DriverType driver;
-    @Getter
-    private final String url;
-    @Getter
-    private final String username;
-    @Getter
-    private final String password;
-
-    private DatabaseConfig(ConfigurationSection configuration) {
-      this.driver = loadDriver(configuration);
-      this.url = required(configuration.getString("url"), "database.url");
-      this.username = required(configuration.getString("username"), "database.username");
-      this.password = required(configuration.getString("password"), "database.password");
-    }
-
-    private DriverType loadDriver(ConfigurationSection configuration) {
-      val typeString = required(configuration.getString("driver"), "database.driver");
-      try {
-        return DriverType.valueOf(typeString);
-      } catch (IllegalArgumentException e) {
-        val supportValues = Arrays.stream(DriverType.values()).map(Enum::name).collect(Collectors.joining(", "));
-        throw new IllegalStateException("config key 'database.driver' value is not supported. support values: " + supportValues);
-      }
-    }
-
-    @AllArgsConstructor
-    public enum DriverType {
-      H2("org.h2.Driver", "org.hibernate.dialect.H2Dialect"),
-      MARIADB("org.mariadb.jdbc.Driver", "org.hibernate.dialect.MariaDBDialect"),
-      POSTGRESQL("org.postgresql.Driver", "org.hibernate.dialect.PostgreSQLDialect");
-
-      @Getter
-      private final String driverClass;
-      @Getter
-      private final String dialectClass;
-    }
   }
 
   public static class PlayerShellConfig {

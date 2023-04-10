@@ -1,4 +1,6 @@
-package mx.kenzie.centurion;
+package mx.kenzie.centurion.arguments;
+
+import mx.kenzie.centurion.Argument;
 
 public abstract class TypedArgument<Type> implements Argument<Type>, Cloneable {
 

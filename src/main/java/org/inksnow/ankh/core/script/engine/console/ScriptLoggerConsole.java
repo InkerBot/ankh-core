@@ -2,6 +2,7 @@ package org.inksnow.ankh.core.script.engine.console;
 
 import bsh.ConsoleInterface;
 import lombok.val;
+import org.inksnow.ankh.core.common.io.NullReader;
 import org.inksnow.ankh.core.common.linebuf.LineBufferingOutputStream;
 import org.inksnow.ankh.core.common.linebuf.TextStream;
 import org.slf4j.Logger;
@@ -11,7 +12,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 
 public class ScriptLoggerConsole implements ConsoleInterface {
-  private static final Reader nullReader = Reader.nullReader();
+  private static final Reader nullReader = new NullReader();
   private final Logger logger;
   private final PrintStream delegateOut;
   private final PrintStream delegateErr;

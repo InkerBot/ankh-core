@@ -5,6 +5,8 @@ import lombok.val;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
+import org.inksnow.ankh.core.common.AdventureAudiences;
+import org.inksnow.ankh.core.common.io.NullReader;
 import org.inksnow.ankh.core.common.linebuf.LineBufferingOutputStream;
 import org.inksnow.ankh.core.common.linebuf.TextStream;
 
@@ -13,7 +15,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 
 public class ScriptPlayerConsole implements ConsoleInterface {
-  private static final Reader nullReader = Reader.nullReader();
+  private static final Reader nullReader = new NullReader();
   private final Player player;
   private final PrintStream delegateOut;
   private final PrintStream delegateErr;
@@ -80,7 +82,8 @@ public class ScriptPlayerConsole implements ConsoleInterface {
     public void text(String rawText) {
       val text = rawText.endsWith("\n") ? rawText.substring(0, rawText.length() - 1) : rawText;
       if (!text.isEmpty()) {
-        player.sendMessage(Component.text(text, color));
+        AdventureAudiences.player(player)
+            .sendMessage(Component.text(text, color));
       }
     }
 

@@ -7,12 +7,21 @@ configurations {
 
 dependencies {
   "ankhShadow"(project(":loader"))
-  add("ankhShadow", project(":loader"))
 
   "ankhImpl"(project(":")) {
     exclude(group = "org.slf4j", module = "slf4j-api")
   }
   "ankhLogger"(project(":loader:logger"))
+
+  // adventure
+  "ankhApi"("net.kyori:adventure-api:4.13.1") {
+    exclude("org.checkerframework", "checker-qual")
+    exclude("org.jetbrains", "annotations")
+  }
+  "ankhApi"("net.kyori:adventure-platform-bukkit:4.3.0") {
+    exclude("org.checkerframework", "checker-qual")
+    exclude("org.jetbrains", "annotations")
+  }
 }
 
 tasks.jar {

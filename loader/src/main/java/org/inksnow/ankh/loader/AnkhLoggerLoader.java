@@ -54,7 +54,7 @@ public class AnkhLoggerLoader extends URLClassLoader {
       }
     }
 
-    INSTANCE = new AnkhLoggerLoader(urlList.toArray(URL[]::new), pluginClassLoader);
+    INSTANCE = new AnkhLoggerLoader(urlList.toArray(new URL[0]), pluginClassLoader);
   }
 
   private static <T extends Throwable, R extends RuntimeException> R uncheck(Throwable e) throws T {

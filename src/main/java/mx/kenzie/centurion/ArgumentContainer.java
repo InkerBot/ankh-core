@@ -1,6 +1,8 @@
 package mx.kenzie.centurion;
 
 import lombok.Data;
+import mx.kenzie.centurion.arguments.CompoundArgument;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,9 +67,9 @@ public class ArgumentContainer {
       if (!passAllArguments && argument.literal()) continue;
       inputs.add(argument.parse(part));
     }
-    if (this.requireEmpty() && !input.isBlank()) return null;
+    if (this.requireEmpty() && !StringUtils.isBlank(input)) return null;
     final String part = initial.substring(0, initial.length() - input.length()).trim();
-    final String remainder = input.stripLeading();
+    final String remainder = StringUtils.stripStart(input, null);
     return new Result(part, remainder, inputs.toArray(new Object[0]));
   }
 
@@ -105,7 +107,7 @@ public class ArgumentContainer {
   }
 
   @Data
-  protected class Result {
+  public class Result {
     private final String part;
     private final String remainder;
     private final Object[] inputs;

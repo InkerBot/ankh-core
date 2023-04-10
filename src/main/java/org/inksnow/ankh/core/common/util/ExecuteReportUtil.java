@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.inksnow.ankh.core.api.AnkhCore;
+import org.inksnow.ankh.core.common.AdventureAudiences;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class ExecuteReportUtil {
                   .build()
               ));
         }
-        sender.sendMessage(component);
+        AdventureAudiences.sender(sender).sendMessage(component);
       }
     } catch (Exception e) {
       logger.error("Failed to handle command", e);

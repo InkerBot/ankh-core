@@ -1,5 +1,9 @@
 package mx.kenzie.centurion;
 
+import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
+import mx.kenzie.centurion.arguments.LiteralArgument;
 import org.inksnow.ankh.core.api.util.DcLazy;
 
 import java.util.*;
@@ -16,7 +20,7 @@ public abstract class Command<Sender> implements Described {
     this.behaviour = DcLazy.of(this::create);
   }
 
-  static List<Argument<?>> coerce(Collection<Object> arguments) {
+  public static List<Argument<?>> coerce(Collection<Object> arguments) {
     final List<Argument<?>> list = new ArrayList<>(arguments.size());
     for (Object argument : arguments) {
       if (argument instanceof String) list.add(new LiteralArgument((String) argument));
@@ -107,19 +111,28 @@ public abstract class Command<Sender> implements Described {
 
   @SuppressWarnings("unchecked")
   public class Behaviour {
-
-    protected final String label;
-    protected final Set<String> aliases;
-    protected final Map<ArgumentContainer, Input<Sender>> functions;
-    protected final List<ArgumentContainer> arguments;
-    protected Input<Sender> lapse = (Input<Sender>) BEHAVIOR_DEFAULT_LAPSE;
-    protected boolean sorted;
-    protected String[] patterns;
-    protected boolean passAllArguments;
+    @Getter
+    private final String label;
+    @Getter
+    private final Set<String> aliases;
+    @Getter
+    private final Map<ArgumentContainer, Input<Sender>> functions;
+    @Getter
+    private final List<ArgumentContainer> arguments;
+    @Getter
+    @Setter
+    private Input<Sender> lapse = (Input<Sender>) BEHAVIOR_DEFAULT_LAPSE;
+    @Getter
+    private boolean sorted;
+    @Getter
+    private String[] patterns;
+    @Getter
+    @Setter
+    private boolean passAllArguments;
 
     protected Behaviour(String label, String... aliases) {
       this.label = label.toLowerCase();
-      this.aliases = new HashSet<>(List.of(aliases));
+      this.aliases = new HashSet<>(Arrays.asList(aliases));
       this.arguments = new LinkedList<>();
       this.functions = new LinkedHashMap<>();
     }
@@ -150,35 +163,24 @@ public abstract class Command<Sender> implements Described {
       return input;
     }
 
-    public Behaviour passAllArguments() {
-      this.passAllArguments = true;
-      return this;
-    }
-
-    public Behaviour lapse(EmptyInput<Sender> function) {
-      if (function == null) lapse = (Input<Sender>) BEHAVIOR_DEFAULT_LAPSE;
-      else lapse = function;
-      return this;
-    }
-
     public Behaviour arg(Object arg1, Input<Sender> function) {
-      return this.arg(List.of(arg1), function);
+      return this.arg(Lists.newArrayList(arg1), function);
     }
 
     public Behaviour arg(Object arg1, Object arg2, Input<Sender> function) {
-      return this.arg(List.of(arg1, arg2), function);
+      return this.arg(Lists.newArrayList(arg1, arg2), function);
     }
 
     public Behaviour arg(Object arg1, Object arg2, Object arg3, Input<Sender> function) {
-      return this.arg(List.of(arg1, arg2, arg3), function);
+      return this.arg(Lists.newArrayList(arg1, arg2, arg3), function);
     }
 
     public Behaviour arg(Object arg1, Object arg2, Object arg3, Object arg4, Input<Sender> function) {
-      return this.arg(List.of(arg1, arg2, arg3, arg4), function);
+      return this.arg(Lists.newArrayList(arg1, arg2, arg3, arg4), function);
     }
 
     public Behaviour arg(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Input<Sender> function) {
-      return this.arg(List.of(arg1, arg2, arg3, arg4, arg5), function);
+      return this.arg(Lists.newArrayList(arg1, arg2, arg3, arg4, arg5), function);
     }
 
     public Behaviour arg(Collection<Object> arguments, Input<Sender> function) {
@@ -203,11 +205,6 @@ public abstract class Command<Sender> implements Described {
         this.patterns = new String[arguments.size()];
         for (ArgumentContainer argument : arguments) patterns[index++] = label + argument.toString();
       }
-    }
-
-    public String[] patterns() {
-      this.sort();
-      return patterns;
     }
 
     @Override

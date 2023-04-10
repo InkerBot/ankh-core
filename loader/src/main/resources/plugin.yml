@@ -1,6 +1,5 @@
 name: ankh-core
 version: 1.0-SNAPSHOT
-api-version: 1.16
 main: org.inksnow.ankh.loader.AnkhCoreLoaderPlugin
 load: STARTUP
 authors:
@@ -13,8 +12,5 @@ ankh-classpath:
   "org.apache.logging.": SELF_ONLY
   "io.github.bakedlibs.": SELF_ONLY
   "com.google.inject.": SELF_ONLY
-  "com.google.common.": SELF_ONLY
   "org.hibernate.": SELF_ONLY
-  "it.unimi.dsi.fastutil.": SELF_ONLY
-  "org.codehaus.groovy.": SELF_ONLY
-  "groovy.": SELF_ONLY
+  "org.objectweb.asm.": SELF_ONLY

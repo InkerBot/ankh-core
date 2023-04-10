@@ -1,14 +1,13 @@
 package org.inksnow.ankh.core.script;
 
-import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.inksnow.ankh.core.api.AnkhCoreLoader;
 import org.inksnow.ankh.core.api.AnkhServiceLoader;
@@ -18,6 +17,7 @@ import org.inksnow.ankh.core.api.script.AnkhScriptService;
 import org.inksnow.ankh.core.api.script.PreparedScript;
 import org.inksnow.ankh.core.api.script.ScriptContext;
 import org.inksnow.ankh.core.api.util.DcLazy;
+import org.inksnow.ankh.core.common.AdventureAudiences;
 import org.inksnow.ankh.core.common.config.AnkhConfig;
 import org.inksnow.ankh.core.common.util.ExecuteReportUtil;
 import org.slf4j.helpers.MessageFormatter;
@@ -132,9 +132,10 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
           .append(Component.text("type: ", NamedTextColor.GOLD))
           .append(Component.text(result == null ? "null" : result.getClass().getName()));
     }
-    player.sendMessage(Component.text("[result] ", NamedTextColor.GOLD)
-        .append(layoutComponent.hoverEvent(hoverComponent)));
-  }  private final DcLazy<AnkhScriptEngine> defaultEngine = DcLazy.of(this::defaultEngineImpl);
+    AdventureAudiences.player(player).sendMessage(
+        Component.text("[result] ", NamedTextColor.GOLD)
+            .append(layoutComponent.hoverEvent(hoverComponent)));
+  }
 
   @Override
   public void runConsoleShell(@Nonnull String shell) {
@@ -185,7 +186,7 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
     val engine = engineName == null ? get() : engine(engineName);
 
     return engine.prepare(command);
-  }
+  }  private final DcLazy<AnkhScriptEngine> defaultEngine = DcLazy.of(this::defaultEngineImpl);
 
   @SubscriptEvent(priority = EventPriority.LOW, ignoreCancelled = true)
   private void onServerCommand(ServerCommandEvent event) {
@@ -197,11 +198,11 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
   }
 
   @SubscriptEvent(priority = EventPriority.LOW, ignoreCancelled = true)
-  private void onAsyncChat(AsyncChatEvent event) {
+  private void onAsyncChat(AsyncPlayerChatEvent event) {
     if (!config.playerShell().enable()) {
       return;
     }
-    val message = PlainComponentSerializer.plain().serialize(event.originalMessage());
+    val message = event.getMessage();
     if (message.startsWith(config.playerShell().prefix())) {
       event.setCancelled(true);
       val player = event.getPlayer();
@@ -213,7 +214,8 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
         if (player.isOp() || player.hasPermission("ankh.script.execute-any")) {
           runPlayerShell(player, command);
         } else {
-          player.sendMessage(Component.text("Permission denied", NamedTextColor.RED));
+          AdventureAudiences.player(player)
+              .sendMessage(Component.text("Permission denied", NamedTextColor.RED));
         }
       });
     }
