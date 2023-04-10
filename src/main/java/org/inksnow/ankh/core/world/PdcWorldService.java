@@ -468,7 +468,7 @@ public class PdcWorldService implements WorldService {
     val ankhBlock = getBlock(location);
     if (ankhBlock != null) {
       ankhBlock.onBlockBreak(event);
-      if(event.isCancelled()) {
+      if(!event.isCancelled()) {
         removeBlock(location);
       }
     }
