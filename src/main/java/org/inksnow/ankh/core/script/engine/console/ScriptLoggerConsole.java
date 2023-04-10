@@ -4,9 +4,9 @@ import bsh.ConsoleInterface;
 import lombok.val;
 import org.inksnow.ankh.core.common.linebuf.LineBufferingOutputStream;
 import org.inksnow.ankh.core.common.linebuf.TextStream;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.io.Reader;
 

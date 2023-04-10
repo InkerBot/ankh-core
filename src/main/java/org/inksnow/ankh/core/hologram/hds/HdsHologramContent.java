@@ -8,27 +8,13 @@ import me.filoghost.holographicdisplays.api.hologram.line.ItemHologramLine;
 import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine;
 import org.bukkit.inventory.ItemStack;
 import org.inksnow.ankh.core.api.hologram.HologramContent;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class HdsHologramContent implements HologramContent {
-
-  public interface LineEntry {}
-
-  @AllArgsConstructor
-  @NoArgsConstructor
-  private static class Text implements LineEntry {
-    public String content;
-  }
-
-  @AllArgsConstructor
-  @NoArgsConstructor
-  private static class Item implements LineEntry {
-    public ItemStack item;
-  }
 
   private final List<LineEntry> lines;
 
@@ -65,6 +51,21 @@ public class HdsHologramContent implements HologramContent {
     }
   }
 
+  public interface LineEntry {
+  }
+
+  @AllArgsConstructor
+  @NoArgsConstructor
+  private static class Text implements LineEntry {
+    public String content;
+  }
+
+  @AllArgsConstructor
+  @NoArgsConstructor
+  private static class Item implements LineEntry {
+    public ItemStack item;
+  }
+
   public static class Builder implements HologramContent.Builder {
 
     private final ArrayList<LineEntry> lines = new ArrayList<>();
@@ -81,15 +82,13 @@ public class HdsHologramContent implements HologramContent {
       return this;
     }
 
-    @NotNull
     @Override
-    public HologramContent.Builder getThis() {
+    public @Nonnull HologramContent.Builder getThis() {
       return this;
     }
 
-    @NotNull
     @Override
-    public HologramContent build() {
+    public @Nonnull HologramContent build() {
       return new HdsHologramContent(lines);
     }
   }

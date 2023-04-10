@@ -9,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.block.AnkhBlock;
 
@@ -72,7 +71,7 @@ public class ProtectDataBlock implements AnkhBlock {
   }
 
   @Override
-  public @NonNull Key key() {
+  public @Nonnull Key key() {
     return key;
   }
 

@@ -3,7 +3,6 @@ package org.inksnow.ankh.core.api.storage;
 import org.bukkit.Location;
 import org.inksnow.ankh.core.api.ioc.IocLazy;
 import org.inksnow.ankh.core.api.util.DcLazy;
-import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -119,7 +118,6 @@ public interface LocationStorage {
   LocationStorage z(int z);
 
   interface Factory {
-    @ApiStatus.Internal
     DcLazy<Factory> INSTANCE = IocLazy.of(Factory.class);
 
     /**

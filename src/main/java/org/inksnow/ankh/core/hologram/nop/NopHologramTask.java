@@ -4,11 +4,12 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.inksnow.ankh.core.api.hologram.HologramContent;
 import org.inksnow.ankh.core.api.hologram.HologramTask;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class NopHologramTask implements HologramTask {
   @Override
-  public void updateContent(@NotNull HologramContent content) {
+  public void updateContent(@Nonnull HologramContent content) {
 
   }
 
@@ -18,34 +19,28 @@ public class NopHologramTask implements HologramTask {
   }
 
   public static class Builder implements HologramTask.Builder {
-
-    @NotNull
     @Override
-    public InnerContentBuilder content() {
+    public @Nonnull InnerContentBuilder content() {
       return new InnerContentBuilder(this);
     }
 
-    @NotNull
     @Override
-    public Builder content(@NotNull HologramContent content) {
+    public @Nonnull Builder content(@Nonnull HologramContent content) {
       return this;
     }
 
-    @NotNull
     @Override
-    public Builder location(@NotNull Location location) {
+    public @Nonnull Builder location(@Nonnull Location location) {
       return this;
     }
 
-    @NotNull
     @Override
-    public Builder getThis() {
+    public @Nonnull Builder getThis() {
       return this;
     }
 
-    @NotNull
     @Override
-    public HologramTask build() {
+    public @Nonnull HologramTask build() {
       return new NopHologramTask();
     }
   }
@@ -57,27 +52,23 @@ public class NopHologramTask implements HologramTask {
       this.parent = parent;
     }
 
-    @NotNull
     @Override
-    public InnerContentBuilder appendContent(@NotNull String content) {
+    public @Nonnull InnerContentBuilder appendContent(@Nonnull String content) {
       return this;
     }
 
-    @NotNull
     @Override
-    public InnerContentBuilder appendItem(@NotNull ItemStack item) {
+    public @Nonnull InnerContentBuilder appendItem(@Nonnull ItemStack item) {
       return this;
     }
 
-    @NotNull
     @Override
-    public InnerContentBuilder getThis() {
+    public @Nonnull InnerContentBuilder getThis() {
       return this;
     }
 
-    @NotNull
     @Override
-    public Builder build() {
+    public @Nonnull Builder build() {
       return parent;
     }
   }

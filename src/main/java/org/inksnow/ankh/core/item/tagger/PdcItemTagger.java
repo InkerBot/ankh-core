@@ -21,14 +21,14 @@ public class PdcItemTagger implements ItemTagger {
   @Override
   public void setTag(@Nonnull ItemStack itemStack, @Nullable Key itemId) {
     val itemMeta = itemStack.getItemMeta();
-    if(itemMeta == null){
-      if(itemId != null) {
+    if (itemMeta == null) {
+      if (itemId != null) {
         throw new UnsupportedOperationException("item " + itemStack.getType() + " can't be tagged");
       }
-    }else{
-      if(itemId == null){
+    } else {
+      if (itemId == null) {
         itemMeta.getPersistentDataContainer().remove(ITEM_ID_KEY);
-      }else{
+      } else {
         itemMeta.getPersistentDataContainer().set(ITEM_ID_KEY, PersistentDataType.STRING, itemId.asString());
       }
       itemStack.setItemMeta(itemMeta);

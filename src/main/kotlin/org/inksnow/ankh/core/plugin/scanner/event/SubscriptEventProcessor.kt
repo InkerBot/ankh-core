@@ -3,10 +3,7 @@ package org.inksnow.ankh.core.plugin.scanner.event
 import org.bukkit.Bukkit
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
-import org.bukkit.event.EventException
 import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
-import org.bukkit.plugin.EventExecutor
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
 import org.inksnow.ankh.core.common.EnsureIgnoreCancelledEventExecutor
 import org.inksnow.ankh.core.common.util.AnnotationUtil
@@ -20,7 +17,6 @@ import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.MethodNode
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SubscriptEventProcessor @Inject private constructor(

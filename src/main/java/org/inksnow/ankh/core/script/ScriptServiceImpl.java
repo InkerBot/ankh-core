@@ -66,7 +66,7 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
   @Override
   public @Nonnull AnkhScriptEngine get() {
     return defaultEngine.get();
-  }  private final DcLazy<AnkhScriptEngine> defaultEngine = DcLazy.of(this::defaultEngineImpl);
+  }
 
   @Override
   public void runPlayerShell(@Nonnull Player player, @Nonnull String shell) {
@@ -134,7 +134,7 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
     }
     player.sendMessage(Component.text("[result] ", NamedTextColor.GOLD)
         .append(layoutComponent.hoverEvent(hoverComponent)));
-  }
+  }  private final DcLazy<AnkhScriptEngine> defaultEngine = DcLazy.of(this::defaultEngineImpl);
 
   @Override
   public void runConsoleShell(@Nonnull String shell) {

@@ -7,8 +7,8 @@ public class BenchmarkTask {
   private final Target target;
 
   private BenchmarkTask(
-    final int warmUpTimes, final int runTimes,
-    final InputSeed<?> inputSeed, final Target<?,?> target
+      final int warmUpTimes, final int runTimes,
+      final InputSeed<?> inputSeed, final Target<?, ?> target
   ) {
     this.warmUpTimes = warmUpTimes;
     this.runTimes = runTimes;
@@ -16,7 +16,11 @@ public class BenchmarkTask {
     this.target = target;
   }
 
-  public BenchmarkRecord run(){
+  public static <T> Builder<T> builder() {
+    return new Builder<>();
+  }
+
+  public BenchmarkRecord run() {
     System.gc();
     Target target = this.target;
     for (int j = 0; j < warmUpTimes; j++) {
@@ -33,18 +37,14 @@ public class BenchmarkTask {
     return builder.build();
   }
 
-  public static <T> Builder<T> builder(){
-    return new Builder<>();
-  }
-
   public static class Builder<T> {
     private int warmUpTimes = 1000_000;
     private int runTimes = 1000_000;
-    private double[] reports = new double[]{ 100, 99.9, 99.5, 99, 50 };
+    private double[] reports = new double[]{100, 99.9, 99.5, 99, 50};
     private InputSeed<T> inputSeed = it -> null;
-    private Target<T,?> target;
+    private Target<T, ?> target;
 
-    private Builder(){
+    private Builder() {
       //
     }
 
@@ -63,17 +63,17 @@ public class BenchmarkTask {
       return this;
     }
 
-    public Builder<T> inputSeed(final InputSeed<T> inputSeed){
+    public Builder<T> inputSeed(final InputSeed<T> inputSeed) {
       this.inputSeed = inputSeed;
       return this;
     }
 
-    public Builder<T> target(final Target<T,?> target) {
+    public Builder<T> target(final Target<T, ?> target) {
       this.target = target;
       return this;
     }
 
-    public BenchmarkTask build(){
+    public BenchmarkTask build() {
       return new BenchmarkTask(warmUpTimes, runTimes, inputSeed, target);
     }
   }

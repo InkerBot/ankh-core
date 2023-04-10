@@ -122,14 +122,20 @@ dependencies {
   compileOnly(project(":libs:shadow-spring-boot-loader", configuration = "shadow"))
 
   @Suppress("VulnerableLibrariesLocal") // We won't include it
-  compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+  compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
+    exclude("org.checkerframework", "checker-qual")
+    exclude("org.jetbrains", "annotations")
+  }
 
   // kotlin
-  api(kotlin("stdlib"))
-  api(kotlin("reflect"))
+  api("org.jetbrains.kotlin:kotlin-stdlib:1.8.10") {
+    exclude("org.jetbrains", "annotations")
+  }
 
   // base utils
-  api("com.google.inject:guice:5.1.0")
+  api("com.google.inject:guice:5.1.0") {
+    exclude("com.google.guava", "guava")
+  }
   api("bot.inker.acj:runtime:1.3")
   api("bot.inker.aig:all:1.1-SNAPSHOT")
   api("org.ow2.asm:asm:9.4")
@@ -137,7 +143,7 @@ dependencies {
   api("org.ow2.asm:asm-commons:9.4")
   api("org.ow2.asm:asm-tree:9.4")
   api("org.ow2.asm:asm-util:9.4")
-  api("it.unimi.dsi:fastutil:8.5.12")
+  compileOnly("it.unimi.dsi:fastutil:8.5.12")
 
   // database
   api("org.hibernate.orm:hibernate-core:6.1.7.Final")
@@ -146,7 +152,9 @@ dependencies {
 
   // database drivers
   runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.0.3")
-  runtimeOnly("org.postgresql:postgresql:42.3.8")
+  runtimeOnly("org.postgresql:postgresql:42.3.8") {
+    exclude("org.checkerframework", "checker-qual")
+  }
   @Suppress("VulnerableLibrariesLocal") // It's a fake cve
   runtimeOnly("com.h2database:h2:2.1.214")
 
@@ -159,9 +167,6 @@ dependencies {
 
   // other plugins (api usage)
   compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
-
-  // For docs, use no-shadow version
-  api("io.github.baked-libs:dough-api:1.2.0")
 
   // lombok
   compileOnly("org.projectlombok:lombok:1.18.26")

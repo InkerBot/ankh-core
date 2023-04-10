@@ -7,8 +7,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.inksnow.ankh.core.common.linebuf.LineBufferingOutputStream;
 import org.inksnow.ankh.core.common.linebuf.TextStream;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.io.Reader;
 

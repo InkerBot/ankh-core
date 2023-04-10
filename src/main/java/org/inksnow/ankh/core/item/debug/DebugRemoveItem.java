@@ -5,14 +5,10 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.plugin.annotations.AutoRegistered;
-import org.inksnow.ankh.core.api.world.WorldService;
 import org.inksnow.ankh.core.item.AbstractAnkhItem;
 import org.inksnow.ankh.core.world.PdcWorldService;
 
@@ -59,7 +55,7 @@ public class DebugRemoveItem extends AbstractAnkhItem {
   }
 
   @Override
-  public @NonNull Key key() {
+  public @Nonnull Key key() {
     return ITEM_KEY;
   }
 
@@ -71,11 +67,11 @@ public class DebugRemoveItem extends AbstractAnkhItem {
     val action = event.getAction();
     if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
       val clickedBlock = event.getClickedBlock();
-      if(clickedBlock == null){
+      if (clickedBlock == null) {
         return;
       }
       worldService.forceRemoveBlock(clickedBlock.getLocation());
-      if(action == Action.LEFT_CLICK_BLOCK){
+      if (action == Action.LEFT_CLICK_BLOCK) {
         clickedBlock.setType(Material.AIR);
       }
     }

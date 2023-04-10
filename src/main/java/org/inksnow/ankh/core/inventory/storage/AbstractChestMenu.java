@@ -22,11 +22,11 @@ import java.util.Objects;
 public abstract class AbstractChestMenu implements InventoryMenu {
   private final DcLazy<Inventory> inventory = DcLazy.of(this::createInventory);
 
-  protected boolean safeMode(){
+  protected boolean safeMode() {
     return false;
   }
 
-  protected Inventory createInventory(){
+  protected Inventory createInventory() {
     return Bukkit.createInventory(this, 54);
   }
 
@@ -35,33 +35,37 @@ public abstract class AbstractChestMenu implements InventoryMenu {
     return inventory.get();
   }
 
-  public final void openForPlayer(Player...players){
+  public final void openForPlayer(Player player) {
+    player.openInventory(inventory.get());
+  }
+
+  public final void openForPlayer(Player... players) {
     for (Player player : players) {
-      player.openInventory(inventory.get());
+      openForPlayer(player);
     }
   }
 
-  protected void canDropFromCursor(@Nonnull StorageDropFromCursorEvent event, @Nonnull Cancellable cancelToken){
+  protected void canDropFromCursor(@Nonnull StorageDropFromCursorEvent event, @Nonnull Cancellable cancelToken) {
     cancelToken.setCancelled(true);
   }
 
-  protected void canPickup(@Nonnull StoragePickupEvent event, @Nonnull Cancellable cancelToken){
+  protected void canPickup(@Nonnull StoragePickupEvent event, @Nonnull Cancellable cancelToken) {
     cancelToken.setCancelled(true);
   }
 
-  protected void canPlace(@Nonnull StoragePlaceEvent event, @Nonnull Cancellable cancelToken){
+  protected void canPlace(@Nonnull StoragePlaceEvent event, @Nonnull Cancellable cancelToken) {
     cancelToken.setCancelled(true);
   }
 
-  protected void acceptDropFromCursor(@Nonnull StorageDropFromCursorEvent event){
+  protected void acceptDropFromCursor(@Nonnull StorageDropFromCursorEvent event) {
     //
   }
 
-  protected void acceptPickup(@Nonnull StoragePickupEvent event){
+  protected void acceptPickup(@Nonnull StoragePickupEvent event) {
     //
   }
 
-  protected void acceptPlace(@Nonnull StoragePlaceEvent event){
+  protected void acceptPlace(@Nonnull StoragePlaceEvent event) {
     //
   }
 
@@ -69,7 +73,7 @@ public abstract class AbstractChestMenu implements InventoryMenu {
   @Override
   public void acceptDragEvent(@Nonnull InventoryDragEvent event) {
     val player = (Player) event.getWhoClicked();
-    if(event.isCancelled()){
+    if (event.isCancelled()) {
       return;
     }
     val newItemsEntrySet = event.getNewItems().entrySet();
@@ -78,7 +82,7 @@ public abstract class AbstractChestMenu implements InventoryMenu {
     for (val entry : newItemsEntrySet) {
       val storagePlaceEvent = new StoragePlaceEvent(player, entry.getKey(), entry.getValue(), entry.getValue().getAmount());
       canPlace(storagePlaceEvent, event);
-      if(event.isCancelled()){
+      if (event.isCancelled()) {
         return;
       }
       storagePlaceEventList[i++] = storagePlaceEvent;
@@ -93,7 +97,7 @@ public abstract class AbstractChestMenu implements InventoryMenu {
     val player = (Player) event.getWhoClicked();
     switch (event.getAction()) {
       case NOTHING: {
-        if(safeMode()){
+        if (safeMode()) {
           event.setCancelled(true);
         }
         break;
@@ -111,7 +115,7 @@ public abstract class AbstractChestMenu implements InventoryMenu {
       }
       case PICKUP_SOME:
       case PICKUP_HALF: {
-        if(safeMode()){
+        if (safeMode()) {
           event.setCancelled(true);
           return;
         }
@@ -148,7 +152,7 @@ public abstract class AbstractChestMenu implements InventoryMenu {
         break;
       }
       case PLACE_SOME: {
-        if(safeMode()){
+        if (safeMode()) {
           event.setCancelled(true);
           return;
         }
@@ -176,43 +180,43 @@ public abstract class AbstractChestMenu implements InventoryMenu {
       case SWAP_WITH_CURSOR: {
         val currentItem = event.getCurrentItem();
         StoragePickupEvent pickupEvent;
-        if (currentItem != null){
+        if (currentItem != null) {
           pickupEvent = new StoragePickupEvent(player, event.getRawSlot(), currentItem, currentItem.getAmount());
           canPickup(pickupEvent, event);
-          if(event.isCancelled()){
+          if (event.isCancelled()) {
             return;
           }
-        }else {
+        } else {
           pickupEvent = null;
         }
         val cursorItem = event.getCursor();
         StoragePlaceEvent placeEvent;
-        if(cursorItem != null){
+        if (cursorItem != null) {
           placeEvent = new StoragePlaceEvent(player, event.getRawSlot(), cursorItem, cursorItem.getAmount());
           canPlace(placeEvent, event);
-          if(event.isCancelled()){
+          if (event.isCancelled()) {
             return;
           }
-        }else{
+        } else {
           placeEvent = null;
         }
-        if(pickupEvent != null) {
+        if (pickupEvent != null) {
           acceptPickup(pickupEvent);
         }
-        if(placeEvent != null) {
+        if (placeEvent != null) {
           acceptPlace(placeEvent);
         }
         break;
       }
       case DROP_ALL_CURSOR: {
         val cursorItem = event.getCursor();
-        if(cursorItem == null){
+        if (cursorItem == null) {
           event.setCancelled(true);
           return;
         }
         val dropEvent = new StorageDropFromCursorEvent(player, cursorItem, cursorItem.getAmount());
         canDropFromCursor(dropEvent, event);
-        if(event.isCancelled()){
+        if (event.isCancelled()) {
           return;
         }
         acceptDropFromCursor(dropEvent);
@@ -220,13 +224,13 @@ public abstract class AbstractChestMenu implements InventoryMenu {
       }
       case DROP_ONE_CURSOR: {
         val cursorItem = event.getCursor();
-        if(cursorItem == null){
+        if (cursorItem == null) {
           event.setCancelled(true);
           return;
         }
         val dropEvent = new StorageDropFromCursorEvent(player, cursorItem, 1);
         canDropFromCursor(dropEvent, event);
-        if(event.isCancelled()){
+        if (event.isCancelled()) {
           return;
         }
         acceptDropFromCursor(dropEvent);
@@ -234,18 +238,18 @@ public abstract class AbstractChestMenu implements InventoryMenu {
       }
       case DROP_ALL_SLOT: {
         val currentItem = event.getCurrentItem();
-        if(currentItem == null){
+        if (currentItem == null) {
           event.setCancelled(true);
           return;
         }
         val pickupEvent = new StoragePickupEvent(player, event.getRawSlot(), currentItem, currentItem.getAmount());
         canPickup(pickupEvent, event);
-        if(event.isCancelled()){
+        if (event.isCancelled()) {
           return;
         }
         val dropEvent = new StorageDropFromCursorEvent(player, currentItem, currentItem.getAmount());
         canDropFromCursor(dropEvent, event);
-        if(event.isCancelled()){
+        if (event.isCancelled()) {
           return;
         }
         acceptPickup(pickupEvent);
@@ -254,18 +258,18 @@ public abstract class AbstractChestMenu implements InventoryMenu {
       }
       case DROP_ONE_SLOT: {
         val currentItem = event.getCurrentItem();
-        if(currentItem == null){
+        if (currentItem == null) {
           event.setCancelled(true);
           return;
         }
         val pickupEvent = new StoragePickupEvent(player, event.getRawSlot(), currentItem, 1);
         canPickup(pickupEvent, event);
-        if(event.isCancelled()){
+        if (event.isCancelled()) {
           return;
         }
         val dropEvent = new StorageDropFromCursorEvent(player, currentItem, 1);
         canDropFromCursor(dropEvent, event);
-        if(event.isCancelled()){
+        if (event.isCancelled()) {
           return;
         }
         acceptPickup(pickupEvent);

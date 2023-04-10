@@ -2,7 +2,6 @@ package org.inksnow.ankh.core.script;
 
 import org.bukkit.entity.Player;
 import org.inksnow.ankh.core.api.script.ScriptContext;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,12 +45,12 @@ public class ScriptContextImpl implements ScriptContext {
   }
 
   @Override
-  public @Nullable Object remove(@NotNull String key) {
+  public @Nullable Object remove(@Nonnull String key) {
     return content.remove(key);
   }
 
   @Override
-  public boolean contains(@NotNull String key) {
+  public boolean contains(@Nonnull String key) {
     return content.containsKey(key);
   }
 

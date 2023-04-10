@@ -34,9 +34,9 @@ class TestBlock private constructor(
     location.block.type = nextMaterial.get()
 
     this.hologram?.updateContent(
-        factory.hologramService.content()
-          .appendContent(nextMaterial.get().name)
-          .build()
+      factory.hologramService.content()
+        .appendContent(nextMaterial.get().name)
+        .build()
     )
   }
 

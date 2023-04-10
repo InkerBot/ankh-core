@@ -6,7 +6,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 @Slf4j
 public class EnsureIgnoreCancelledEventExecutor implements EventExecutor {
@@ -17,7 +18,7 @@ public class EnsureIgnoreCancelledEventExecutor implements EventExecutor {
   }
 
   @Override
-  public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
+  public void execute(@Nonnull Listener listener, @Nonnull Event event) throws EventException {
     if (((Cancellable) event).isCancelled()) {
       logger.error("====================================================");
       logger.error("Found cancelled event called in ignore-cancelled executor");

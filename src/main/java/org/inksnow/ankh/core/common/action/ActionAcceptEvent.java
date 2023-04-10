@@ -4,23 +4,23 @@ import org.bukkit.event.Cancellable;
 
 @FunctionalInterface
 public interface ActionAcceptEvent<T> {
-  void accept(T event);
-
   @SuppressWarnings("unchecked")
-  static <E> ActionAcceptEvent<E> nop(){
+  static <E> ActionAcceptEvent<E> nop() {
     return (ActionAcceptEvent<E>) Nop.INSTANCE;
   }
 
   @SuppressWarnings("unchecked")
-  static <E> ActionAcceptEvent<E> cancel(){
+  static <E> ActionAcceptEvent<E> cancel() {
     return (ActionAcceptEvent<E>) Cancel.INSTANCE;
   }
+
+  void accept(T event);
 
   @SuppressWarnings("rawtypes")
   class Nop implements ActionAcceptEvent {
     private static final ActionAcceptEvent INSTANCE = new Nop();
 
-    private Nop(){
+    private Nop() {
       //
     }
 
@@ -34,7 +34,7 @@ public interface ActionAcceptEvent<T> {
   class Cancel implements ActionAcceptEvent {
     private static final ActionAcceptEvent INSTANCE = new Cancel();
 
-    private Cancel(){
+    private Cancel() {
       //
     }
 
@@ -42,7 +42,7 @@ public interface ActionAcceptEvent<T> {
     public void accept(Object event) {
       if (event instanceof Cancellable) {
         ((Cancellable) event).setCancelled(true);
-      }else{
+      } else {
         throw new IllegalArgumentException("try to cancelled event which not support cancel: " + event.getClass().getName());
       }
     }
