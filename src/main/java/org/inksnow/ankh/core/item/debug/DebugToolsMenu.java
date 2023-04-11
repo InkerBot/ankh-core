@@ -29,9 +29,10 @@ public class DebugToolsMenu {
   private final ItemStack[] defaultItems;
 
   @Inject
-  private DebugToolsMenu(DebugRemoveItem debugRemoveItem) {
+  private DebugToolsMenu(DebugRemoveItem debugRemoveItem, DebugChunkFixItem debugChunkFixItem) {
     defaultItems = new ItemStack[54];
     defaultItems[0] = debugRemoveItem.createItem();
+    defaultItems[1] = debugChunkFixItem.createItem();
   }
 
   public void openForPlayer(Player player) {
