@@ -104,9 +104,13 @@ public class AnkhClassLoader extends URLClassLoader {
           }
         }
 
-        if (loadType.p1 && clazz == null) {
+        if (clazz == null) {
           try {
-            clazz = parentLoadClass(name);
+            if (loadType.p1) {
+              clazz = parentLoadClass(name);
+            } else {
+              clazz = Class.forName(name, false, null);
+            }
           } catch (ClassNotFoundException e) {
             // ignore
           }

@@ -3,6 +3,9 @@ package mx.kenzie.centurion;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import mx.kenzie.centurion.arguments.*;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -18,15 +21,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 import org.inksnow.ankh.core.common.AdventureAudiences;
+import org.inksnow.ankh.core.common.util.BootstrapUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.logging.Level;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
+@Slf4j
 public abstract class MinecraftCommand extends Command<CommandSender> implements TabCompleter, CommandExecutor {
+  private static final MethodHandle pluginCommandInitHandle = BootstrapUtil.ofInit(
+      "Lorg/bukkit/command/PluginCommand;<init>(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V"
+  );
+  private static final MethodHandle serverGetCommandMapHandle = BootstrapUtil.ofGet(
+      "Lorg/bukkit/craftbukkit/[CB_VERSION]/CraftServer;commandMap:Lorg/bukkit/craftbukkit/[CB_VERSION]/command/CraftCommandMap;"
+  ).asType(MethodType.methodType(CommandMap.class, Server.class));
   public static final EnumArgument<BlockFace> BLOCK_FACE = new EnumArgument<>(BlockFace.class);
   public static final EnumArgument<Material> MATERIAL = new EnumArgument<>(Material.class);
   public static final EnumArgument<EntityType> ENTITY_TYPE = new EnumArgument<>(EntityType.class);
@@ -185,8 +198,7 @@ public abstract class MinecraftCommand extends Command<CommandSender> implements
     else input = label + " " + String.join(" ", args);
     final Result result = this.execute(sender, input);
     if (result.error() != null) {
-      Bukkit.getLogger().log(Level.SEVERE, "Error in command: " + label + Arrays.toString(args));
-      result.error().printStackTrace();
+      logger.error("Error in command: {} {}", label, args, result.error());
     }
     return result.successful();
   }
@@ -229,32 +241,25 @@ public abstract class MinecraftCommand extends Command<CommandSender> implements
   }
 
   @SuppressWarnings("deprecation")
+  @SneakyThrows
   public void register(Plugin plugin) {
-    try {
-      final Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-      if (!constructor.isAccessible()) constructor.setAccessible(true);
-      final PluginCommand command = constructor.newInstance(behaviour().label(), plugin);
-      this.update(command);
-      command.register(this.getCommandMap());
-      if (this.getCommandMap().register(behaviour().label(), plugin.getName(), command)) {
-        command.setExecutor(this);
-        command.setTabCompleter(this);
-      } else {
-        final org.bukkit.command.Command current = this.getCommandMap().getCommand(command.getName());
-        if (current instanceof PluginCommand) {
-          final PluginCommand found = (PluginCommand) current;
-          this.update(found);
-          found.setExecutor(this);
-          found.setTabCompleter(this);
-        }
-        Bukkit.getLogger().log(Level.WARNING, "A command '/" + behaviour().label() + "' is already defined!");
-        Bukkit.getLogger().log(Level.WARNING, "As this cannot be replaced, the executor will be overridden.");
-        Bukkit.getLogger()
-            .log(Level.WARNING, "To avoid this warning, please do not add MinecraftCommands to your plugin.yml.");
+    val command = (PluginCommand) pluginCommandInitHandle.invokeExact(behaviour().label(), plugin);
+    this.update(command);
+    command.register(this.getCommandMap());
+    if (this.getCommandMap().register(behaviour().label(), plugin.getName(), command)) {
+      command.setExecutor(this);
+      command.setTabCompleter(this);
+    } else {
+      final org.bukkit.command.Command current = this.getCommandMap().getCommand(command.getName());
+      if (current instanceof PluginCommand) {
+        final PluginCommand found = (PluginCommand) current;
+        this.update(found);
+        found.setExecutor(this);
+        found.setTabCompleter(this);
       }
-    } catch (NoSuchMethodException | IllegalAccessException | InstantiationException |
-             InvocationTargetException e) {
-      e.printStackTrace();
+      logger.warn("A command '/{}' is already defined!", behaviour().label());
+      logger.warn("As this cannot be replaced, the executor will be overridden.");
+      logger.warn("To avoid this warning, please do not add MinecraftCommands to your plugin.yml.");
     }
   }
 
@@ -270,8 +275,9 @@ public abstract class MinecraftCommand extends Command<CommandSender> implements
   /**
    * This can be overridden if Bukkit removes or changes the method.
    */
+  @SneakyThrows
   protected CommandMap getCommandMap() {
-    return Bukkit.getCommandMap();
+    return (CommandMap) serverGetCommandMapHandle.invokeExact(Bukkit.getServer());
   }
 
   /**

@@ -11,7 +11,6 @@ import javax.script.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Method;
 
 public class JsNashornEngine implements AnkhScriptEngine {
   private static final Logger logger = LoggerFactory.getLogger("ankh-js-nashorn");
@@ -41,9 +40,8 @@ public class JsNashornEngine implements AnkhScriptEngine {
     }
     Class<? extends ScriptEngineFactory> clazz = factory.getClass();
     try {
-      Method initMethod = clazz.getMethod("getScriptEngine", String[].class, ClassLoader.class);
       return MethodHandles.lookup().findVirtual(
-          initMethod.getDeclaringClass(),
+          clazz,
           "getScriptEngine",
           MethodType.methodType(ScriptEngine.class, String[].class, ClassLoader.class)
       ).bindTo(factory).asType(

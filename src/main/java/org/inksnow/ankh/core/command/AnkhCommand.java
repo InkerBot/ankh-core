@@ -39,6 +39,8 @@ public class AnkhCommand extends MinecraftCommand {
           if (user instanceof Player) {
             val player = (Player) user;
             debugToolsMenu.openForPlayer(player);
+          } else {
+            user.sendMessage("Sorry, this command only can be used by player");
           }
           return CommandResult.PASSED;
         });
