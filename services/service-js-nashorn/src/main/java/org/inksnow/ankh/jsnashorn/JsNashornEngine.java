@@ -13,18 +13,32 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 
-public class J8JsNashornEngine implements AnkhScriptEngine {
+public class JsNashornEngine implements AnkhScriptEngine {
   private static final Logger logger = LoggerFactory.getLogger("ankh-js-nashorn");
   private static final MethodHandle nashornFactory = createFactory();
 
-  private static <T extends Throwable> MethodHandle createFactory() throws T {
-    ScriptEngineFactory factory = new ScriptEngineManager()
-        .getEngineFactories()
-        .stream()
-        .filter(it -> it.getNames().contains("nashorn"))
-        .findFirst()
-        .orElseThrow(() -> new IllegalStateException("No support js engine found"));
+  private static <T extends Throwable> ScriptEngineFactory getFactory() throws T {
+    try {
+      return (ScriptEngineFactory) Class.forName("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory")
+          .getConstructor()
+          .newInstance();
+    } catch (UnsupportedClassVersionError e) {
+      return new ScriptEngineManager()
+          .getEngineFactories()
+          .stream()
+          .filter(it -> it.getNames().contains("nashorn"))
+          .findFirst()
+          .orElse(null);
+    } catch (Exception e) {
+      throw (T) e;
+    }
+  }
 
+  private static <T extends Throwable> MethodHandle createFactory() throws T {
+    ScriptEngineFactory factory = getFactory();
+    if (factory == null) {
+      throw new IllegalStateException("No support js engine found");
+    }
     Class<? extends ScriptEngineFactory> clazz = factory.getClass();
     try {
       Method initMethod = clazz.getMethod("getScriptEngine", String[].class, ClassLoader.class);

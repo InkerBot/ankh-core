@@ -64,7 +64,6 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
           } else if (annotation instanceof com.google.inject.name.Named) {
             name = ((com.google.inject.name.Named) annotation).value();
           } else {
-            logger.warn("service implement class should be named. {}", entry.getValue().getSource());
             continue;
           }
           if (Arrays.stream(new String[]{

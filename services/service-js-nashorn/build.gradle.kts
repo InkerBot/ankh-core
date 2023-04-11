@@ -1,25 +1,14 @@
-plugins {
-  id("me.champeau.mrjar").version("0.1.1")
-}
-
-group = "org.inksnow.ankh.jsnashorn"
-
-multiRelease {
-  targetVersions(8, 11)
-}
+group = "org.inksnow.ankh.groovy"
 
 configurations {
   create("ankhShadow")
   create("ankhApi")
-  create("ankhImpl")
+  create("ankhImpl").extendsFrom(getByName("runtimeClasspath"))
 }
 
 dependencies {
-  "java11Implementation"("org.openjdk.nashorn:nashorn-core:15.4")
-  "java11Implementation"(project(":"))
-
-  "ankhImpl"("org.openjdk.nashorn:nashorn-core:15.4") {
-    exclude("org.ow2.asm")
+  implementation("org.openjdk.nashorn:nashorn-core:15.4") {
+    exclude("org.ow2.asm:asm")
   }
   compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
   compileOnly(project(":"))
@@ -35,16 +24,18 @@ tasks.jar {
     }
   })
 
-  into("ankh-api") {
+  with(copySpec {
     from(configurations.getByName("ankhApi"))
-  }
+    into("ankh-api")
+  })
 
-  into("ankh-impl") {
+  with(copySpec {
     from(configurations.getByName("ankhImpl").filter {
       !configurations.getByName("ankhShadow").contains(it) &&
           !configurations.getByName("ankhApi").contains(it)
     })
-  }
+    into("ankh-impl")
+  })
 }
 
 tasks.publish {
