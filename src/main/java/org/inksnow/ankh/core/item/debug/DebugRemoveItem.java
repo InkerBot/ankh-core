@@ -20,53 +20,31 @@ import java.util.List;
 
 @AutoRegistered
 @Singleton
-public class DebugRemoveItem extends AbstractAnkhItem {
-  private static final Key ITEM_KEY = Key.key(AnkhCore.PLUGIN_ID, "remove-item");
-  private static final Component ITEM_NAME = Component.text()
-      .append(AnkhCore.PLUGIN_NAME_COMPONENT)
-      .append(Component.text("remove util", NamedTextColor.RED))
-      .build();
-  private static final List<Component> ITEM_LORE = Lists.newArrayList(
-      Component.text("left click to remove ankh-block and block", NamedTextColor.WHITE),
-      Component.text("right click to remove ankh-block only", NamedTextColor.WHITE),
-      Component.empty(),
-      Component.text("This is ankh-core debug item", NamedTextColor.WHITE),
-      Component.text("DON'T GIVE IT TO PLAYER", NamedTextColor.RED)
-  );
-
+public class DebugRemoveItem extends AbstractDebugItem {
   private final PdcWorldService worldService;
 
   @Inject
   private DebugRemoveItem(PdcWorldService worldService) {
+    super(
+        Key.key(AnkhCore.PLUGIN_ID, "remove-item"),
+        Material.STICK,
+        Component.text()
+            .append(AnkhCore.PLUGIN_NAME_COMPONENT)
+            .append(Component.text("remove util", NamedTextColor.RED))
+            .build(),
+        Lists.newArrayList(
+            Component.text("left click to remove ankh-block and block", NamedTextColor.WHITE),
+            Component.text("right click to remove ankh-block only", NamedTextColor.WHITE),
+            Component.empty(),
+            Component.text("This is ankh-core debug item", NamedTextColor.WHITE),
+            Component.text("DON'T GIVE IT TO PLAYER", NamedTextColor.RED)
+        )
+    );
     this.worldService = worldService;
   }
 
   @Override
-  public @Nonnull Material material() {
-    return Material.STICK;
-  }
-
-  @Override
-  public @Nonnull Component itemName() {
-    return ITEM_NAME;
-  }
-
-  @Nonnull
-  @Override
-  public List<Component> lores() {
-    return ITEM_LORE;
-  }
-
-  @Override
-  public @Nonnull Key key() {
-    return ITEM_KEY;
-  }
-
-
-  @SuppressWarnings("deprecation") // for debug use only
-  @Override
-  public void acceptInteractEvent(PlayerInteractEvent event) {
-    event.setCancelled(true);
+  protected void acceptUseItem(PlayerInteractEvent event) {
     val action = event.getAction();
     if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
       val clickedBlock = event.getClickedBlock();

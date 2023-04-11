@@ -10,6 +10,7 @@ import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.AnkhCoreLoader;
 import org.inksnow.ankh.core.api.plugin.PluginLifeCycle;
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptLifecycle;
+import org.inksnow.ankh.core.common.AdventureAudiences;
 import org.inksnow.ankh.core.item.debug.DebugToolsMenu;
 
 import javax.inject.Inject;
@@ -31,6 +32,10 @@ public class AnkhCommand extends MinecraftCommand {
   public Command<CommandSender>.Behaviour create() {
     return command(AnkhCore.PLUGIN_ID, "ankh")
         .arg("debug-tools", (user, arguments) -> {
+          if (!user.hasPermission("ankhcore.debugtools.inventory")) {
+            AdventureAudiences.sender(user).sendMessage(permissionMessage());
+            return CommandResult.PASSED;
+          }
           if (user instanceof Player) {
             val player = (Player) user;
             debugToolsMenu.openForPlayer(player);
