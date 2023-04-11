@@ -5,62 +5,40 @@ import org.bukkit.Chunk;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.inksnow.ankh.core.api.AnkhCore;
+import org.inksnow.ankh.core.api.world.storage.BlockStorageEntry;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.io.*;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Singleton
 public class PdcWorldStorage extends AbstractIoWorldStorage {
   private static final NamespacedKey CHUNK_STORAGE_KEY = new NamespacedKey(AnkhCore.PLUGIN_ID, "chunk-storage");
 
   @Override
-  public @Nullable InputStream openInputStream(@Nonnull Chunk chunk) {
+  public CompletableFuture<List<BlockStorageEntry>> provide(@Nonnull Chunk chunk) {
     val fullBytes = chunk.getPersistentDataContainer().get(CHUNK_STORAGE_KEY, PersistentDataType.BYTE_ARRAY);
     if (fullBytes == null) {
-      return null;
+      return EMPTY_RESULT;
     }
-    return new ByteArrayInputStream(fullBytes);
+    try (val in = new DataInputStream(new ByteArrayInputStream(fullBytes))) {
+      return CompletableFuture.completedFuture(provideByIo(chunk, in));
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   @Override
-  public @Nonnull OutputStream openOutputStream(@Nonnull Chunk chunk) {
-    return new CloseStoreOutputStream(chunk);
-  }
-
-  private static class CloseStoreOutputStream extends ByteArrayOutputStream {
-    private final Chunk chunk;
-    private volatile boolean closed = false;
-
-    private CloseStoreOutputStream(Chunk chunk) {
-      this.chunk = chunk;
+  public CompletableFuture<Void> store(@Nonnull Chunk chunk, @Nonnull List<BlockStorageEntry> entries) {
+    val bout = new ByteArrayOutputStream();
+    try (val out = new DataOutputStream(bout)) {
+      storeByIo(chunk, entries, out);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
-
-    private <T extends Throwable> void ensureOpen() throws T {
-      if (closed) {
-        throw (T) new IOException("Stream closed");
-      }
-    }
-
-    @Override
-    public synchronized void write(int b) {
-      ensureOpen();
-      super.write(b);
-    }
-
-    @Override
-    public synchronized void write(byte[] b, int off, int len) {
-      ensureOpen();
-      super.write(b, off, len);
-    }
-
-    @Override
-    public void close() throws IOException {
-      if (!this.closed) {
-        this.closed = true;
-        chunk.getPersistentDataContainer().set(CHUNK_STORAGE_KEY, PersistentDataType.BYTE_ARRAY, this.toByteArray());
-      }
-    }
+    chunk.getPersistentDataContainer().set(CHUNK_STORAGE_KEY, PersistentDataType.BYTE_ARRAY, bout.toByteArray());
+    return COMPLETED_RESULT;
   }
 }

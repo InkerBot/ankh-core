@@ -5,6 +5,7 @@ import org.bukkit.Chunk;
 import javax.annotation.Nonnull;
 import javax.inject.Named;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * StorageBackend store world data, likes block's pos and meta
@@ -15,9 +16,9 @@ public interface WorldStorage {
    * Provide a stream include all ankh-blocks in WorldChunkEmbedded
    *
    * @param chunk chunk which contains ankh-blocks
-   * @return list of entries
+   * @return future of list of entries
    */
-  List<BlockStorageEntry> provide(@Nonnull Chunk chunk);
+  CompletableFuture<List<BlockStorageEntry>> provide(@Nonnull Chunk chunk);
 
 
   /**
@@ -25,6 +26,7 @@ public interface WorldStorage {
    *
    * @param chunk   chunk which contains ankh-blocks
    * @param entries ankh-blocks entry
+   * @return future of success
    */
-  void store(@Nonnull Chunk chunk, @Nonnull List<BlockStorageEntry> entries);
+  CompletableFuture<Void> store(@Nonnull Chunk chunk, @Nonnull List<BlockStorageEntry> entries);
 }

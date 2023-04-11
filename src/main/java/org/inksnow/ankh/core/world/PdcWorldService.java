@@ -35,6 +35,7 @@ import org.inksnow.ankh.core.common.config.AnkhConfig;
 import org.inksnow.ankh.core.common.entity.LocationEmbedded;
 import org.inksnow.ankh.core.common.entity.WorldChunkEmbedded;
 import org.inksnow.ankh.core.common.util.FastEmbeddedUtil;
+import org.inksnow.ankh.core.common.util.ThreadUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -223,43 +224,26 @@ public class PdcWorldService implements WorldService {
       ));
     }
 
-    val asyncTask = (Runnable) () -> {
-      storageBackend.store(chunk, entryList);
-    };
-
-    if (coreLoader.isEnabled()) {
-      Bukkit.getScheduler().runTaskAsynchronously(coreLoader, asyncTask);
-    } else {
-      asyncTask.run();
-    }
+    storageBackend.store(chunk, entryList);
   }
 
   private void loadChunk(ChunkStorage chunkStorage, Chunk chunk) {
-    Bukkit.getScheduler().runTaskAsynchronously(coreLoader, () -> {
+    storageBackend.provide(chunk).thenAcceptAsync(entryList -> {
       try {
-        val entryList = storageBackend.provide(chunk);
-
-        Bukkit.getScheduler().runTask(coreLoader, () -> {
-          try {
-            for (val entry : entryList) {
-              handleBlockSet(
-                  chunkStorage,
-                  new Location(chunk.getWorld(), entry.location().x(), entry.location().y(), entry.location().z()),
-                  LocationEmbedded.warp(entry.location()).position(),
-                  loadBlock(entry.blockId(), entry.content())
-              );
-            }
-            chunkStorage.loaded.set(true);
-          } catch (Exception e) {
-            chunkStorage.loadFailure.set(true);
-            logger.error("Failed to load chunk storage", e);
-          }
-        });
+        for (val entry : entryList) {
+          handleBlockSet(
+              chunkStorage,
+              new Location(chunk.getWorld(), entry.location().x(), entry.location().y(), entry.location().z()),
+              LocationEmbedded.warp(entry.location()).position(),
+              loadBlock(entry.blockId(), entry.content())
+          );
+        }
+        chunkStorage.loaded.set(true);
       } catch (Exception e) {
         chunkStorage.loadFailure.set(true);
         logger.error("Failed to load chunk storage", e);
       }
-    });
+    }, ThreadUtil.mainExecutor());
   }
 
   private AnkhBlock loadBlock(Key blockId, byte[] content) {

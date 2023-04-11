@@ -1,24 +1,6 @@
-database:
-  # database driver, available values: H2 MARIADB POSTGRESQL
-  driver: H2
-  # jdbc url
-  # H2: jdbc:h2:./ankh-core
-  # MARIADB: jdbc:mariadb://localhost:3306/ankh-core
-  url: jdbc:h2:./ankh-core
-  # database username
-  username: ''
-  # database password
-  password: ''
-
-# config about world-storage, which stores ankh-block
-world-storage:
-  # available values: filesystem database
-  # WIP: database backend is too slow, use it only necessary
-  backend: filesystem
-
 # config about player shell
 player-shell:
-  enabled: true
+  enable: true
   prefix: '@'
 
 # tick rate, run ankh-tick in x ticks
@@ -35,9 +17,12 @@ service:
   # 'holographic-displays': https://github.com/filoghost/HolographicDisplays
   # 'nop': no operation
   hologram: ''
+  # Support values: 'bsh' ...(add by other plugin)
+  # 'groovy' if enable service-groovy
+  # 'js' 'nashorn' if enable service-js-nashorn
+  # 'kether' if enable service-kether
   script: 'bsh'
-  # pdc
-  # database
-  # filesystem
-  world-storage: 'database'
+  # Support values: 'pdc' 'filesystem' ...(add by other plugin)
+  world-storage: 'pdc'
+  # Support values: 'pdc' 'nbt' ...(add by other plugin)
   item-tagger: 'pdc'
