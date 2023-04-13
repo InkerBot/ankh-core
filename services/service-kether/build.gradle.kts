@@ -1,6 +1,6 @@
 plugins {
   id("io.izzel.taboolib") version "1.56"
-  id("org.jetbrains.kotlin.jvm")
+  id("org.jetbrains.kotlin.jvm") version "1.8.10"
 }
 
 group = "org.inksnow.ankh.kether"

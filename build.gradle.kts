@@ -1,7 +1,6 @@
 plugins {
   id("java-library")
   id("maven-publish")
-  id("org.jetbrains.kotlin.jvm") version "1.8.10"
 }
 
 allprojects {
@@ -139,11 +138,6 @@ dependencies {
     exclude("org.jetbrains", "annotations")
   }
 
-  // kotlin
-  api("org.jetbrains.kotlin:kotlin-stdlib:1.8.10") {
-    exclude("org.jetbrains", "annotations")
-  }
-
   // base utils
   api("it.unimi.dsi:fastutil:8.5.12")
   api("com.google.inject:guice:5.1.0") {
@@ -172,11 +166,4 @@ dependencies {
   // logger binding
   implementation("org.apache.logging.log4j:log4j-to-slf4j:2.20.0")
   api("org.slf4j:slf4j-api:2.0.6")
-}
-
-tasks.compileKotlin {
-  kotlinOptions {
-    jvmTarget = "1.8"
-    freeCompilerArgs = listOf("-Xjvm-default=all")
-  }
 }
