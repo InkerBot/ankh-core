@@ -39,7 +39,7 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
       return keyInstance;
     }
     val pluginContainer = pluginRegistry.get().get(it.namespace);
-    val injector = pluginContainer.getInjector();
+    val injector = pluginContainer.injector();
     val iocKey = com.google.inject.Key.get(it.clazz, Names.named(it.value));
     val binding = injector.getExistingBinding(iocKey);
     return binding != null ? injector.getInstance(iocKey) : null;
@@ -53,7 +53,7 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
     return LazyProxyUtil.generate(List.class, DcLazy.of(() -> {
       val resultList = new ArrayList<>();
       for (val plugin : pluginRegistry.get().values()) {
-        for (val entry : plugin.getInjector().getAllBindings().entrySet()) {
+        for (val entry : plugin.injector().getAllBindings().entrySet()) {
           if (clazz != entry.getKey().getTypeLiteral().getRawType()) {
             continue;
           }
@@ -68,9 +68,9 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
           }
           if (Arrays.stream(new String[]{
               config.service().get(serviceName + "@" + name),
-              config.service().get(serviceName + "@" + plugin.getPluginYml().getName() + ":" + name)
+              config.service().get(serviceName + "@" + plugin.pluginYml().getName() + ":" + name)
           }).filter(Objects::nonNull).allMatch(Boolean::parseBoolean)) {
-            resultList.add(staticLoadService(Key.key(plugin.getPluginYml().getName(), name), clazz));
+            resultList.add(staticLoadService(Key.key(plugin.pluginYml().getName(), name), clazz));
           }
         }
       }
@@ -98,13 +98,13 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
       return stringInstance;
     }
     val named = Names.named(it.key);
-    for (AnkhPluginContainerImpl ankhPluginContainer : pluginRegistry.get().values()) {
-      val injector = ankhPluginContainer.getInjector();
+    for (AnkhPluginContainerImpl container : pluginRegistry.get().values()) {
+      val injector = container.injector();
       val iocKey = com.google.inject.Key.get(it.clazz, named);
       val binding = injector.getExistingBinding(iocKey);
       if (binding != null) {
         val instance = injector.getInstance(iocKey);
-        keyCacheMap.get().put(new KeyCacheKey(Key.key(ankhPluginContainer.getPluginYml().getName(), it.key), it.clazz), instance);
+        keyCacheMap.get().put(new KeyCacheKey(Key.key(container.pluginYml().getName(), it.key), it.clazz), instance);
         return instance;
       }
     }

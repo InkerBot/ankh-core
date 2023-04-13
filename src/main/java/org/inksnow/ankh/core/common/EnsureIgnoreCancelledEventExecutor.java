@@ -19,7 +19,7 @@ public class EnsureIgnoreCancelledEventExecutor implements EventExecutor {
 
   @Override
   public void execute(@Nonnull Listener listener, @Nonnull Event event) throws EventException {
-    if (((Cancellable) event).isCancelled()) {
+    if (event instanceof Cancellable && ((Cancellable) event).isCancelled()) {
       logger.error("====================================================");
       logger.error("Found cancelled event called in ignore-cancelled executor");
       logger.error("You should update your server software to latest version");
@@ -27,7 +27,8 @@ public class EnsureIgnoreCancelledEventExecutor implements EventExecutor {
       logger.error("If you run latest server software");
       logger.error("please commit issue to your server software", new EventException());
       logger.error("====================================================");
+    } else {
+      delegate.execute(listener, event);
     }
-    delegate.execute(listener, event);
   }
 }

@@ -149,8 +149,6 @@ dependencies {
   api("com.google.inject:guice:5.1.0") {
     exclude("com.google.guava", "guava")
   }
-  api("bot.inker.acj:runtime:1.3")
-  api("bot.inker.aig:all:1.1-SNAPSHOT")
   api("org.ow2.asm:asm:9.4")
   api("org.ow2.asm:asm-analysis:9.4")
   api("org.ow2.asm:asm-commons:9.4")

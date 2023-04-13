@@ -16,7 +16,6 @@ import org.inksnow.ankh.core.common.config.AnkhConfig;
 import org.inksnow.ankh.core.common.entity.LocationEmbedded;
 import org.inksnow.ankh.core.common.entity.WorldChunkEmbedded;
 import org.inksnow.ankh.core.ioc.BridgerKey;
-import org.inksnow.ankh.core.plugin.AnkhPluginContainerImpl;
 import org.inksnow.ankh.core.plugin.AnkhPluginManagerImpl;
 import org.inksnow.ankh.loader.AnkhCoreLoaderPlugin;
 
@@ -33,10 +32,10 @@ public class AnkhCorePluginModule extends AbstractModule {
     bind(AnkhIocKey.Factory.class).to(BridgerKey.Factory.class);
     bind(AnkhServiceLoader.class).to(AnkhServiceLoaderImpl.class);
 
-    bind(AnkhCoreLoader.class).toProvider(() -> (AnkhCoreLoader) ((AnkhPluginContainerImpl) AnkhCoreLoaderPlugin.container).getBukkitPlugin());
+    bind(AnkhCoreLoader.class).toProvider(() -> (AnkhCoreLoader) AnkhCoreLoaderPlugin.container.plugin());
 
     bind(AnkhPluginManager.class).to(AnkhPluginManagerImpl.class);
-    bind(AnkhPluginManagerImpl.class).toInstance(AnkhPluginManagerImpl.INSTANCE);
+    bind(AnkhPluginManagerImpl.class).toInstance(AnkhPluginManagerImpl.instance());
 
     bind(LocationStorage.Factory.class).to(LocationEmbedded.Factory.class);
     bind(ChunkStorage.Factory.class).to(WorldChunkEmbedded.Factory.class);

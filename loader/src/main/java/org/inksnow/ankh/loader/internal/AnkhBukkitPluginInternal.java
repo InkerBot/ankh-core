@@ -153,7 +153,7 @@ public final class AnkhBukkitPluginInternal implements AnkhBukkitPlugin.$interna
     pluginDescriptionFile.getSoftDepend().forEach(dependConsumer);
 
     Class<?> anhkPluginManagerClass = Class.forName("org.inksnow.ankh.core.plugin.AnkhPluginManagerImpl", true, ankhClassLoader);
-    AnkhPluginManager pluginManager = (AnkhPluginManager) anhkPluginManagerClass.getField("INSTANCE").get(null);
+    AnkhPluginManager pluginManager = (AnkhPluginManager) anhkPluginManagerClass.getMethod("instance").invoke(null);
     return pluginManager.register(mainClass, file, ankhClassLoader, pluginDescriptionFile, pluginYml);
   }
 
@@ -163,6 +163,7 @@ public final class AnkhBukkitPluginInternal implements AnkhBukkitPlugin.$interna
     if (pluginYmlEntry == null || pluginYmlEntry.isDirectory()) {
       throw new IllegalArgumentException("'plugin.yml' in '" + jarFile.getName() + "' not found");
     }
+    // don't remove this, to ensure some class in loaded class loader
     CodeSigner[] codeSigners = pluginYmlEntry.getCodeSigners();
     try (Reader reader = new InputStreamReader(jarFile.getInputStream(pluginYmlEntry), StandardCharsets.UTF_8)) {
       return new AnkhPluginYml(YAML.load(reader));

@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.inksnow.ankh.core.api.util.DcLazy;
+import org.inksnow.ankh.core.common.asm.ClassWriterWithClassLoader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;

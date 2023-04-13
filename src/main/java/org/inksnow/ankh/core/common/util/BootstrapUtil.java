@@ -1,5 +1,6 @@
 package org.inksnow.ankh.core.common.util;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.objectweb.asm.Type;
 import sun.misc.Unsafe;
@@ -11,15 +12,12 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 @SuppressWarnings("unused")
+@UtilityClass
 public class BootstrapUtil {
   private static final Unsafe unsafe = createUnsafe();
   private static final MethodHandles.Lookup lookup = createLookup();
   private static final String cbVersion = createCbVersion();
   private static final ClassLoader defaultClassLoader = BootstrapUtil.class.getClassLoader();
-
-  private BootstrapUtil() {
-    throw new UnsupportedOperationException("Utility class can't be instanced");
-  }
 
   @SuppressWarnings("unchecked")
   private static <T extends Throwable> RuntimeException uncheck(Throwable e) throws T {
