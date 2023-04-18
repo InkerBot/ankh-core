@@ -61,8 +61,8 @@ allprojects {
         }
         maven("https://s0.blobs.inksnow.org/maven/") {
           credentials {
-            username = ""
-            password = System.getenv("IREPO_PASSWORD")
+            username = System.getenv("REPO_USERNAME")
+            password = System.getenv("REPO_PASSWORD")
           }
         }
       }
