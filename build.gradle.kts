@@ -23,7 +23,7 @@ allprojects {
   version = if (buildNumber == null) {
     "1.0-dev-SNAPSHOT"
   } else {
-    "1.0-${System.getenv("BUILD_NUMBER")}-SNAPSHOT"
+    "1.0"
   }
 
   repositories {
@@ -59,7 +59,7 @@ allprojects {
             password = System.getenv("NEXUS_PASSWORD")
           }
         }
-        maven("https://s0.blobs.inksnow.org/") {
+        maven("https://s0.blobs.inksnow.org/maven/") {
           credentials {
             username = ""
             password = System.getenv("IREPO_PASSWORD")
