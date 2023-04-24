@@ -128,11 +128,10 @@ dependencies {
     }
 
     // minecraft
-    @Suppress("VulnerableLibrariesLocal") // We won't include it
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
+        exclude("it.unimi.dsi", "fastutil") // we use our version
         exclude("org.checkerframework", "checker-qual")
         exclude("org.jetbrains", "annotations")
-        exclude("it.unimi.dsi", "fastutil") // we use our version
     }
 
     // adventure
@@ -158,6 +157,8 @@ dependencies {
 
     // script
     api("org.beanshell:bsh:3.0.0-SNAPSHOT")
+
+    // config
     api("com.typesafe:config:1.4.2")
 
     // shadow depends

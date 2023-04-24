@@ -9,8 +9,9 @@ softdepend: [ HolographicDisplays ]
 ankh-self-as-api: true
 ankh-classpath:
   "kotlin.": SELF_ONLY
+  "bsh.": SELF_ONLY
   "org.apache.logging.": SELF_ONLY
   "io.github.bakedlibs.": SELF_ONLY
   "com.google.inject.": SELF_ONLY
-  "org.hibernate.": SELF_ONLY
   "org.objectweb.asm.": SELF_ONLY
+  "com.typesafe.config.": SELF_ONLY

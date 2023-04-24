@@ -195,7 +195,7 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
       event.setCancelled(true);
       runConsoleShell(rawCommand.substring(config.playerShell().prefix().length()));
     }
-  }  private final DcLazy<AnkhScriptEngine> defaultEngine = DcLazy.of(this::defaultEngineImpl);
+  }
 
   @SubscriptEvent(priority = EventPriority.LOW, ignoreCancelled = true)
   private void onAsyncChat(AsyncPlayerChatEvent event) {
@@ -221,7 +221,7 @@ public class ScriptServiceImpl implements AnkhScriptService, Provider<AnkhScript
     }
   }
 
-
+  private final DcLazy<AnkhScriptEngine> defaultEngine = DcLazy.of(this::defaultEngineImpl);
 
 
 }

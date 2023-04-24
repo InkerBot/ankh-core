@@ -147,17 +147,17 @@ public class AnkhClassLoader extends URLClassLoader {
   }
 
   private Class<?> parentLoadClass(String name) throws ClassNotFoundException {
-    try {
-      return getParent().loadClass(name);
-    } catch (ClassNotFoundException e) {
-      // ignore
-    }
     for (AnkhClassLoader dependClassLoader : dependClassLoaders) {
       try {
         return dependClassLoader.loadClass(name);
       } catch (ClassNotFoundException e) {
         // ignore
       }
+    }
+    try {
+      return getParent().loadClass(name);
+    } catch (ClassNotFoundException e) {
+      // ignore
     }
     throw new ClassNotFoundException(name);
   }
