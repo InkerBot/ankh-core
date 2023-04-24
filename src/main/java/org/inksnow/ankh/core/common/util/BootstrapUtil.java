@@ -62,30 +62,41 @@ public class BootstrapUtil {
     return cbVersion;
   }
 
-  private static String processRef(String rawRef){
+  private static String processRef(String rawRef) {
     return rawRef.replace("[CB_VERSION]", cbVersion());
   }
 
   private static Class<?> typeToClass(ClassLoader classLoader, Type type) throws ClassNotFoundException {
     switch (type.getSort()) {
-      case Type.VOID: return void.class;
-      case Type.BOOLEAN: return boolean.class;
-      case Type.CHAR: return char.class;
-      case Type.BYTE: return byte.class;
-      case Type.SHORT: return short.class;
-      case Type.INT: return int.class;
-      case Type.FLOAT: return float.class;
-      case Type.LONG: return long.class;
-      case Type.DOUBLE: return double.class;
-      case Type.ARRAY:{
+      case Type.VOID:
+        return void.class;
+      case Type.BOOLEAN:
+        return boolean.class;
+      case Type.CHAR:
+        return char.class;
+      case Type.BYTE:
+        return byte.class;
+      case Type.SHORT:
+        return short.class;
+      case Type.INT:
+        return int.class;
+      case Type.FLOAT:
+        return float.class;
+      case Type.LONG:
+        return long.class;
+      case Type.DOUBLE:
+        return double.class;
+      case Type.ARRAY: {
         Class<?> currentClass = Class.forName(type.getElementType().getClassName(), false, classLoader);
         for (int i = 0; i < type.getDimensions(); i++) {
           currentClass = Array.newInstance(currentClass, 0).getClass();
         }
         return currentClass;
       }
-      case Type.OBJECT: return Class.forName(type.getClassName(), false, classLoader);
-      default: throw new IllegalArgumentException("Unsupported class type: "+ type);
+      case Type.OBJECT:
+        return Class.forName(type.getClassName(), false, classLoader);
+      default:
+        throw new IllegalArgumentException("Unsupported class type: " + type);
     }
   }
 
@@ -102,7 +113,7 @@ public class BootstrapUtil {
     for (int i = 0; i < argsType.length; i++) {
       argsClass[i] = typeToClass(classLoader, argsType[i]);
     }
-    parsedMethod.type = MethodType.methodType(typeToClass(classLoader ,methodType.getReturnType()), argsClass);
+    parsedMethod.type = MethodType.methodType(typeToClass(classLoader, methodType.getReturnType()), argsClass);
     return parsedMethod;
   }
 

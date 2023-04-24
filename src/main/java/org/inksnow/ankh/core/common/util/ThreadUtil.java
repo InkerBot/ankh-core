@@ -25,7 +25,7 @@ public class ThreadUtil {
       AnkhCoreLoader coreLoader = ThreadUtil.coreLoader.get();
       if (!Bukkit.isPrimaryThread() && coreLoader.isEnabled()) {
         scheduler.runTask(coreLoader, command);
-      }else {
+      } else {
         command.run();
       }
     }
@@ -37,7 +37,7 @@ public class ThreadUtil {
       AnkhCoreLoader coreLoader = ThreadUtil.coreLoader.get();
       if (coreLoader.isEnabled()) {
         scheduler.runTaskAsynchronously(coreLoader, command);
-      }else {
+      } else {
         command.run();
       }
     }

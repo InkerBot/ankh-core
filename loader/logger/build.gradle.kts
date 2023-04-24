@@ -1,21 +1,21 @@
 dependencies {
-  implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0") {
-    exclude("*")
-  }
-  implementation("org.slf4j:slf4j-jdk14:2.0.6") {
-    exclude("*")
-  }
-  implementation("org.slf4j:slf4j-api:2.0.6")
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0") {
+        exclude("*")
+    }
+    implementation("org.slf4j:slf4j-jdk14:2.0.6") {
+        exclude("*")
+    }
+    implementation("org.slf4j:slf4j-api:2.0.6")
 }
 
 tasks.publish {
-  enabled = false
+    enabled = false
 }
 
 tasks.javadocJar {
-  enabled = false
+    enabled = false
 }
 
 tasks.sourcesJar {
-  enabled = false
+    enabled = false
 }

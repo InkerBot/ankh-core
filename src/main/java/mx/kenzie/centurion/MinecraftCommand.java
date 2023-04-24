@@ -34,12 +34,6 @@ import java.util.List;
 
 @Slf4j
 public abstract class MinecraftCommand extends Command<CommandSender> implements TabCompleter, CommandExecutor {
-  private static final MethodHandle pluginCommandInitHandle = BootstrapUtil.ofInit(
-      "Lorg/bukkit/command/PluginCommand;<init>(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V"
-  );
-  private static final MethodHandle serverGetCommandMapHandle = BootstrapUtil.ofGet(
-      "Lorg/bukkit/craftbukkit/[CB_VERSION]/CraftServer;commandMap:Lorg/bukkit/craftbukkit/[CB_VERSION]/command/CraftCommandMap;"
-  ).asType(MethodType.methodType(CommandMap.class, Server.class));
   public static final EnumArgument<BlockFace> BLOCK_FACE = new EnumArgument<>(BlockFace.class);
   public static final EnumArgument<Material> MATERIAL = new EnumArgument<>(Material.class);
   public static final EnumArgument<EntityType> ENTITY_TYPE = new EnumArgument<>(EntityType.class);
@@ -47,7 +41,6 @@ public abstract class MinecraftCommand extends Command<CommandSender> implements
   public static final TypedArgument<Player> PLAYER = new PlayerArgument();
   public static final TypedArgument<World> WORLD = new WorldArgument();
   public static final TypedArgument<Key> KEY = new KeyArgument();
-
   public static final TypedArgument<NamespacedKey> NAMESPACED_KEY = new NamespacedKeyArgument();
   public static final TypedArgument<RelativeNumber> RELATIVE_NUMBER = new RelativeNumberArgument(),
       LOCAL_NUMBER = new LocalNumberArgument();
@@ -67,7 +60,12 @@ public abstract class MinecraftCommand extends Command<CommandSender> implements
       NamedTextColor.GREEN,
       NamedTextColor.GOLD
   );
-
+  private static final MethodHandle pluginCommandInitHandle = BootstrapUtil.ofInit(
+      "Lorg/bukkit/command/PluginCommand;<init>(Ljava/lang/String;Lorg/bukkit/plugin/Plugin;)V"
+  );
+  private static final MethodHandle serverGetCommandMapHandle = BootstrapUtil.ofGet(
+      "Lorg/bukkit/craftbukkit/[CB_VERSION]/CraftServer;commandMap:Lorg/bukkit/craftbukkit/[CB_VERSION]/command/CraftCommandMap;"
+  ).asType(MethodType.methodType(CommandMap.class, Server.class));
   @Getter
   @Setter
   private String usage;

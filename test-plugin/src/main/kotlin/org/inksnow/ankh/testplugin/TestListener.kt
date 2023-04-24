@@ -11,71 +11,77 @@ import org.inksnow.ankh.core.api.plugin.AnkhBukkitPlugin
 import org.inksnow.ankh.core.api.plugin.PluginLifeCycle
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptLifecycle
+import org.inksnow.ankh.core.config.ConfigServiceImpl
 import org.inksnow.ankh.core.inventory.storage.StorageChestMenu
 import org.inksnow.ankh.testplugin.item.TestItem
 import org.slf4j.LoggerFactory
+import java.nio.file.Paths
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TestListener @Inject private constructor(
-  private val plugin: AnkhBukkitPlugin,
-  private val testItem: TestItem,
+    private val plugin: AnkhBukkitPlugin,
+    private val testItem: TestItem,
+    private val configService: ConfigServiceImpl
 ) {
-  private val logger = LoggerFactory.getLogger(this.javaClass)
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
-  @SubscriptEvent
-  private fun onAsyncPlayerChat(event: AsyncPlayerChatEvent) {
-    if (!event.message.startsWith("@")) {
-      return
-    }
-    Bukkit.getScheduler().runTask(plugin, Runnable {
-      runSimpleCommand(event.player, event.message.substring(1))
-    })
-  }
-
-  private fun runSimpleCommand(player: Player, command: String) {
-    when (command) {
-      "a" -> {
-        player.inventory.addItem(
-          testItem.createItem()
-        ).values.forEach {
-          player.world.dropItemNaturally(player.location, it)
+    @SubscriptEvent
+    private fun onAsyncPlayerChat(event: AsyncPlayerChatEvent) {
+        if (!event.message.startsWith("@")) {
+            return
         }
-      }
-
-      "b" -> {
-        StorageChestMenu.builder().apply {
-          createInventory {
-            Bukkit.createInventory(it, 54, Component.text("Hello, world.", NamedTextColor.RED)).apply {
-              for (i in 0 until 54) {
-                setItem(i, ItemStack(Material.STONE).apply {
-                  editMeta {
-                    it.displayName(Component.text("TEST_ITEM", NamedTextColor.BLUE))
-                  }
-                })
-              }
-            }
-          }
-
-          canPlaceAction { event, cancelToken ->
-            //
-          }
-
-          canPickupAction { event, cancelToken ->
-            //
-          }
-
-          canDropFromCursorAction { event, cancelToken ->
-            //
-          }
-        }.build().openForPlayer(player)
-      }
+        Bukkit.getScheduler().runTask(plugin, Runnable {
+            runSimpleCommand(event.player, event.message.substring(1))
+        })
     }
-  }
 
-  @SubscriptLifecycle(PluginLifeCycle.LOAD)
-  private fun onLoad() {
+    private fun runSimpleCommand(player: Player, command: String) {
+        when (command) {
+            "a" -> {
+                player.inventory.addItem(
+                    testItem.createItem()
+                ).values.forEach {
+                    player.world.dropItemNaturally(player.location, it)
+                }
+            }
 
-  }
+            "b" -> {
+                StorageChestMenu.builder().apply {
+                    createInventory {
+                        Bukkit.createInventory(it, 54, Component.text("Hello, world.", NamedTextColor.RED)).apply {
+                            for (i in 0 until 54) {
+                                setItem(i, ItemStack(Material.STONE).apply {
+                                    editMeta {
+                                        it.displayName(Component.text("TEST_ITEM", NamedTextColor.BLUE))
+                                    }
+                                })
+                            }
+                        }
+                    }
+
+                    canPlaceAction { event, cancelToken ->
+                        //
+                    }
+
+                    canPickupAction { event, cancelToken ->
+                        //
+                    }
+
+                    canDropFromCursorAction { event, cancelToken ->
+                        //
+                    }
+                }.build().openForPlayer(player)
+            }
+        }
+    }
+
+    @SubscriptLifecycle(PluginLifeCycle.LOAD)
+    private fun onLoad() {
+        val section = configService.readSectionFromPath(
+            Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config/paper-global.yml")
+        )
+        println()
+    }
 }

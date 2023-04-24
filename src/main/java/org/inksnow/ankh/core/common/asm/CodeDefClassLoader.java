@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CodeDefClassLoader extends ClassLoader {
-  static  {
+  static {
     registerAsParallelCapable();
   }
 
@@ -36,7 +36,7 @@ public class CodeDefClassLoader extends ClassLoader {
   @Override
   protected @Nonnull Class<?> loadClass(@Nonnull String name, boolean resolve) throws ClassNotFoundException {
     val codeDefResult = codeDefClass.get(name);
-    if(codeDefResult != null){
+    if (codeDefResult != null) {
       return codeDefResult;
     }
     return super.loadClass(name, resolve);
@@ -54,7 +54,7 @@ public class CodeDefClassLoader extends ClassLoader {
     return defineClass(name, b, off, len);
   }
 
-  public @Nonnull Class<?> define(@Nonnull String name, @Nonnull byte[] b, int off, int len, @Nullable ProtectionDomain protectionDomain){
+  public @Nonnull Class<?> define(@Nonnull String name, @Nonnull byte[] b, int off, int len, @Nullable ProtectionDomain protectionDomain) {
     return defineClass(name, b, off, len, protectionDomain);
   }
 }

@@ -10,13 +10,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.plugin.annotations.AutoRegistered;
-import org.inksnow.ankh.core.item.AbstractAnkhItem;
 import org.inksnow.ankh.core.world.PdcWorldService;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 @AutoRegistered
 @Singleton

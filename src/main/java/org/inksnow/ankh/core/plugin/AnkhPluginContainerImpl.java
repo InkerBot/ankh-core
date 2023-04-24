@@ -91,7 +91,7 @@ public class AnkhPluginContainerImpl implements AnkhPluginContainer {
   public void callInit(AnkhBukkitPlugin bukkitPlugin) {
     this.plugin = bukkitPlugin;
     val combineModule = Modules.combine(pluginModules.stream().map(this::createModule).toArray(Module[]::new));
-    if(pluginClass == AnkhCoreLoaderPlugin.class) {
+    if (pluginClass == AnkhCoreLoaderPlugin.class) {
       this.injector = Guice.createInjector(
           combineModule,
           binder -> {
@@ -144,14 +144,14 @@ public class AnkhPluginContainerImpl implements AnkhPluginContainer {
     private Set<SortEntry> listeners = new TreeSet<>();
 
     public synchronized void register(EventPriority priority, Runnable listener) {
-      if(loaded){
+      if (loaded) {
         throw new IllegalStateException("ListenerSet have been called");
       }
       listeners.add(new SortEntry(listener, priority, loadIdAllocator.getAndIncrement()));
     }
 
-    public synchronized void call(){
-      if(loaded){
+    public synchronized void call() {
+      if (loaded) {
         throw new IllegalStateException("ListenerSet have been called");
       }
       loaded = true;

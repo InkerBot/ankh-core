@@ -40,18 +40,18 @@ public class SubscriptLifecycleProcessor implements ScannerMethodProcessor {
     if (argumentTypes.length != 0) {
       throw new IllegalStateException("subscript lifecycle require no-args method");
     }
-    val callMethod = new Runnable(){
+    val callMethod = new Runnable() {
       @Override
       @SneakyThrows
       public void run() {
         val ownerClass = Class.forName(classNode.name.replace('/', '.'), true, ankhClassLoader);
-        if(isStaticMethod){
+        if (isStaticMethod) {
           BootstrapUtil.lookup().findStatic(
               ownerClass,
               methodNode.name,
               MethodType.fromMethodDescriptorString(methodNode.desc, ownerClass.getClassLoader())
           ).invoke();
-        }else{
+        } else {
           BootstrapUtil.lookup().findVirtual(
               ownerClass,
               methodNode.name,

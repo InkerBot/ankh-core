@@ -74,6 +74,10 @@ public abstract class DcLazy<T> {
     return new CallableInitializer<>(supplier);
   }
 
+  public static <T> DcLazy<T> ofCompleted(T value) {
+    return new CompletedInitializer<>(value);
+  }
+
   /**
    * Returns the object wrapped by this instance. On first access the object
    * is created. After that it is cached and can be accessed pretty fast.
@@ -126,6 +130,19 @@ public abstract class DcLazy<T> {
     @Override
     protected T initialize() throws Throwable {
       return supplier.call();
+    }
+  }
+
+  private static class CompletedInitializer<T> extends DcLazy<T> {
+    private final T value;
+
+    private CompletedInitializer(T value) {
+      this.value = value;
+    }
+
+    @Override
+    protected T initialize() throws Throwable {
+      return value;
     }
   }
 }

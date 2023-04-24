@@ -24,7 +24,7 @@ public class AnkhPluginManagerImpl implements AnkhPluginManager {
 
   @Override
   public AnkhPluginContainer register(Class<? extends AnkhBukkitPlugin> pluginClass, File file, ClassLoader rawClassLoader, PluginDescriptionFile descriptionFile, AnkhPluginYml pluginYml) {
-    if(!(rawClassLoader instanceof AnkhClassLoader)){
+    if (!(rawClassLoader instanceof AnkhClassLoader)) {
       throw new IllegalArgumentException("ClassLoader should be instance of AnkhClassLoader");
     }
     val classLoader = (AnkhClassLoader) rawClassLoader;

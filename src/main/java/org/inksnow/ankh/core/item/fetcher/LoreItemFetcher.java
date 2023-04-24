@@ -36,6 +36,7 @@ public class LoreItemFetcher implements ItemFetcher {
     if (itemMeta == null || !itemMeta.hasLore()) {
       return Collections.emptyList();
     }
+    @SuppressWarnings("deprecation") // we use text only
     val itemLore = itemMeta.getLore();
     if (itemLore == null) {
       return Collections.emptyList();

@@ -50,7 +50,7 @@ public class PluginClassScanner {
     this.ankhPluginContainer = ankhPluginContainer;
   }
 
-  public void scan(){
+  public void scan() {
     val startTime = System.nanoTime();
     val passTime = (System.nanoTime() - startTime) / 1000_000;
     for (val url : ankhPluginContainer.classLoader().getURLs()) {
@@ -60,27 +60,27 @@ public class PluginClassScanner {
   }
 
   @SneakyThrows
-  public void doScan(URL url){
+  public void doScan(URL url) {
     val urlConnection = url.openConnection();
-    if(!(urlConnection instanceof JarURLConnection)){
+    if (!(urlConnection instanceof JarURLConnection)) {
       return;
     }
     val jarFile = ((JarURLConnection) urlConnection).getJarFile();
-    jarCount ++;
+    jarCount++;
     val jarEntryEnumeration = jarFile.entries();
-    while (jarEntryEnumeration.hasMoreElements()){
+    while (jarEntryEnumeration.hasMoreElements()) {
       val jarEntry = jarEntryEnumeration.nextElement();
-      if(jarEntry.isDirectory()){
+      if (jarEntry.isDirectory()) {
         continue;
       }
-      if(!jarEntry.getName().endsWith(".class")){
+      if (!jarEntry.getName().endsWith(".class")) {
         continue;
       }
-      entryCount ++;
+      entryCount++;
       logger.trace("scan class {}", jarEntry.getName());
 
       val classNode = readClassNode(jarFile.getInputStream(jarEntry));
-      if(classNode.visibleAnnotations != null) {
+      if (classNode.visibleAnnotations != null) {
         for (val annotationNode : classNode.visibleAnnotations) {
           val annotationType = Type.getType(annotationNode.desc);
           val processorClass = classProcessors.get(annotationType.getClassName());
@@ -93,7 +93,7 @@ public class PluginClassScanner {
         }
       }
       for (val methodNode : classNode.methods) {
-        if(methodNode.visibleAnnotations != null){
+        if (methodNode.visibleAnnotations != null) {
           for (AnnotationNode annotationNode : methodNode.visibleAnnotations) {
             val annotationType = Type.getType(annotationNode.desc);
             val processorClass = methodProcessors.get(annotationType.getClassName());
@@ -110,13 +110,13 @@ public class PluginClassScanner {
   }
 
   @SneakyThrows
-  private ClassNode readClassNode(InputStream input){
+  private ClassNode readClassNode(InputStream input) {
     try {
       val classReader = new ClassReader(input);
       val classNode = new ClassNode();
       classReader.accept(classNode, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
       return classNode;
-    }finally {
+    } finally {
       input.close();
     }
   }

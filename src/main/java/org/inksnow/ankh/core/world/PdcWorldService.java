@@ -200,7 +200,7 @@ public class PdcWorldService implements WorldService {
     for (val entry : chunkStorage.blockMap.long2ObjectEntrySet()) {
       try {
         entry.getValue().unload();
-      }catch (Exception e){
+      } catch (Exception e) {
         //
       }
     }

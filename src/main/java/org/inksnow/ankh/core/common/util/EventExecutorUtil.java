@@ -29,13 +29,14 @@ public class EventExecutorUtil {
         ? generateDynamic(ownerClass, owner, methodName, rawType)
         : generateDynamic(ownerClass, owner, methodName, rawType);
   }
+
   @SneakyThrows
   private static EventExecutor generateDynamic(Class<?> ownerClass, Object owner, String methodName, Type rawType) {
     val rawArgumentTypes = rawType.getArgumentTypes();
     val classLoader = ownerClass.getClassLoader();
     val internalName = Type.getInternalName(ownerClass) + "$" + methodName + "$ankh-core-asm-event-executor$" + idAllocator.incrementAndGet();
     val cw = new ClassWriterWithClassLoader(ownerClass.getClassLoader(), ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-    cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, internalName, null, "java/lang/Object", new String[]{ "org/bukkit/plugin/EventExecutor" });
+    cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, internalName, null, "java/lang/Object", new String[]{"org/bukkit/plugin/EventExecutor"});
     cw.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, "callsite", "Ljava/lang/invoke/CallSite;", null, null).visitEnd();
     {
       val mw = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "(Ljava/lang/invoke/CallSite;)V", null, null);
@@ -44,7 +45,7 @@ public class EventExecutorUtil {
       mw.visitVarInsn(Opcodes.ALOAD, 1);
       mw.visitFieldInsn(Opcodes.PUTSTATIC, internalName, "callsite", "Ljava/lang/invoke/CallSite;");
       mw.visitInsn(Opcodes.RETURN);
-      mw.visitMaxs(0,0);
+      mw.visitMaxs(0, 0);
       mw.visitEnd();
     }
     {
@@ -53,14 +54,14 @@ public class EventExecutorUtil {
       mw.visitTypeInsn(Opcodes.CHECKCAST, rawArgumentTypes[0].getInternalName());
       mw.visitInvokeDynamicInsn(methodName, rawType.getDescriptor(), new Handle(Opcodes.H_INVOKESTATIC, internalName, "callsite", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false));
       mw.visitInsn(Opcodes.RETURN);
-      mw.visitMaxs(0,0);
+      mw.visitMaxs(0, 0);
       mw.visitEnd();
     }
     {
       val mw = cw.visitMethod(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, "callsite", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", null, null);
       mw.visitFieldInsn(Opcodes.GETSTATIC, internalName, "callsite", "Ljava/lang/invoke/CallSite;");
       mw.visitInsn(Opcodes.ARETURN);
-      mw.visitMaxs(0,0);
+      mw.visitMaxs(0, 0);
       mw.visitEnd();
     }
     val methodType = MethodType.fromMethodDescriptorString(rawType.getDescriptor(), classLoader);
@@ -81,8 +82,8 @@ public class EventExecutorUtil {
     val executorId = idAllocator.getAndIncrement();
     val internalName = Type.getInternalName(ownerClass) + "$" + methodName + "$ankh-core-asm-event-executor$" + executorId;
     val cw = new ClassWriterWithClassLoader(ownerClass.getClassLoader(), ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-    cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, ownerInternalName + "$" + methodName + "$ankh-core-asm-event-executor$" + idAllocator.incrementAndGet(), null, "java/lang/Object", new String[]{ "org/bukkit/plugin/EventExecutor" });
-    if(owner != null) {
+    cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, ownerInternalName + "$" + methodName + "$ankh-core-asm-event-executor$" + idAllocator.incrementAndGet(), null, "java/lang/Object", new String[]{"org/bukkit/plugin/EventExecutor"});
+    if (owner != null) {
       cw.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL, "owner", ownerDescriptor, null, null)
           .visitEnd();
       $internal$actions$.set(executorId, owner);
@@ -107,7 +108,7 @@ public class EventExecutorUtil {
     }
     {
       val mw = cw.visitMethod(Opcodes.ACC_PUBLIC, "execute", "(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Event;)V", null, null);
-      if(owner != null){
+      if (owner != null) {
         mw.visitFieldInsn(Opcodes.GETSTATIC, internalName, "owner", ownerDescriptor);
       }
       mw.visitVarInsn(Opcodes.ALOAD, 2);
@@ -125,11 +126,12 @@ public class EventExecutorUtil {
 
   public static class $internal$actions$ {
     private static final Long2ObjectMap<WeakReference<Object>> objectMap = Long2ObjectMaps.synchronize(new Long2ObjectAVLTreeMap<>());
-    private static void set(long id, Object instance){
+
+    private static void set(long id, Object instance) {
       objectMap.put(id, new WeakReference<>(instance));
     }
 
-    public static Object get(long id){
+    public static Object get(long id) {
       val value = objectMap.get(id);
       objectMap.remove(id);
       return value == null ? null : value.get();

@@ -14,9 +14,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @UtilityClass
 public class AnnotationUtil {
   private static final AtomicLong idAllocator = new AtomicLong();
+
   @SneakyThrows
   public static <T extends Annotation> T create(AnnotationNode annotationNode, ClassLoader classLoader) {
-    val cw = new ClassWriterWithClassLoader(classLoader,0);
+    val cw = new ClassWriterWithClassLoader(classLoader, 0);
     val demoInternalName = "org/inksnow/ankh/core/common/util/AnnotationUtil$generate$annotation$demo$" + idAllocator.getAndIncrement();
     cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, demoInternalName, null, "java/lang/Object", null);
     {
@@ -25,7 +26,7 @@ public class AnnotationUtil {
     }
     val bytes = cw.toByteArray();
     val codeDefClassLoader = new CodeDefClassLoader(classLoader);
-    val demoClass = codeDefClassLoader.define(demoInternalName.replace('/','.'), bytes, 0, bytes.length);
+    val demoClass = codeDefClassLoader.define(demoInternalName.replace('/', '.'), bytes, 0, bytes.length);
     return (T) demoClass.getDeclaredAnnotations()[0];
   }
 }
