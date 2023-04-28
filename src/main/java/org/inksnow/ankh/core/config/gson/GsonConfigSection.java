@@ -212,7 +212,11 @@ public class GsonConfigSection implements ConfigSection {
   @Override
   public ConfigSection get(String memberName) {
     if (isArray()) {
-      return sectionList.get().get(Integer.parseInt(memberName));
+      try {
+        return sectionList.get().get(Integer.parseInt(memberName));
+      } catch (NumberFormatException | IndexOutOfBoundsException e) {
+        return null;
+      }
     } else {
       return sectionMap.get().get(memberName);
     }
@@ -221,7 +225,11 @@ public class GsonConfigSection implements ConfigSection {
   @Override
   public ConfigSection get(int index) {
     if (isArray()) {
-      return sectionList.get().get(index);
+      try {
+        return sectionList.get().get(index);
+      } catch (IndexOutOfBoundsException e) {
+        return null;
+      }
     } else {
       return sectionMap.get().get(Integer.toString(index));
     }

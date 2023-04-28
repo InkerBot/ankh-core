@@ -232,7 +232,7 @@ public class LinkedConfigSection implements ConfigSection {
     }
     try {
       return asList().get(Integer.parseInt(memberName));
-    } catch (NumberFormatException e) {
+    } catch (NumberFormatException | IndexOutOfBoundsException e) {
       return null;
     }
   }
