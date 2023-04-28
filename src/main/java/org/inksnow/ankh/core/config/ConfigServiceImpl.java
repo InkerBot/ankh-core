@@ -46,4 +46,9 @@ public class ConfigServiceImpl implements ConfigService {
       return readSection(extName, source, reader);
     }
   }
+
+  @Override
+  public @Nonnull ConfigSection load(@Nonnull Path path) {
+    return new ConfigLoader(this, path).loadCore();
+  }
 }

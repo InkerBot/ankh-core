@@ -14,4 +14,7 @@ public interface ConfigService {
 
   @Nonnull
   ConfigSection readSectionFromPath(@Nonnull Path path);
+
+  @Nonnull
+  ConfigSection load(@Nonnull Path path);
 }

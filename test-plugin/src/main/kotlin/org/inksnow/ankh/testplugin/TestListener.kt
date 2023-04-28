@@ -12,8 +12,6 @@ import org.inksnow.ankh.core.api.plugin.AnkhBukkitPlugin
 import org.inksnow.ankh.core.api.plugin.PluginLifeCycle
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptLifecycle
-import org.inksnow.ankh.core.config.ConfigLoader
-import org.inksnow.ankh.core.config.ConfigServiceImpl
 import org.inksnow.ankh.core.inventory.storage.StorageChestMenu
 import org.inksnow.ankh.testplugin.item.TestItem
 import org.slf4j.LoggerFactory
@@ -24,7 +22,8 @@ import javax.inject.Singleton
 @Singleton
 class TestListener @Inject private constructor(
     private val plugin: AnkhBukkitPlugin,
-    private val testItem: TestItem
+    private val testItem: TestItem,
+    private val configService: ConfigService
 ) {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -80,9 +79,7 @@ class TestListener @Inject private constructor(
 
     @SubscriptLifecycle(PluginLifeCycle.LOAD)
     private fun onLoad() {
-        val section = ConfigLoader(
-            Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config/test.yml")
-        ).loadCore()
+        configService.load(Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config/test.yml"))
         println()
     }
 }

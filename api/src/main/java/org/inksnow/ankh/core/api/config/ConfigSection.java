@@ -22,7 +22,6 @@ public interface ConfigSection {
 
   boolean isNull();
 
-  // if primitive
   int asInteger();
 
   byte asByte();
@@ -47,7 +46,6 @@ public interface ConfigSection {
 
   short asShort();
 
-  // if object or array
   Set<Map.Entry<String, ConfigSection>> entrySet();
 
   List<ConfigSection> asList();

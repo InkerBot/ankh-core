@@ -6,8 +6,6 @@ import lombok.val;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigService;
 import org.inksnow.ankh.core.api.config.ConfigSource;
-import org.inksnow.ankh.core.api.ioc.IocLazy;
-import org.inksnow.ankh.core.api.util.DcLazy;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -16,28 +14,29 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ConfigLoader {
-  private final DcLazy<ConfigService> configService = IocLazy.of(ConfigService.class);
+  private final ConfigService configService;
   @Getter
   private final Path coreConfigPath;
   @Getter
   private final Path baseDirectoryPath;
   private final Map<String, ConfigSection> sectionByPath;
 
-  public ConfigLoader(Path coreConfigPath) {
+  public ConfigLoader(ConfigService configService, Path coreConfigPath) {
+    this.configService = configService;
     this.coreConfigPath = coreConfigPath;
     this.baseDirectoryPath = coreConfigPath.getParent();
     this.sectionByPath = new HashMap<>();
   }
 
-  private ConfigSection loadPath(ConfigSource source, String path){
+  private ConfigSection loadPath(ConfigSource source, String path) {
     Path baseDir = source == null ? null : source.file().getParent();
-    if(baseDir == null){
+    if (baseDir == null) {
       baseDir = baseDirectoryPath;
     }
     val targetPath = baseDir.resolve(path);
     val identifyPath = baseDir.relativize(targetPath).toString();
-    return sectionByPath.computeIfAbsent(identifyPath, it->
-      configService.get().readSectionFromPath(targetPath)
+    return sectionByPath.computeIfAbsent(identifyPath, it ->
+        configService.readSectionFromPath(targetPath)
     );
   }
 
