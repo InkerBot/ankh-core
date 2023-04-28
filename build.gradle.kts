@@ -129,6 +129,7 @@ dependencies {
 
     // minecraft
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
+        exclude("com.google.code.gson", "gson") // we use our version
         exclude("it.unimi.dsi", "fastutil") // we use our version
         exclude("org.checkerframework", "checker-qual")
         exclude("org.jetbrains", "annotations")
@@ -160,6 +161,9 @@ dependencies {
 
     // config
     api("com.typesafe:config:1.4.2")
+    api("com.google.code.gson:gson:2.10.1")
+    api("org.yaml:snakeyaml:2.0")
+
 
     // shadow depends
     api(project(":libs:shadow-paper-lib", configuration = "shadow"))

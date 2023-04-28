@@ -14,4 +14,6 @@ ankh-classpath:
   "io.github.bakedlibs.": SELF_ONLY
   "com.google.inject.": SELF_ONLY
   "org.objectweb.asm.": SELF_ONLY
+  "org.yaml.snakeyaml.": SELF_ONLY
   "com.typesafe.config.": SELF_ONLY
+  "com.google.gson.": SELF_ONLY

@@ -11,6 +11,9 @@ public interface ConfigSection {
   @Nonnull
   ConfigSource source();
 
+  @Nonnull
+  ConfigExtension extension();
+
   boolean isArray();
 
   boolean isObject();

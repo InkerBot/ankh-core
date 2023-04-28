@@ -5,6 +5,7 @@ import org.inksnow.ankh.core.api.util.DcLazy;
 import org.inksnow.ankh.core.api.util.IBuilder;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 public interface ConfigSource {
@@ -20,7 +21,7 @@ public interface ConfigSource {
   String path();
 
   @Nonnull
-  String fileName();
+  Path file();
 
   int lineNumber();
 
@@ -49,10 +50,10 @@ public interface ConfigSource {
     Builder path(@Nonnull Callable<String> supplier);
 
     @Nonnull
-    Builder fileName(@Nonnull String fileName);
+    Builder file(@Nonnull Path file);
 
     @Nonnull
-    Builder fileName(@Nonnull Callable<String> supplier);
+    Builder file(@Nonnull Callable<Path> supplier);
 
     @Nonnull
     Builder lineNumber(int lineNumber);

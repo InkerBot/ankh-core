@@ -5,6 +5,7 @@ import org.inksnow.ankh.core.api.config.ConfigSource;
 import org.inksnow.ankh.core.api.util.DcLazy;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.StringJoiner;
 import java.util.concurrent.Callable;
 
@@ -13,7 +14,7 @@ public class ConfigSourceImpl implements ConfigSource {
   @lombok.Builder.Default
   private final @Nonnull DcLazy<String> description = DcLazy.ofCompleted("(unknown)");
   @lombok.Builder.Default
-  private final @Nonnull DcLazy<String> fileName = DcLazy.ofCompleted("(unknown)");
+  private final @Nonnull DcLazy<Path> file = DcLazy.ofCompleted(null);
   @lombok.Builder.Default
   private final @Nonnull DcLazy<Integer> lineNumber = DcLazy.ofCompleted(-1);
   @lombok.Builder.Default
@@ -25,8 +26,8 @@ public class ConfigSourceImpl implements ConfigSource {
   }
 
   @Override
-  public @Nonnull String fileName() {
-    return fileName.get();
+  public @Nonnull Path file() {
+    return file.get();
   }
 
   @Override
@@ -45,8 +46,8 @@ public class ConfigSourceImpl implements ConfigSource {
     if (description.get() != null) {
       joiner.add("description=" + description.get());
     }
-    if (fileName.get() != null) {
-      joiner.add("fileName=" + fileName.get());
+    if (file.get() != null) {
+      joiner.add("file=" + file.get());
     }
     if (lineNumber.get() != null && lineNumber.get() != -1) {
       joiner.add("lineNumber=" + lineNumber.get());
@@ -87,20 +88,20 @@ public class ConfigSourceImpl implements ConfigSource {
       return description(DcLazy.of(supplier));
     }
 
-    public @Nonnull Builder fileName(@Nonnull DcLazy<String> dcLazy) {
-      this.fileName$set = true;
-      this.fileName$value = dcLazy;
+    public @Nonnull Builder file(@Nonnull DcLazy<Path> dcLazy) {
+      this.file$set = true;
+      this.file$value = dcLazy;
       return getThis();
     }
 
     @Override
-    public @Nonnull Builder fileName(@Nonnull String fileName) {
-      return fileName(DcLazy.ofCompleted(fileName));
+    public @Nonnull Builder file(@Nonnull Path file) {
+      return file(DcLazy.ofCompleted(file));
     }
 
     @Override
-    public @Nonnull Builder fileName(@Nonnull Callable<String> supplier) {
-      return fileName(DcLazy.of(supplier));
+    public @Nonnull Builder file(@Nonnull Callable<Path> supplier) {
+      return file(DcLazy.of(supplier));
     }
 
     public @Nonnull Builder lineNumber(@Nonnull DcLazy<Integer> dcLazy) {

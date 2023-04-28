@@ -7,6 +7,7 @@ import com.google.gson.JsonPrimitive;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.inksnow.ankh.core.api.config.ConfigExtension;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigSource;
 import org.inksnow.ankh.core.api.util.DcLazy;
@@ -20,7 +21,10 @@ import java.util.stream.Collectors;
 public class GsonConfigSection implements ConfigSection {
   @Getter
   private final ConfigSource source;
+  @Getter
+  private final ConfigExtension extension;
   private final JsonElement element;
+
   private final DcLazy<List<ConfigSection>> sectionList = DcLazy.of(this::provideSectionList);
 
   private final DcLazy<Map<String, ConfigSection>> sectionMap = DcLazy.of(this::provideSectionMap);
@@ -134,6 +138,7 @@ public class GsonConfigSection implements ConfigSection {
         source.toBuilder()
             .path(source.path() + (isArray() ? ("[" + memberName + "]") : ("." + memberName)))
             .build(),
+        ConfigExtension.empty(),
         element
     );
   }

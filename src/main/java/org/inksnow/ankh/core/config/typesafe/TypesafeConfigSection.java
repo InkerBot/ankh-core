@@ -5,28 +5,65 @@ import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueType;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.inksnow.ankh.core.api.config.ConfigExtension;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigSource;
 import org.inksnow.ankh.core.api.util.DcLazy;
 import org.inksnow.ankh.core.common.config.LazilyParsedNumber;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TypesafeConfigObject implements ConfigSection {
+@RequiredArgsConstructor
+public class TypesafeConfigSection implements ConfigSection {
   @Getter
   private final ConfigSource source;
   private final ConfigValue configValue;
+
+  private final DcLazy<ConfigExtension> extension = DcLazy.of(this::provideExtension);
+
   private final DcLazy<List<ConfigSection>> sectionList = DcLazy.of(this::provideSectionList);
 
   private final DcLazy<Map<String, ConfigSection>> sectionMap = DcLazy.of(this::provideSectionMap);
 
-  public TypesafeConfigObject(ConfigSource source, ConfigValue configValue) {
-    this.source = source;
-    this.configValue = configValue;
+  @Nonnull
+  @Override
+  public ConfigExtension extension() {
+    return extension.get();
+  }
+
+  private ConfigExtension provideExtension() {
+    ConfigExtension extension = ConfigExtension.empty();
+    if (configValue.valueType() == ConfigValueType.OBJECT) {
+      val configObject = (ConfigObject) configValue;
+      val extConfig = configObject.get(TypesafeConfigFactory.INTERNAL_EXTENSION_PREFIX);
+      if (extConfig != null) {
+        if (extConfig.valueType() == ConfigValueType.OBJECT) {
+          val extConfigObject = (ConfigObject) extConfig;
+          for (val entry : extConfigObject.entrySet()) {
+            extension = extension.include(entry.getKey());
+          }
+        } else if (extConfig.valueType() == ConfigValueType.LIST) {
+          val extConfigList = (ConfigList) extConfig;
+          for (val entry : extConfigList) {
+            switch (entry.valueType()) {
+              case NUMBER:
+              case STRING: {
+                extension = extension.include(entry.unwrapped().toString());
+              }
+            }
+          }
+        } else if (extConfig.valueType() == ConfigValueType.STRING || extConfig.valueType() == ConfigValueType.NUMBER) {
+          extension = extension.include(extConfig.unwrapped().toString());
+        }
+      }
+    }
+    return extension;
   }
 
   @Override
@@ -160,7 +197,7 @@ public class TypesafeConfigObject implements ConfigSection {
   }
 
   private ConfigSection provideSubSection(String memberName, ConfigValue element) {
-    return new TypesafeConfigObject(
+    return new TypesafeConfigSection(
         TypesafeConfigFactory.applyOrigin(source.toBuilder(), element.origin())
             .path(source.path() + (isArray() ? ("[" + memberName + "]") : ("." + memberName)))
             .build(),
@@ -180,6 +217,7 @@ public class TypesafeConfigObject implements ConfigSection {
       val obj = (ConfigObject) configValue;
       return obj.entrySet()
           .stream()
+          .filter(it -> !TypesafeConfigFactory.INTERNAL_EXTENSION_PREFIX.equals(it.getKey()))
           .collect(Collectors.collectingAndThen(
               Collectors.toMap(
                   Map.Entry::getKey,

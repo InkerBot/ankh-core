@@ -12,27 +12,27 @@ import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.Reader;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Paths;
 import java.util.function.Supplier;
 
 public abstract class TypesafeConfigFactory implements ConfigSectionFactory {
+  public static final String INTERNAL_EXTENSION_PREFIX = "_$ankh$extension$internal$_";
   private final ConfigParseOptions options = ConfigParseOptions.defaults()
       .setAllowMissing(true)
       .setIncluder(new NopIncluder())
       .setSyntax(syntax());
 
   public static ConfigSource.Builder applyOrigin(ConfigSource.Builder builder, ConfigOrigin origin) {
-    val description = origin.description();
-    if (description != null) {
-      builder.description(description);
-    }
-    val url = origin.url();
-    val filename = origin.filename();
-    if (url != null) {
-      builder.fileName(url.toString());
-    } else if (filename != null) {
-      builder.fileName(Paths.get(filename).toUri().toString());
+    if (origin.url() != null) {
+      builder.description(origin.url().toString());
+      try {
+        builder.file(Paths.get(origin.url().toURI()));
+      } catch (FileSystemNotFoundException | IllegalArgumentException | URISyntaxException e) {
+        //
+      }
     }
     builder.lineNumber(origin.lineNumber());
     return builder;
@@ -43,7 +43,7 @@ public abstract class TypesafeConfigFactory implements ConfigSectionFactory {
   @Override
   public @Nonnull ConfigSection load(@Nonnull ConfigSource source, @Nonnull Reader reader) {
     val value = ConfigFactory.parseReader(reader, options).root();
-    return new TypesafeConfigObject(applyOrigin(source.toBuilder(), value.origin()).build(), value);
+    return new TypesafeConfigSection(applyOrigin(source.toBuilder(), value.origin()).build(), value);
   }
 
   @Singleton
@@ -81,6 +81,8 @@ public abstract class TypesafeConfigFactory implements ConfigSectionFactory {
       }
     }.get();
 
+    private static final ConfigValue nullConfigValue = ConfigValueFactory.fromAnyRef(null);
+
     @Override
     public ConfigIncluder withFallback(ConfigIncluder fallback) {
       return new NopIncluder();
@@ -88,22 +90,22 @@ public abstract class TypesafeConfigFactory implements ConfigSectionFactory {
 
     @Override
     public ConfigObject include(ConfigIncludeContext context, String what) {
-      return emptyConfigObject;
+      return emptyConfigObject.withValue(INTERNAL_EXTENSION_PREFIX, emptyConfigObject.withValue(what, nullConfigValue));
     }
 
     @Override
     public ConfigObject includeResources(ConfigIncludeContext context, String what) {
-      return emptyConfigObject;
+      throw new UnsupportedOperationException("include resource is not supported");
     }
 
     @Override
     public ConfigObject includeFile(ConfigIncludeContext context, File what) {
-      return emptyConfigObject;
+      throw new UnsupportedOperationException("include file is not supported");
     }
 
     @Override
     public ConfigObject includeURL(ConfigIncludeContext context, URL what) {
-      return emptyConfigObject;
+      throw new UnsupportedOperationException("include url is not supported");
     }
   }
 }

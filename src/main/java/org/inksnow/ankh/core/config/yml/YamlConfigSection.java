@@ -1,28 +1,59 @@
 package org.inksnow.ankh.core.config.yml;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.inksnow.ankh.core.api.config.ConfigExtension;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigSource;
 import org.inksnow.ankh.core.api.util.DcLazy;
 import org.inksnow.ankh.core.common.config.LazilyParsedNumber;
+import org.inksnow.ankh.core.config.typesafe.TypesafeConfigFactory;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class YamlConfigSection implements ConfigSection {
   @Getter
   private final ConfigSource source;
   private final Object value;
-  private final DcLazy<List<ConfigSection>> sectionList = DcLazy.of(this::provideSectionList);
 
+  private final DcLazy<ConfigExtension> extension = DcLazy.of(this::provideExtension);
+  private final DcLazy<List<ConfigSection>> sectionList = DcLazy.of(this::provideSectionList);
   private final DcLazy<Map<String, ConfigSection>> sectionMap = DcLazy.of(this::provideSectionMap);
 
-  public YamlConfigSection(ConfigSource source, Object value) {
-    this.source = source;
-    this.value = value;
+  public @Nonnull ConfigExtension extension() {
+    return extension.get();
+  }
+
+  private ConfigExtension provideExtension() {
+    ConfigExtension extension = ConfigExtension.empty();
+    if (value instanceof Map) {
+      val configObject = (Map<String, Object>) value;
+      val extConfig = configObject.get(SnakeYmlConfigFactory.INTERNAL_EXTENSION_PREFIX);
+      if (extConfig != null) {
+        if (extConfig instanceof Map) {
+          val extConfigObject = (Map<String, Object>) extConfig;
+          for (val entry : extConfigObject.entrySet()) {
+            extension = extension.include(entry.getKey());
+          }
+        } else if (extConfig instanceof List) {
+          val extConfigList = (List) extConfig;
+          for (val entry : extConfigList) {
+            if (entry instanceof String || entry instanceof Number) {
+              extension = extension.include(entry.toString());
+            }
+          }
+        } else if (extConfig instanceof String || extConfig instanceof Number) {
+          extension = extension.include(extConfig.toString());
+        }
+      }
+    }
+    return extension;
   }
 
   @Override
@@ -174,6 +205,7 @@ public class YamlConfigSection implements ConfigSection {
       val obj = (Map<String, Object>) value;
       return obj.entrySet()
           .stream()
+          .filter(it -> !TypesafeConfigFactory.INTERNAL_EXTENSION_PREFIX.equals(it.getKey()))
           .collect(Collectors.collectingAndThen(
               Collectors.toMap(
                   Map.Entry::getKey,

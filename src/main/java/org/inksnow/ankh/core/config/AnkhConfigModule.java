@@ -2,6 +2,7 @@ package org.inksnow.ankh.core.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import org.inksnow.ankh.core.api.config.ConfigExtension;
 import org.inksnow.ankh.core.api.config.ConfigSectionFactory;
 import org.inksnow.ankh.core.api.config.ConfigService;
 import org.inksnow.ankh.core.api.config.ConfigSource;
@@ -21,7 +22,7 @@ public class AnkhConfigModule extends AbstractModule {
     bind(ConfigSectionFactory.class).annotatedWith(Names.named("properties")).to(TypesafeConfigFactory.Properties.class);
 
     bind(ConfigSource.Factory.class).to(ConfigSourceImpl.Factory.class);
-
+    bind(ConfigExtension.Factory.class).to(ConfigExtensionImpl.Factory.class);
     bind(ConfigService.class).to(ConfigServiceImpl.class);
   }
 }

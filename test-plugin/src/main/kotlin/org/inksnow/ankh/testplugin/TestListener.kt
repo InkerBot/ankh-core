@@ -7,10 +7,12 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.inventory.ItemStack
+import org.inksnow.ankh.core.api.config.ConfigService
 import org.inksnow.ankh.core.api.plugin.AnkhBukkitPlugin
 import org.inksnow.ankh.core.api.plugin.PluginLifeCycle
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptLifecycle
+import org.inksnow.ankh.core.config.ConfigLoader
 import org.inksnow.ankh.core.config.ConfigServiceImpl
 import org.inksnow.ankh.core.inventory.storage.StorageChestMenu
 import org.inksnow.ankh.testplugin.item.TestItem
@@ -22,8 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class TestListener @Inject private constructor(
     private val plugin: AnkhBukkitPlugin,
-    private val testItem: TestItem,
-    private val configService: ConfigServiceImpl
+    private val testItem: TestItem
 ) {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -79,9 +80,9 @@ class TestListener @Inject private constructor(
 
     @SubscriptLifecycle(PluginLifeCycle.LOAD)
     private fun onLoad() {
-        val section = configService.readSectionFromPath(
-            Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config/paper-global.yml")
-        )
+        val section = ConfigLoader(
+            Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config/test.yml")
+        ).loadCore()
         println()
     }
 }
