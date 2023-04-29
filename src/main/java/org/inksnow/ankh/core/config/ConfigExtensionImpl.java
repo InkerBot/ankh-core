@@ -16,7 +16,7 @@ public class ConfigExtensionImpl implements ConfigExtension {
   private final @Nonnull List<String> includeList;
 
   @Override
-  public @Nonnull ConfigExtension include(@Nonnull String fileName){
+  public @Nonnull ConfigExtension include(@Nonnull String fileName) {
     return new ConfigExtensionImpl(
         ImmutableList.<String>builder()
             .addAll(includeList)

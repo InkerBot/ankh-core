@@ -8,22 +8,24 @@ import java.util.List;
 
 public interface ConfigExtension {
   @Nonnull
-  List<String> includeList();
-
-  @Nonnull ConfigExtension include(@Nonnull String fileName);
-
-  @Nonnull
-  static Factory factory(){
+  static Factory factory() {
     return $internal$actions$.factory.get();
   }
 
   @Nonnull
-  static ConfigExtension empty(){
+  static ConfigExtension empty() {
     return factory().empty();
   }
 
+  @Nonnull
+  List<String> includeList();
+
+  @Nonnull
+  ConfigExtension include(@Nonnull String fileName);
+
   interface Factory {
-    @Nonnull ConfigExtension empty();
+    @Nonnull
+    ConfigExtension empty();
   }
 
   class $internal$actions$ {

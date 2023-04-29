@@ -17,19 +17,21 @@ import java.util.stream.Collectors;
 public class LinkedConfigSection implements ConfigSection {
   private final ConfigLoader configLoader;
   private final List<ConfigSection> mergeList;
+  private final DcLazy<Map<String, ConfigSection>> entryMap = DcLazy.of(this::provideEntryMap);
+  private final DcLazy<List<ConfigSection>> entryList = DcLazy.of(this::provideEntryList);
 
   public LinkedConfigSection(ConfigLoader configLoader, List<ConfigSection> mergeList) {
     this.configLoader = configLoader;
     this.mergeList = mergeList;
   }
 
-  private boolean isEmpty(){
+  private boolean isEmpty() {
     return mergeList.isEmpty();
   }
 
   @Override
   public @Nonnull ConfigSource source() {
-    return isEmpty() ? ConfigSource.builder().build() :  mergeList.get(0).source();
+    return isEmpty() ? ConfigSource.builder().build() : mergeList.get(0).source();
   }
 
   @Nonnull
@@ -68,7 +70,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asInteger)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -77,7 +79,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asByte)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -86,7 +88,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asCharacter)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -95,7 +97,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asBoolean)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -104,7 +106,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asNumber)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -113,7 +115,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asString)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -122,7 +124,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asDouble)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -131,7 +133,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asBigDecimal)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -140,7 +142,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asBigInteger)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -149,7 +151,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asFloat)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -158,7 +160,7 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asLong)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
   @Override
@@ -167,27 +169,24 @@ public class LinkedConfigSection implements ConfigSection {
         .filter(ConfigSection::isPrimitive)
         .findFirst()
         .map(ConfigSection::asShort)
-        .orElseThrow(()->new IllegalStateException("Failed to get primitive from no primitive type"));
+        .orElseThrow(() -> new IllegalStateException("Failed to get primitive from no primitive type"));
   }
 
-  private final DcLazy<Map<String, ConfigSection>> entryMap = DcLazy.of(this::provideEntryMap);
-  private final DcLazy<List<ConfigSection>> entryList = DcLazy.of(this::provideEntryList);
-
-  private ConfigSection provideSection(ConfigSection coreSection){
+  private ConfigSection provideSection(ConfigSection coreSection) {
     return configLoader.load(coreSection);
   }
 
-  private Map<String, ConfigSection> provideEntryMap(){
+  private Map<String, ConfigSection> provideEntryMap() {
     return mergeList.stream()
-        .filter(it->it.isArray() || it.isObject())
-        .flatMap(it->it.entrySet().stream())
-        .collect(Collectors.toMap(Map.Entry::getKey, it->provideSection(it.getValue())));
+        .filter(it -> it.isArray() || it.isObject())
+        .flatMap(it -> it.entrySet().stream())
+        .collect(Collectors.toMap(Map.Entry::getKey, it -> provideSection(it.getValue())));
   }
 
   private List<ConfigSection> provideEntryList() {
     return mergeList.stream()
         .filter(ConfigSection::isArray)
-        .flatMap(it->it.asList().stream())
+        .flatMap(it -> it.asList().stream())
         .map(this::provideSection)
         .collect(Collectors.toList());
   }
@@ -227,7 +226,7 @@ public class LinkedConfigSection implements ConfigSection {
   @Override
   public ConfigSection get(String memberName) {
     ConfigSection section = entryMap.get().get(memberName);
-    if(section != null){
+    if (section != null) {
       return section;
     }
     try {
@@ -242,10 +241,10 @@ public class LinkedConfigSection implements ConfigSection {
     ConfigSection section = null;
     try {
       section = entryList.get().get(index);
-    }catch (IndexOutOfBoundsException e){
+    } catch (IndexOutOfBoundsException e) {
       //
     }
-    if(section != null){
+    if (section != null) {
       return section;
     }
     return entryMap.get().get(Integer.toString(index));

@@ -40,20 +40,20 @@ public class ConfigLoader {
     );
   }
 
-  public ConfigSection loadCore(){
+  public ConfigSection loadCore() {
     return load(loadPath(null, coreConfigPath.getFileName().toString()));
   }
 
-  public ConfigSection load(ConfigSection coreSection){
+  public ConfigSection load(ConfigSection coreSection) {
     if (coreSection.extension().includeList().isEmpty()) {
       return new LinkedConfigSection(this, Collections.singletonList(coreSection));
-    }else{
+    } else {
       return new LinkedConfigSection(this, ImmutableList.<ConfigSection>builder()
           .add(coreSection)
           .addAll(coreSection.extension()
               .includeList()
               .stream()
-              .map(it->loadPath(coreSection.source() ,it))
+              .map(it -> loadPath(coreSection.source(), it))
               .filter(Objects::nonNull)
               .iterator())
           .build()
