@@ -4,4 +4,5 @@ dependencies {
         exclude("org.jetbrains", "annotations")
     }
     api("javax.inject:javax.inject:1")
+    api("jakarta.validation:jakarta.validation-api:3.0.2")
 }

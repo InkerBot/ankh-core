@@ -18,7 +18,7 @@ public class NullOutputStream extends OutputStream {
   }
 
   @Override
-  public void write(byte b[], int off, int len) throws IOException {
+  public void write(byte[] b, int off, int len) throws IOException {
     if ((b.length | off | len) < 0 || len > b.length - off) {
       throw new IllegalArgumentException();
     }

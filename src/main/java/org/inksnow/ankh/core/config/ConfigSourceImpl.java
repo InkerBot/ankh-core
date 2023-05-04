@@ -12,13 +12,13 @@ import java.util.concurrent.Callable;
 @lombok.Builder(toBuilder = true)
 public class ConfigSourceImpl implements ConfigSource {
   @lombok.Builder.Default
-  private final @Nonnull DcLazy<String> description = DcLazy.ofCompleted("(unknown)");
+  private final @Nonnull DcLazy<String> description = DcLazy.ofCompleted(null);
   @lombok.Builder.Default
   private final @Nonnull DcLazy<Path> file = DcLazy.ofCompleted(null);
   @lombok.Builder.Default
   private final @Nonnull DcLazy<Integer> lineNumber = DcLazy.ofCompleted(-1);
   @lombok.Builder.Default
-  private final @Nonnull DcLazy<String> path = DcLazy.ofCompleted("(root)");
+  private final @Nonnull DcLazy<String> path = DcLazy.ofCompleted("");
 
   @Override
   public @Nonnull String description() {
@@ -42,20 +42,21 @@ public class ConfigSourceImpl implements ConfigSource {
 
   @Override
   public String toString() {
-    val joiner = new StringJoiner(", ", "ConfigSource(", ")");
+    val joiner = new StringJoiner(", ", "(", ")");
     if (description.get() != null) {
-      joiner.add("description=" + description.get());
+      joiner.add(description.get());
     }
-    if (file.get() != null) {
-      joiner.add("file=" + file.get());
+    if (description.get() == null && file.get() != null) {
+      joiner.add(file.get().toUri().toString());
     }
     if (lineNumber.get() != null && lineNumber.get() != -1) {
       joiner.add("lineNumber=" + lineNumber.get());
     }
     if (path.get() != null) {
-      joiner.add("path=" + path.get());
+      return joiner + path.get();
+    } else {
+      return joiner.toString();
     }
-    return joiner.toString();
   }
 
   public static class Factory implements ConfigSource.Factory {

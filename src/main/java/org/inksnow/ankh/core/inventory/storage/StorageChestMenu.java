@@ -113,7 +113,7 @@ public final class StorageChestMenu extends AbstractChestMenu {
   }
 
   @Override
-  public final void acceptCloseEvent(@Nonnull InventoryCloseEvent event) {
+  public void acceptCloseEvent(@Nonnull InventoryCloseEvent event) {
     val cancelToken = new CancellableToken();
     acceptCloseEventAction.accept(event, cancelToken);
     if (cancelToken.isCancelled()) {

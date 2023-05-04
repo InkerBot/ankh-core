@@ -42,7 +42,7 @@ public class AnkhPluginContainerImpl implements AnkhPluginContainer {
   private final ListenerSet disableListeners = new ListenerSet();
 
   @Getter
-  private List<Class<? extends Module>> pluginModules = new ArrayList<>();
+  private final List<Class<? extends Module>> pluginModules = new ArrayList<>();
   @Getter
   private Injector injector;
   @Getter
@@ -141,7 +141,7 @@ public class AnkhPluginContainerImpl implements AnkhPluginContainer {
   private static class ListenerSet {
     private static final AtomicLong loadIdAllocator = new AtomicLong();
     private boolean loaded = false;
-    private Set<SortEntry> listeners = new TreeSet<>();
+    private final Set<SortEntry> listeners = new TreeSet<>();
 
     public synchronized void register(EventPriority priority, Runnable listener) {
       if (loaded) {

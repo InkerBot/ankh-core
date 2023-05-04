@@ -3,6 +3,11 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version ("0.5.1")
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}
+
 bukkit {
     name = "ankh-test-plugin"
     main = "org.inksnow.ankh.testplugin.TestBukkitPluginLoader"

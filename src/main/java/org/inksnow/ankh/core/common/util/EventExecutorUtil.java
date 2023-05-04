@@ -25,9 +25,7 @@ public class EventExecutorUtil {
   private static final AtomicLong idAllocator = new AtomicLong();
 
   public static EventExecutor generate(Class<?> ownerClass, Object owner, String methodName, Type rawType, boolean withAccess) {
-    return withAccess
-        ? generateDynamic(ownerClass, owner, methodName, rawType)
-        : generateDynamic(ownerClass, owner, methodName, rawType);
+    return generateDynamic(ownerClass, owner, methodName, rawType);
   }
 
   @SneakyThrows

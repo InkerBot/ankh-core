@@ -30,6 +30,8 @@ public class AnkhConfig {
   private final ItemConfig item;
   @Getter
   private final ServiceConfig service;
+  @Getter
+  private final PerformanceConfig performance;
 
   private AnkhConfig() throws IOException {
     val configFile = new File("plugins/" + AnkhCore.PLUGIN_ID + "/config.yml");
@@ -55,6 +57,7 @@ public class AnkhConfig {
     this.playerShell = new PlayerShellConfig(required(configuration.getConfigurationSection("player-shell"), "player-shell"));
     this.item = new ItemConfig(required(configuration.getConfigurationSection("item"), "item"));
     this.service = new ServiceConfig(required(configuration.getConfigurationSection("service"), "service"));
+    this.performance = new PerformanceConfig(required(configuration.getConfigurationSection("performance"), "performance"));
   }
 
   public static AnkhConfig instance() {
@@ -134,6 +137,24 @@ public class AnkhConfig {
         this.markStart = required(configuration.getString("mark-start"), "item.lore-fetcher.mark-start");
         this.markEnd = required(configuration.getString("mark-end"), "item.lore-fetcher.mark-end");
       }
+    }
+  }
+
+  public static class PerformanceConfig {
+    @Getter
+    private final int cacheConcurrencyLevel;
+    @Getter
+    private final int cacheInitialCapacity;
+    @Getter
+    private final boolean cacheKeyWeak;
+    @Getter
+    private final boolean cacheValueWeak;
+
+    public PerformanceConfig(ConfigurationSection configuration) {
+      this.cacheConcurrencyLevel = configuration.getInt("cache-concurrency-level", -1);
+      this.cacheInitialCapacity = configuration.getInt("cache-initial-capacity", -1);
+      this.cacheKeyWeak = configuration.getBoolean("cache-key-weak", true);
+      this.cacheValueWeak = configuration.getBoolean("cache-value-weak", false);
     }
   }
 }

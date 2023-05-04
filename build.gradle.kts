@@ -41,6 +41,8 @@ allprojects {
         }
         withSourcesJar()
         withJavadocJar()
+        sourceCompatibility = JavaVersion.VERSION_14
+        targetCompatibility = JavaVersion.VERSION_14
     }
 
     publishing {
@@ -163,6 +165,11 @@ dependencies {
     api("com.typesafe:config:1.4.2")
     api("com.google.code.gson:gson:2.10.1")
     api("org.yaml:snakeyaml:2.0")
+    api("org.hibernate.validator:hibernate-validator:8.0.0.Final") {
+        exclude("jakarta.validation", "jakarta.validation-api") // use the version in api
+        exclude("org.jboss.logging", "jboss-logging") // don't expose logger
+    }
+    runtimeOnly("org.jboss.logging:jboss-logging:3.4.1.Final")
 
 
     // shadow depends

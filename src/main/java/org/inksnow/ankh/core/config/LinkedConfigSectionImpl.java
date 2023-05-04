@@ -14,13 +14,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class LinkedConfigSection implements ConfigSection {
-  private final ConfigLoader configLoader;
+public class LinkedConfigSectionImpl implements ConfigSection {
+  private final ConfigLoaderImpl configLoader;
   private final List<ConfigSection> mergeList;
   private final DcLazy<Map<String, ConfigSection>> entryMap = DcLazy.of(this::provideEntryMap);
   private final DcLazy<List<ConfigSection>> entryList = DcLazy.of(this::provideEntryList);
 
-  public LinkedConfigSection(ConfigLoader configLoader, List<ConfigSection> mergeList) {
+  public LinkedConfigSectionImpl(ConfigLoaderImpl configLoader, List<ConfigSection> mergeList) {
     this.configLoader = configLoader;
     this.mergeList = mergeList;
   }

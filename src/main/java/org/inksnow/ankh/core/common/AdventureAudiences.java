@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 @SuppressWarnings({"resource", "unused"})
 @Singleton
 public class AdventureAudiences {
-  private static LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+  private static final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
   private static DcLazy<BukkitAudiences> proxyBukkitAudiences;
   private final DcLazy<BukkitAudiences> lazyBukkitAudiences;
   private final AnkhCoreLoader coreLoader;

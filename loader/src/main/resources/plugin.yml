@@ -12,6 +12,7 @@ ankh-classpath:
   "bsh.": SELF_ONLY
   "org.apache.logging.": SELF_ONLY
   "io.github.bakedlibs.": SELF_ONLY
+  "org.jboss.logging.": SELF_ONLY
   "com.google.inject.": SELF_ONLY
   "org.objectweb.asm.": SELF_ONLY
   "org.yaml.snakeyaml.": SELF_ONLY

@@ -1,81 +1,42 @@
-package org.inksnow.ankh.core.config.typesafe;
+package org.inksnow.ankh.core.config;
 
-import com.typesafe.config.ConfigList;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
-import com.typesafe.config.ConfigValueType;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.inksnow.ankh.core.api.config.ConfigExtension;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigSource;
 import org.inksnow.ankh.core.api.util.DcLazy;
 import org.inksnow.ankh.core.common.config.LazilyParsedNumber;
+import org.inksnow.ankh.core.config.typesafe.TypesafeConfigFactory;
 
-import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-public class TypesafeConfigSection implements ConfigSection {
+@lombok.Builder
+public class ObjectConfigSectionImpl implements ConfigSection {
+  @lombok.Builder.Default
   @Getter
-  private final ConfigSource source;
-  private final ConfigValue configValue;
-
-  private final DcLazy<ConfigExtension> extension = DcLazy.of(this::provideExtension);
+  private final ConfigSource source = ConfigSource.builder()
+      .description("(from code)")
+      .build();
+  @lombok.Builder.Default
+  @Getter
+  private final ConfigExtension extension = ConfigExtension.empty();
+  @lombok.Builder.Default
+  private final Object value = null;
 
   private final DcLazy<List<ConfigSection>> sectionList = DcLazy.of(this::provideSectionList);
-
   private final DcLazy<Map<String, ConfigSection>> sectionMap = DcLazy.of(this::provideSectionMap);
-
-  @Nonnull
-  @Override
-  public ConfigExtension extension() {
-    return extension.get();
-  }
-
-  private ConfigExtension provideExtension() {
-    ConfigExtension extension = ConfigExtension.empty();
-    if (configValue.valueType() == ConfigValueType.OBJECT) {
-      val configObject = (ConfigObject) configValue;
-      val extConfig = configObject.get(TypesafeConfigFactory.INTERNAL_EXTENSION_PREFIX);
-      if (extConfig != null) {
-        if (extConfig.valueType() == ConfigValueType.OBJECT) {
-          val extConfigObject = (ConfigObject) extConfig;
-          for (val entry : extConfigObject.entrySet()) {
-            extension = extension.include(entry.getKey());
-          }
-        } else if (extConfig.valueType() == ConfigValueType.LIST) {
-          val extConfigList = (ConfigList) extConfig;
-          for (val entry : extConfigList) {
-            switch (entry.valueType()) {
-              case NUMBER:
-              case STRING: {
-                extension = extension.include(entry.unwrapped().toString());
-              }
-            }
-          }
-        } else if (extConfig.valueType() == ConfigValueType.STRING || extConfig.valueType() == ConfigValueType.NUMBER) {
-          extension = extension.include(extConfig.unwrapped().toString());
-        }
-      }
-    }
-    return extension;
-  }
-
   @Override
   public boolean isNull() {
-    return configValue.valueType() == ConfigValueType.NULL;
+    return value == null;
   }
 
   @Override
   public boolean isPrimitive() {
-    return configValue.valueType() == ConfigValueType.STRING
-        || configValue.valueType() == ConfigValueType.NUMBER
-        || configValue.valueType() == ConfigValueType.BOOLEAN;
+    return value instanceof String || value instanceof Number || value instanceof Boolean;
   }
 
   private void ensurePrimitive() {
@@ -86,102 +47,102 @@ public class TypesafeConfigSection implements ConfigSection {
 
   @Override
   public int asInteger() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? ((Number) configValue.unwrapped()).intValue()
+    return value instanceof Number
+        ? ((Number) value).intValue()
         : Integer.parseInt(asString());
   }
 
   @Override
   public byte asByte() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? ((Number) configValue.unwrapped()).byteValue()
+    return value instanceof Number
+        ? ((Number) value).byteValue()
         : Byte.parseByte(asString());
   }
 
   @Override
   public char asCharacter() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? (char) ((Number) configValue.unwrapped()).shortValue()
+    return value instanceof Number
+        ? (char) ((Number) value).shortValue()
         : asString().charAt(0);
   }
 
   @Override
   public boolean asBoolean() {
-    return configValue.valueType() == ConfigValueType.BOOLEAN
-        ? (Boolean) configValue.unwrapped()
+    return value instanceof Boolean
+        ? (Boolean) value
         : Boolean.parseBoolean(asString());
   }
 
   @Override
   public Number asNumber() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? (Number) configValue.unwrapped()
+    return value instanceof Number
+        ? (Number) value
         : new LazilyParsedNumber(asString());
   }
 
   @Override
   public String asString() {
     ensurePrimitive();
-    if (configValue.valueType() == ConfigValueType.STRING) {
-      return (String) configValue.unwrapped();
-    } else if (configValue.valueType() == ConfigValueType.BOOLEAN) {
-      return ((Boolean) configValue.unwrapped()).toString();
-    } else if (configValue.valueType() == ConfigValueType.NUMBER) {
-      return configValue.unwrapped().toString();
+    if (value instanceof String) {
+      return (String) value;
+    } else if (value instanceof Boolean) {
+      return ((Boolean) value).toString();
+    } else if (value instanceof Number) {
+      return value.toString();
     }
-    throw new IllegalStateException("Failed to detect config value type " + configValue.valueType());
+    throw new IllegalStateException("Failed to detect config value type " + value.getClass().getSimpleName());
   }
 
   @Override
   public double asDouble() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? ((Number) configValue.unwrapped()).doubleValue()
+    return value instanceof Number
+        ? ((Number) value).doubleValue()
         : Double.parseDouble(asString());
   }
 
   @Override
   public BigDecimal asBigDecimal() {
-    return (configValue.valueType() == ConfigValueType.NUMBER && configValue.unwrapped() instanceof BigDecimal)
-        ? (BigDecimal) configValue.unwrapped()
+    return (value instanceof BigDecimal)
+        ? (BigDecimal) value
         : new BigDecimal(asString());
   }
 
   @Override
   public BigInteger asBigInteger() {
-    return (configValue.valueType() == ConfigValueType.NUMBER && configValue.unwrapped() instanceof BigInteger)
-        ? (BigInteger) configValue.unwrapped()
+    return (value instanceof BigInteger)
+        ? (BigInteger) value
         : new BigInteger(asString());
   }
 
   @Override
   public float asFloat() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? ((Number) configValue.unwrapped()).floatValue()
+    return value instanceof Number
+        ? ((Number) value).floatValue()
         : Float.parseFloat(asString());
   }
 
   @Override
   public long asLong() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? ((Number) configValue.unwrapped()).longValue()
+    return value instanceof Number
+        ? ((Number) value).longValue()
         : Long.parseLong(asString());
   }
 
   @Override
   public short asShort() {
-    return configValue.valueType() == ConfigValueType.NUMBER
-        ? ((Number) configValue.unwrapped()).shortValue()
+    return value instanceof Number
+        ? ((Number) value).shortValue()
         : Short.parseShort(asString());
   }
 
   @Override
   public boolean isObject() {
-    return configValue.valueType() == ConfigValueType.OBJECT;
+    return value instanceof Map;
   }
 
   @Override
   public boolean isArray() {
-    return configValue.valueType() == ConfigValueType.LIST;
+    return value instanceof List;
   }
 
   private void ensureArray() {
@@ -196,13 +157,13 @@ public class TypesafeConfigSection implements ConfigSection {
     }
   }
 
-  private ConfigSection provideSubSection(String memberName, ConfigValue element) {
-    return new TypesafeConfigSection(
-        TypesafeConfigFactory.applyOrigin(source.toBuilder(), element.origin())
+  private ConfigSection provideSubSection(String memberName, Object element) {
+    return ObjectConfigSectionImpl.builder()
+        .source(source.toBuilder()
             .path(source.path() + (isArray() ? ("[" + memberName + "]") : ("." + memberName)))
-            .build(),
-        element
-    );
+            .build())
+        .value(element)
+        .build();
   }
 
   private Map<String, ConfigSection> provideSectionMap() {
@@ -214,7 +175,7 @@ public class TypesafeConfigSection implements ConfigSection {
       return map;
     } else {
       ensureObject();
-      val obj = (ConfigObject) configValue;
+      val obj = (Map<String, Object>) value;
       return obj.entrySet()
           .stream()
           .filter(it -> !TypesafeConfigFactory.INTERNAL_EXTENSION_PREFIX.equals(it.getKey()))
@@ -230,7 +191,7 @@ public class TypesafeConfigSection implements ConfigSection {
 
   private List<ConfigSection> provideSectionList() {
     ensureArray();
-    val configArray = (ConfigList) configValue;
+    val configArray = (List<Object>) value;
     val list = new ArrayList<ConfigSection>(configArray.size());
     for (int i = 0; i < configArray.size(); i++) {
       list.add(provideSubSection(Integer.toString(i), configArray.get(i)));
@@ -280,7 +241,7 @@ public class TypesafeConfigSection implements ConfigSection {
     if (isArray()) {
       try {
         return sectionList.get().get(Integer.parseInt(memberName));
-      } catch (NumberFormatException | IndexOutOfBoundsException e) {
+      } catch (IndexOutOfBoundsException e) {
         return null;
       }
     } else {

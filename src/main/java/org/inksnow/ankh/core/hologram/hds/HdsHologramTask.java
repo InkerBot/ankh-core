@@ -75,7 +75,7 @@ public class HdsHologramTask implements HologramTask {
 
     public static class InnerContentBuilder implements HologramTask.InnerContentBuilder {
       private final Builder parent;
-      private HdsHologramContent.Builder delegateBuilder = new HdsHologramContent.Builder();
+      private final HdsHologramContent.Builder delegateBuilder = new HdsHologramContent.Builder();
 
       public InnerContentBuilder(Builder parent) {
         this.parent = parent;
