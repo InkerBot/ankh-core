@@ -19,9 +19,9 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class ConfigLoaderImpl implements ConfigLoader {
   private static final List<ConfigTypeAdapter.Factory<?>> DEFAULT_FACTORY_LIST = ImmutableList.of(
-      AnkhTypeAdapters.NUMBER, AnkhTypeAdapters.INTEGER, AnkhTypeAdapters.BYTE, AnkhTypeAdapters.CHARACTER,
-      AnkhTypeAdapters.BOOLEAN, AnkhTypeAdapters.DOUBLE, AnkhTypeAdapters.FLOAT, AnkhTypeAdapters.LONG,
-      AnkhTypeAdapters.BIG_DECIMAL, AnkhTypeAdapters.BIG_INTEGER, AnkhTypeAdapters.STRING,
+      AnkhTypeAdapters.CONFIG_SECTION, AnkhTypeAdapters.NUMBER, AnkhTypeAdapters.INTEGER, AnkhTypeAdapters.BYTE,
+      AnkhTypeAdapters.CHARACTER, AnkhTypeAdapters.BOOLEAN, AnkhTypeAdapters.DOUBLE, AnkhTypeAdapters.FLOAT,
+      AnkhTypeAdapters.LONG, AnkhTypeAdapters.BIG_DECIMAL, AnkhTypeAdapters.BIG_INTEGER, AnkhTypeAdapters.STRING,
       AnkhTypeAdapters.ATOMIC_BOOLEAN, AnkhTypeAdapters.ATOMIC_INTEGER, AnkhTypeAdapters.ATOMIC_INTEGER_ARRAY,
       AnkhTypeAdapters.ATOMIC_LONG, AnkhTypeAdapters.ATOMIC_LONG_ARRAY, AnkhTypeAdapters.STRING_BUFFER,
       AnkhTypeAdapters.STRING_BUILDER, AnkhTypeAdapters.URL, AnkhTypeAdapters.URI, AnkhTypeAdapters.UUID,
