@@ -24,6 +24,7 @@ public class ObjectConfigAdapter<T> implements ConfigTypeAdapter<T> {
   private final Class<?> clazz;
   private final TypedEntry[] typedEntries;
 
+  @SuppressWarnings("unchecked")
   @SneakyThrows
   @Override
   public T read(ConfigSection section) {

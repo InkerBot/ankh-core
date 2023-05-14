@@ -144,6 +144,7 @@ public final class AnkhTypeAdapters {
   public static final ConfigTypeAdapter.Factory<Object> ARRAY = new ArrayConfigAdapter.Factory();
   public static final ConfigTypeAdapter.Factory<Collection<?>> COLLECTION = new CollectionConfigAdapter.Factory();
   public static final ConfigTypeAdapter.Factory<Map<?, ?>> MAP = new MapConfigAdapter.Factory();
+  public static final ConfigTypeAdapter.Factory<Object> CODEC = new CodecConfigAdapter.Factory();
   public static final ConfigTypeAdapter.Factory<Enum<?>> ENUM = new EnumConfigAdapter.Factory();
   public static final ConfigTypeAdapter.Factory<Object> INTERFACE = new InterfaceConfigAdapter.Factory();
   public static final ConfigTypeAdapter.Factory<Object> RECORD = new RecordConfigAdapter.Factory();

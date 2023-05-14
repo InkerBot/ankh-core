@@ -36,11 +36,12 @@ public class ConfigLoaderImpl implements ConfigLoader {
 
   private final ConfigService configService;
   private final Path baseDirectoryPath;
-  private static final Map<Class<?>, Supplier<?>> cacheConstructor = CacheMapUtil.make();
   private final Map<Class<?>, Class<?>> implementationMap;
   private final List<ConfigTypeAdapter.Factory<?>> adapterFactories;
-  private final Map<String, ConfigSection> sectionByPath = new HashMap<>();
 
+  private final Map<String, ConfigSection> sectionByPath = new HashMap<>();
+  private final Map<TypeToken<?>, ConfigTypeAdapter<?>> adapterCache = new HashMap<>();
+  private final Map<Class<?>, Supplier<?>> cacheConstructor = new HashMap<>();
   private final Function<Class<?>, Supplier<?>> findConstructorSupplier = new Function<Class<?>, Supplier<?>>() {
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -60,14 +61,21 @@ public class ConfigLoaderImpl implements ConfigLoader {
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public <T> ConfigTypeAdapter<? extends T> getAdapter(TypeToken<T> typeToken) {
+  public <T> ConfigTypeAdapter<? extends T> getAdapter(@Nonnull TypeToken<T> typeToken) {
+    val cacheValue = adapterCache.get(typeToken);
+    if (cacheValue != null) {
+      return (ConfigTypeAdapter<? extends T>) cacheValue;
+    }
+
+    ConfigTypeAdapter adapter = null;
     for (ConfigTypeAdapter.Factory adapterFactory : adapterFactories) {
-      ConfigTypeAdapter adapter = adapterFactory.create(this, typeToken);
+      adapter = adapterFactory.create(this, typeToken);
       if (adapter != null) {
-        return adapter;
+        break;
       }
     }
-    return null;
+    adapterCache.put(typeToken, adapter);
+    return adapter;
   }
 
   private ConfigSection loadPath(ConfigSource source, String path) {
@@ -106,18 +114,18 @@ public class ConfigLoaderImpl implements ConfigLoader {
   }
 
   @Override
-  public <T> T parse(String path, TypeToken<T> typeToken) {
+  public <T> T parse(@Nonnull String path, @Nonnull TypeToken<T> typeToken) {
     return getAdapter(typeToken).read(loadPath(null, path));
   }
 
   @Override
-  public <T> T parse(String path, Class<T> type) {
+  public <T> T parse(@Nonnull String path, @Nonnull Class<T> type) {
     return getAdapter(TypeToken.get(type)).read(loadPath(null, path));
   }
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Supplier getConstructor(TypeToken type) {
+  public Supplier getConstructor(@Nonnull TypeToken type) {
     return cacheConstructor.computeIfAbsent(type.getRawType(), findConstructorSupplier);
   }
 
@@ -182,8 +190,8 @@ public class ConfigLoaderImpl implements ConfigLoader {
           AnkhTypeAdapters.STRING_BUILDER, AnkhTypeAdapters.URL, AnkhTypeAdapters.URI, AnkhTypeAdapters.UUID,
           AnkhTypeAdapters.CURRENCY, AnkhTypeAdapters.LOCALE, AnkhTypeAdapters.INET_ADDRESS, AnkhTypeAdapters.BIT_SET,
           AnkhTypeAdapters.DATE, AnkhTypeAdapters.CALENDAR, AnkhTypeAdapters.ARRAY, AnkhTypeAdapters.COLLECTION,
-          AnkhTypeAdapters.MAP, AnkhTypeAdapters.ENUM, AnkhTypeAdapters.INTERFACE, AnkhTypeAdapters.RECORD,
-          AnkhTypeAdapters.OBJECT, AnkhTypeAdapters.NULL
+          AnkhTypeAdapters.MAP, AnkhTypeAdapters.CODEC, AnkhTypeAdapters.ENUM, AnkhTypeAdapters.INTERFACE,
+          AnkhTypeAdapters.RECORD, AnkhTypeAdapters.OBJECT, AnkhTypeAdapters.NULL
       );
 
       implementationMapBuilder.putAll(userImplementationMap);
@@ -193,7 +201,7 @@ public class ConfigLoaderImpl implements ConfigLoader {
       put(implementationMapBuilder, List.class, ArrayList.class);
       put(implementationMapBuilder, Set.class, LinkedHashSet.class);
 
-      return new ConfigLoaderImpl(configService, baseDirectory, factoryListBuilder.build(), implementationMapBuilder.build());
+      return new ConfigLoaderImpl(configService, baseDirectory, implementationMapBuilder.build(), factoryListBuilder.build());
     }
   }
 }
