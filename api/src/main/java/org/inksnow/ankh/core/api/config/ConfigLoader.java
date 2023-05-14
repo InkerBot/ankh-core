@@ -28,6 +28,9 @@ public interface ConfigLoader {
 
   <T> Supplier<T> getConstructor(@Nonnull TypeToken<? super T> type);
 
+  @Nonnull
+  String translateName(@Nonnull String name);
+
   interface Factory {
     @Nonnull
     Builder builder();
@@ -39,6 +42,9 @@ public interface ConfigLoader {
 
     @Nonnull
     Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> factory);
+
+    @Nonnull
+    Builder nameStrategy(@Nonnull ConfigNameStrategy nameStrategy);
 
     <T> @Nonnull Builder registerUserImplementation(@Nonnull Class<T> base, @Nonnull Class<? extends T> impl);
   }

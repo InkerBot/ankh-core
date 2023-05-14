@@ -30,9 +30,9 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
     for (int i = 0; i < typedEntries.length; i++) {
       val typedEntry = typedEntries[i];
       if (typedEntry.adapter != null) {
-        val subSection = section.get(typedEntry.name);
+        val subSection = section.get(typedEntry.configName);
         val value = typedEntry.adapter.read(subSection);
-        val validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.name, value);
+        val validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.beanName, value);
         for (val violation : validateResult) {
           logger.error("Failed to check config: {}\n\tat {}", violation.getMessage(), subSection.source());
           success = false;
@@ -116,10 +116,12 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
         val recordComponentType = recordComponentGetType(recordComponent);
         val recordComponentGenericType = recordComponentGetGenericType(recordComponent);
         val recordComponentTypeToken = TypeToken.get(recordComponentGenericType);
+        val recordComponentName = recordComponentGetName(recordComponent);
         recordComponentTypes[i] = recordComponentType;
         recordEntries[i] = new TypedEntry(
             recordComponent,
-            recordComponentGetName(recordComponent),
+            recordComponentName,
+            configLoader.translateName(recordComponentName),
             recordComponentTypeToken,
             configLoader.getAdapter(recordComponentTypeToken)
         );
@@ -133,7 +135,8 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
   @RequiredArgsConstructor
   private static class TypedEntry {
     private final Object recordComponent;
-    private final String name;
+    private final String beanName;
+    private final String configName;
     private final TypeToken<?> typeToken;
     private final ConfigTypeAdapter<?> adapter;
   }

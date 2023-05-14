@@ -149,8 +149,9 @@ public final class AnkhTypeAdapters {
   public static final ConfigTypeAdapter.Factory<Object> INTERFACE = new InterfaceConfigAdapter.Factory();
   public static final ConfigTypeAdapter.Factory<Object> RECORD = new RecordConfigAdapter.Factory();
   public static final ConfigTypeAdapter.Factory<Object> OBJECT = new ObjectConfigAdapter.Factory();
-  public static final ConfigTypeAdapter.Factory<Object> NULL = new ConfigTypeAdapter.Factory<>() {
+  public static final ConfigTypeAdapter.Factory<Object> NULL = new ConfigTypeAdapter.Factory<Object>() {
     private final ConfigTypeAdapter<Object> NULL = it -> null;
+
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
     public ConfigTypeAdapter create(ConfigLoader configLoader, TypeToken typeToken) {

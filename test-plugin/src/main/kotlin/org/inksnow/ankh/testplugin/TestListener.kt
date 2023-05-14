@@ -8,6 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.inventory.ItemStack
 import org.inksnow.ankh.core.api.config.ConfigLoader
+import org.inksnow.ankh.core.api.config.ConfigNameStrategy
 import org.inksnow.ankh.core.api.config.ConfigService
 import org.inksnow.ankh.core.api.plugin.AnkhBukkitPlugin
 import org.inksnow.ankh.core.api.plugin.PluginLifeCycle
@@ -82,12 +83,13 @@ class TestListener @Inject private constructor(
     private fun onLoad() {
         val configLoader = ConfigLoader.builder()
             .baseDirectory(Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config"))
+            .nameStrategy(ConfigNameStrategy.lowerCaseWithDashes())
             .build()
         val value = configLoader.parse("test.yml", TestInterface::class.java)
         println()
     }
 
     interface TestInterface {
-        fun testlist(): List<String>
+        fun testList(): List<String>
     }
 }

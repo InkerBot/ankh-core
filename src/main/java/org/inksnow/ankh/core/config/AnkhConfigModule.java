@@ -18,6 +18,7 @@ public class AnkhConfigModule extends AbstractModule {
     bind(ConfigSectionFactory.class).annotatedWith(Names.named("json")).to(TypesafeConfigFactory.Json.class);
     bind(ConfigSectionFactory.class).annotatedWith(Names.named("properties")).to(TypesafeConfigFactory.Properties.class);
 
+    bind(ConfigNameStrategy.Factory.class).to(StandardConfigNameStrategyImpl.Factory.class);
     bind(ConfigLoader.Factory.class).to(ConfigLoaderImpl.Factory.class);
     bind(ConfigSource.Factory.class).to(ConfigSourceImpl.Factory.class);
     bind(ConfigExtension.Factory.class).to(ConfigExtensionImpl.Factory.class);

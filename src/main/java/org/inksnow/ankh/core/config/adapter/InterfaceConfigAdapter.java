@@ -40,9 +40,9 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
     for (int i = 0; i < typedEntries.length; i++) {
       val typedEntry = typedEntries[i];
       if (typedEntry.adapter != null) {
-        val subSection = section.get(typedEntry.name);
+        val subSection = section.get(typedEntry.configName);
         val value = typedEntry.adapter.read(subSection);
-        val validateResult = ConfigVaildatorUtils.validator().validateValue(generatedClass, typedEntry.name, value);
+        val validateResult = ConfigVaildatorUtils.validator().validateValue(generatedClass, typedEntry.beanName, value);
         for (val violation : validateResult) {
           logger.error("Failed to check config: {}\n\tat {}", violation.getMessage(), subSection.source());
           success = false;
@@ -74,18 +74,19 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
         return null;
       }
       val adapters = Stream.concat(Stream.of(rawType), Arrays.stream(rawType.getInterfaces()))
-          .filter(it->it != Object.class)
-          .flatMap(it-> Arrays.stream(it.getMethods()))
-          .filter(it->(it.getModifiers() & Modifier.ABSTRACT) != 0)
-          .filter(it->it.getParameterCount() == 0)
+          .filter(it -> it != Object.class)
+          .flatMap(it -> Arrays.stream(it.getMethods()))
+          .filter(it -> (it.getModifiers() & Modifier.ABSTRACT) != 0)
+          .filter(it -> it.getParameterCount() == 0)
           .distinct()
-          .map(method->{
+          .map(method -> {
             method.setAccessible(true);
-            val name = method.getName();
+            val beanName = method.getName();
+            val configName = configLoader.translateName(beanName);
             val rawReturnType = method.getReturnType();
             val type = TypeToken.get(method.getGenericReturnType());
             val adapter = rawReturnType == void.class ? null : configLoader.getAdapter(type);
-            return new TypedEntry(method, name, type, adapter);
+            return new TypedEntry(method, beanName, configName, type, adapter);
           })
           .toArray(TypedEntry[]::new);
       val generatedName = "org/inksnow/ankh/core/config/$codedef$/" + rawType.getSimpleName();
@@ -111,7 +112,7 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
 
     private void writeField(ClassWriter cw, int index, TypedEntry entry){
       if (entry.method.getReturnType() != void.class) {
-        val fw = cw.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, entry.name + "$" + index, Type.getDescriptor(entry.typeToken.getRawType()), null, null);
+        val fw = cw.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, entry.beanName + "$" + index, Type.getDescriptor(entry.typeToken.getRawType()), null, null);
         fw.visitEnd();
       }
     }
@@ -119,12 +120,12 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
     private void writeMethod(ClassWriter cw, String ownerName, int index, TypedEntry entry){
       val type = Type.getType(entry.method);
       val rType = type.getReturnType();
-      val mw = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, entry.name, type.getDescriptor(), null, null);
+      val mw = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, entry.beanName, type.getDescriptor(), null, null);
       if(rType == Type.VOID_TYPE){
         mw.visitInsn(Opcodes.RETURN);
       }else {
         mw.visitVarInsn(Opcodes.ALOAD, 0);
-        mw.visitFieldInsn(Opcodes.GETFIELD, ownerName, entry.name + "$" + index, rType.getDescriptor());
+        mw.visitFieldInsn(Opcodes.GETFIELD, ownerName, entry.beanName + "$" + index, rType.getDescriptor());
         mw.visitInsn(rType.getOpcode(Opcodes.IRETURN));
       }
       mw.visitMaxs(0, 0);
@@ -143,7 +144,7 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
           mw.visitLdcInsn(i);
           mw.visitInsn(Opcodes.AALOAD);
           mw.visitTypeInsn(Opcodes.CHECKCAST, Type.getInternalName(entry.method.getReturnType()));
-          mw.visitFieldInsn(Opcodes.PUTFIELD, ownerName, entry.name + "$" + i, Type.getDescriptor(entry.method.getReturnType()));
+          mw.visitFieldInsn(Opcodes.PUTFIELD, ownerName, entry.beanName + "$" + i, Type.getDescriptor(entry.method.getReturnType()));
         }
       }
       mw.visitInsn(Opcodes.RETURN);
@@ -155,7 +156,8 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
   @RequiredArgsConstructor
   private static class TypedEntry {
     private final Method method;
-    private final String name;
+    private final String beanName;
+    private final String configName;
     private final TypeToken<?> typeToken;
     private final ConfigTypeAdapter<?> adapter;
   }

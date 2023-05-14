@@ -32,9 +32,9 @@ public class ObjectConfigAdapter<T> implements ConfigTypeAdapter<T> {
     boolean success = true;
     for (val typedEntry : typedEntries) {
       if (typedEntry.adapter != null) {
-        val subSection = section.get(typedEntry.name);
+        val subSection = section.get(typedEntry.configName);
         val value = typedEntry.adapter.read(subSection);
-        val validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.name, value);
+        val validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.beanName, value);
         for (val violation : validateResult) {
           logger.error("Failed to check config: {}\n\tat {}", violation.getMessage(), subSection.source());
           success = false;
@@ -64,14 +64,15 @@ public class ObjectConfigAdapter<T> implements ConfigTypeAdapter<T> {
             @Override
             @SneakyThrows
             public TypedEntry apply(Field field) {
-              val name = field.getName();
+              val beanName = field.getName();
+              val configName = configLoader.translateName(beanName);
               val fieldType = field.getType();
               val fieldTypeToken = TypeToken.get(field.getGenericType());
               val adapter = configLoader.getAdapter(fieldTypeToken);
               val setter = BootstrapUtil.lookup()
-                  .findSetter(field.getDeclaringClass(), name, fieldType)
+                  .findSetter(field.getDeclaringClass(), beanName, fieldType)
                   .asType(MethodType.methodType(void.class, rawType, field.getType()));
-              return new TypedEntry(field, name, setter, fieldTypeToken, adapter);
+              return new TypedEntry(field, beanName, configName, setter, fieldTypeToken, adapter);
             }
           })
           .toArray(TypedEntry[]::new);
@@ -82,7 +83,8 @@ public class ObjectConfigAdapter<T> implements ConfigTypeAdapter<T> {
   @RequiredArgsConstructor
   private static class TypedEntry {
     private final Field field;
-    private final String name;
+    private final String beanName;
+    private final String configName;
     private final MethodHandle setter;
     private final TypeToken<?> typeToken;
     private final ConfigTypeAdapter<?> adapter;

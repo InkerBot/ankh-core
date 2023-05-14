@@ -36,6 +36,7 @@ public class ConfigLoaderImpl implements ConfigLoader {
 
   private final ConfigService configService;
   private final Path baseDirectoryPath;
+  private final ConfigNameStrategy nameStrategy;
   private final Map<Class<?>, Class<?>> implementationMap;
   private final List<ConfigTypeAdapter.Factory<?>> adapterFactories;
 
@@ -91,11 +92,11 @@ public class ConfigLoaderImpl implements ConfigLoader {
   }
 
   @Override
-  public ConfigSection load(String path) {
+  public ConfigSection load(@Nonnull String path) {
     return loadPath(null, path);
   }
 
-  public ConfigSection load(ConfigSection coreSection) {
+  public ConfigSection load(@Nonnull ConfigSection coreSection) {
     if (coreSection.extension().includeList().isEmpty()) {
       return new LinkedConfigSectionImpl(this, Collections.singletonList(coreSection));
     } else {
@@ -129,6 +130,11 @@ public class ConfigLoaderImpl implements ConfigLoader {
     return cacheConstructor.computeIfAbsent(type.getRawType(), findConstructorSupplier);
   }
 
+  @Override
+  public @Nonnull String translateName(@Nonnull String name) {
+    return nameStrategy.translateName(name);
+  }
+
   @Singleton
   public static class Factory implements ConfigLoader.Factory {
     private final ConfigService configService;
@@ -148,8 +154,10 @@ public class ConfigLoaderImpl implements ConfigLoader {
     private final ConfigService configService;
     @Setter
     private Path baseDirectory;
-    private List<ConfigTypeAdapter.Factory<?>> userFactories = new LinkedList<>();
-    private Map<Class<?>, Class<?>> userImplementationMap = new HashMap<>();
+    private final List<ConfigTypeAdapter.Factory<?>> userFactories = new LinkedList<>();
+    private final Map<Class<?>, Class<?>> userImplementationMap = new HashMap<>();
+    @Setter
+    private ConfigNameStrategy nameStrategy = ConfigNameStrategy.identity();
 
     public @Nonnull Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> factory) {
       userFactories.add(factory);
@@ -201,7 +209,7 @@ public class ConfigLoaderImpl implements ConfigLoader {
       put(implementationMapBuilder, List.class, ArrayList.class);
       put(implementationMapBuilder, Set.class, LinkedHashSet.class);
 
-      return new ConfigLoaderImpl(configService, baseDirectory, implementationMapBuilder.build(), factoryListBuilder.build());
+      return new ConfigLoaderImpl(configService, baseDirectory, nameStrategy, implementationMapBuilder.build(), factoryListBuilder.build());
     }
   }
 }
