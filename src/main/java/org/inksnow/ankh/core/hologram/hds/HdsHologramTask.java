@@ -42,7 +42,7 @@ public class HdsHologramTask implements HologramTask {
     }
 
     @Override
-    public Builder getThis() {
+    public @Nonnull Builder getThis() {
       return this;
     }
 

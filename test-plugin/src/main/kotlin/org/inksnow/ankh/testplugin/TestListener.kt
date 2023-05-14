@@ -7,13 +7,12 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.inventory.ItemStack
-import org.hibernate.validator.constraints.Length
+import org.inksnow.ankh.core.api.config.ConfigLoader
 import org.inksnow.ankh.core.api.config.ConfigService
 import org.inksnow.ankh.core.api.plugin.AnkhBukkitPlugin
 import org.inksnow.ankh.core.api.plugin.PluginLifeCycle
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptLifecycle
-import org.inksnow.ankh.core.config.ConfigLoaderImpl
 import org.inksnow.ankh.core.inventory.storage.StorageChestMenu
 import org.inksnow.ankh.testplugin.item.TestItem
 import org.slf4j.LoggerFactory
@@ -81,14 +80,14 @@ class TestListener @Inject private constructor(
 
     @SubscriptLifecycle(PluginLifeCycle.LOAD)
     private fun onLoad() {
-        val configLoader =
-            ConfigLoaderImpl(configService, Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config"))
+        val configLoader = ConfigLoader.builder()
+            .baseDirectory(Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config"))
+            .build()
         val value = configLoader.parse("test.yml", TestInterface::class.java)
         println()
     }
 
     interface TestInterface {
-        @Length(min = 999, max = 1000)
-        fun somevalue(): String
+        fun testlist(): List<String>
     }
 }

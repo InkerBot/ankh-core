@@ -1,14 +1,19 @@
 package org.inksnow.ankh.core.config;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.inksnow.ankh.core.api.config.*;
 import org.inksnow.ankh.core.common.util.BootstrapUtil;
 import org.inksnow.ankh.core.common.util.CacheMapUtil;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.nio.file.Path;
@@ -18,18 +23,6 @@ import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class ConfigLoaderImpl implements ConfigLoader {
-  private static final List<ConfigTypeAdapter.Factory<?>> DEFAULT_FACTORY_LIST = ImmutableList.of(
-      AnkhTypeAdapters.CONFIG_SECTION, AnkhTypeAdapters.NUMBER, AnkhTypeAdapters.INTEGER, AnkhTypeAdapters.BYTE,
-      AnkhTypeAdapters.CHARACTER, AnkhTypeAdapters.BOOLEAN, AnkhTypeAdapters.DOUBLE, AnkhTypeAdapters.FLOAT,
-      AnkhTypeAdapters.LONG, AnkhTypeAdapters.BIG_DECIMAL, AnkhTypeAdapters.BIG_INTEGER, AnkhTypeAdapters.STRING,
-      AnkhTypeAdapters.ATOMIC_BOOLEAN, AnkhTypeAdapters.ATOMIC_INTEGER, AnkhTypeAdapters.ATOMIC_INTEGER_ARRAY,
-      AnkhTypeAdapters.ATOMIC_LONG, AnkhTypeAdapters.ATOMIC_LONG_ARRAY, AnkhTypeAdapters.STRING_BUFFER,
-      AnkhTypeAdapters.STRING_BUILDER, AnkhTypeAdapters.URL, AnkhTypeAdapters.URI, AnkhTypeAdapters.UUID,
-      AnkhTypeAdapters.CURRENCY, AnkhTypeAdapters.LOCALE, AnkhTypeAdapters.INET_ADDRESS, AnkhTypeAdapters.BIT_SET,
-      AnkhTypeAdapters.DATE, AnkhTypeAdapters.CALENDAR, AnkhTypeAdapters.ARRAY, AnkhTypeAdapters.COLLECTION,
-      AnkhTypeAdapters.MAP, AnkhTypeAdapters.ENUM, AnkhTypeAdapters.INTERFACE, AnkhTypeAdapters.RECORD,
-      AnkhTypeAdapters.OBJECT, AnkhTypeAdapters.NULL
-  );
   private static final Map<Class<?>, MethodHandle> classCacheConstructor = CacheMapUtil.make();
 
   private static final Function<Class<?>, MethodHandle> findNoArgsConstructor = new Function<Class<?>, MethodHandle>() {
@@ -44,9 +37,10 @@ public class ConfigLoaderImpl implements ConfigLoader {
   private final ConfigService configService;
   private final Path baseDirectoryPath;
   private static final Map<Class<?>, Supplier<?>> cacheConstructor = CacheMapUtil.make();
-  private final Map<String, ConfigSection> sectionByPath;
   private final Map<Class<?>, Class<?>> implementationMap;
   private final List<ConfigTypeAdapter.Factory<?>> adapterFactories;
+  private final Map<String, ConfigSection> sectionByPath = new HashMap<>();
+
   private final Function<Class<?>, Supplier<?>> findConstructorSupplier = new Function<Class<?>, Supplier<?>>() {
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -63,14 +57,6 @@ public class ConfigLoaderImpl implements ConfigLoader {
       };
     }
   };
-
-  public ConfigLoaderImpl(ConfigService configService, Path baseDirectory) {
-    this.configService = configService;
-    this.baseDirectoryPath = baseDirectory;
-    this.implementationMap = new HashMap<>();
-    this.sectionByPath = new HashMap<>();
-    this.adapterFactories = new LinkedList<>(DEFAULT_FACTORY_LIST);
-  }
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
@@ -133,5 +119,81 @@ public class ConfigLoaderImpl implements ConfigLoader {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Supplier getConstructor(TypeToken type) {
     return cacheConstructor.computeIfAbsent(type.getRawType(), findConstructorSupplier);
+  }
+
+  @Singleton
+  public static class Factory implements ConfigLoader.Factory {
+    private final ConfigService configService;
+
+    @Inject
+    private Factory(ConfigService configService) {
+      this.configService = configService;
+    }
+
+    public @Nonnull Builder builder() {
+      return new Builder(configService);
+    }
+  }
+
+  @RequiredArgsConstructor
+  public static class Builder implements ConfigLoader.Builder {
+    private final ConfigService configService;
+    @Setter
+    private Path baseDirectory;
+    private List<ConfigTypeAdapter.Factory<?>> userFactories = new LinkedList<>();
+    private Map<Class<?>, Class<?>> userImplementationMap = new HashMap<>();
+
+    public @Nonnull Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> factory) {
+      userFactories.add(factory);
+      return this;
+    }
+
+    public @Nonnull <T> Builder registerUserImplementation(@Nonnull Class<T> base, @Nonnull Class<? extends T> impl) {
+      userImplementationMap.put(base, impl);
+      return this;
+    }
+
+    @Override
+    public @Nonnull Builder getThis() {
+      return this;
+    }
+
+    private <T> void put(ImmutableMap.Builder<Class<?>, Class<?>> builder, Class<T> base, Class<? extends T> impl) {
+      if (userImplementationMap.get(base) == null) {
+        builder.put(base, impl);
+      }
+    }
+
+    @Override
+    public @Nonnull ConfigLoader build() {
+      val factoryListBuilder = ImmutableList.<ConfigTypeAdapter.Factory<?>>builder();
+      val implementationMapBuilder = ImmutableMap.<Class<?>, Class<?>>builder();
+
+      factoryListBuilder.add(AnkhTypeAdapters.CONFIG_SECTION);
+
+      factoryListBuilder.addAll(userFactories);
+
+      factoryListBuilder.add(
+          AnkhTypeAdapters.NUMBER, AnkhTypeAdapters.INTEGER, AnkhTypeAdapters.BYTE, AnkhTypeAdapters.CHARACTER,
+          AnkhTypeAdapters.BOOLEAN, AnkhTypeAdapters.DOUBLE, AnkhTypeAdapters.FLOAT, AnkhTypeAdapters.LONG,
+          AnkhTypeAdapters.BIG_DECIMAL, AnkhTypeAdapters.BIG_INTEGER, AnkhTypeAdapters.STRING,
+          AnkhTypeAdapters.ATOMIC_BOOLEAN, AnkhTypeAdapters.ATOMIC_INTEGER, AnkhTypeAdapters.ATOMIC_INTEGER_ARRAY,
+          AnkhTypeAdapters.ATOMIC_LONG, AnkhTypeAdapters.ATOMIC_LONG_ARRAY, AnkhTypeAdapters.STRING_BUFFER,
+          AnkhTypeAdapters.STRING_BUILDER, AnkhTypeAdapters.URL, AnkhTypeAdapters.URI, AnkhTypeAdapters.UUID,
+          AnkhTypeAdapters.CURRENCY, AnkhTypeAdapters.LOCALE, AnkhTypeAdapters.INET_ADDRESS, AnkhTypeAdapters.BIT_SET,
+          AnkhTypeAdapters.DATE, AnkhTypeAdapters.CALENDAR, AnkhTypeAdapters.ARRAY, AnkhTypeAdapters.COLLECTION,
+          AnkhTypeAdapters.MAP, AnkhTypeAdapters.ENUM, AnkhTypeAdapters.INTERFACE, AnkhTypeAdapters.RECORD,
+          AnkhTypeAdapters.OBJECT, AnkhTypeAdapters.NULL
+      );
+
+      implementationMapBuilder.putAll(userImplementationMap);
+
+      put(implementationMapBuilder, Map.class, LinkedHashMap.class);
+      put(implementationMapBuilder, Collection.class, ArrayList.class);
+      put(implementationMapBuilder, List.class, ArrayList.class);
+      put(implementationMapBuilder, Set.class, LinkedHashSet.class);
+
+      return new ConfigLoaderImpl(configService, baseDirectory, factoryListBuilder.build(), implementationMapBuilder.build());
+    }
   }
 }

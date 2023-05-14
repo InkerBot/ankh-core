@@ -1,6 +1,5 @@
 package org.inksnow.ankh.core.config;
 
-import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.inksnow.ankh.core.api.AnkhServiceLoader;
@@ -46,23 +45,5 @@ public class ConfigServiceImpl implements ConfigService {
     try (val reader = Files.newBufferedReader(path)) {
       return readSection(extName, source, reader);
     }
-  }
-
-  @Override
-  public @Nonnull ConfigSection load(@Nonnull Path path) {
-    return new ConfigLoaderImpl(this, path.getParent())
-        .load(path.getFileName().toString());
-  }
-
-  @Override
-  public <T> T parse(Path path, TypeToken<T> typeToken) {
-    return new ConfigLoaderImpl(this, path.getParent())
-        .parse(path.getFileName().toString(), typeToken);
-  }
-
-  @Override
-  public <T> T parse(Path path, Class<T> type) {
-    return new ConfigLoaderImpl(this, path.getParent())
-        .parse(path.getFileName().toString(), type);
   }
 }

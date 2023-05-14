@@ -23,7 +23,7 @@ public class MapConfigAdapter<K, V> implements ConfigTypeAdapter<Map<K, V>> {
     for (val entry : section.entrySet()) {
       map.put(
           keyAdapter.read(ObjectConfigSectionImpl.builder()
-              .value(entry.getValue())
+              .value(entry.getKey())
               .source(entry.getValue().source())
               .build()),
           valueAdapter.read(entry.getValue())

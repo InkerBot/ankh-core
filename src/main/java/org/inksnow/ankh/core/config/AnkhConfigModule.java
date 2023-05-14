@@ -2,10 +2,7 @@ package org.inksnow.ankh.core.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import org.inksnow.ankh.core.api.config.ConfigExtension;
-import org.inksnow.ankh.core.api.config.ConfigSectionFactory;
-import org.inksnow.ankh.core.api.config.ConfigService;
-import org.inksnow.ankh.core.api.config.ConfigSource;
+import org.inksnow.ankh.core.api.config.*;
 import org.inksnow.ankh.core.api.plugin.annotations.PluginModule;
 import org.inksnow.ankh.core.config.gson.GsonConfigFactory;
 import org.inksnow.ankh.core.config.typesafe.TypesafeConfigFactory;
@@ -21,6 +18,7 @@ public class AnkhConfigModule extends AbstractModule {
     bind(ConfigSectionFactory.class).annotatedWith(Names.named("json")).to(TypesafeConfigFactory.Json.class);
     bind(ConfigSectionFactory.class).annotatedWith(Names.named("properties")).to(TypesafeConfigFactory.Properties.class);
 
+    bind(ConfigLoader.Factory.class).to(ConfigLoaderImpl.Factory.class);
     bind(ConfigSource.Factory.class).to(ConfigSourceImpl.Factory.class);
     bind(ConfigExtension.Factory.class).to(ConfigExtensionImpl.Factory.class);
     bind(ConfigService.class).to(ConfigServiceImpl.class);
