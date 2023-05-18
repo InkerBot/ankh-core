@@ -14,6 +14,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Modifier;
 
 @RequiredArgsConstructor
+@SuppressWarnings("rawtypes")
 public class CodecConfigAdapter<T> implements ConfigTypeAdapter<T> {
   private final MethodHandle codecMethod;
 
@@ -28,7 +29,7 @@ public class CodecConfigAdapter<T> implements ConfigTypeAdapter<T> {
     @Override
     @SneakyThrows
     public <V> ConfigTypeAdapter<V> create(ConfigLoader configLoader, TypeToken<? super V> typeToken) {
-      val rawType = typeToken.getRawType();
+      val rawType = ((TypeToken) typeToken).getRawType();
       if(rawType.isPrimitive()){
         return null;
       }

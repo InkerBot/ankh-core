@@ -1,6 +1,7 @@
 package org.inksnow.ankh.core.config.adapter;
 
 import com.google.gson.reflect.TypeToken;
+import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +26,14 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("rawtypes")
 public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
-  private final Class<?> generatedClass;
+  private final Class generatedClass;
   private final MethodHandle constructorHandle;
   private final TypedEntry[] typedEntries;
 
@@ -45,7 +48,7 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
       if (typedEntry.adapter != null) {
         val subSection = section.get(typedEntry.configName);
         val value = typedEntry.adapter.read(subSection);
-        val validateResult = ConfigVaildatorUtils.validator().validateValue(generatedClass, typedEntry.beanName, value);
+        Set<ConstraintViolation<T>> validateResult = ConfigVaildatorUtils.validator().validateValue(generatedClass, typedEntry.beanName, value);
         for (val violation : validateResult) {
           exceptions.add(new ConfigException.Entry(subSection.source(), violation.getMessage()));
         }

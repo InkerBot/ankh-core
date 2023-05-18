@@ -41,8 +41,6 @@ allprojects {
         }
         withSourcesJar()
         withJavadocJar()
-        sourceCompatibility = JavaVersion.VERSION_14
-        targetCompatibility = JavaVersion.VERSION_14
     }
 
     publishing {

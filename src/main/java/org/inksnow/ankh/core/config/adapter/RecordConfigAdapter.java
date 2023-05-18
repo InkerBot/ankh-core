@@ -1,6 +1,7 @@
 package org.inksnow.ankh.core.config.adapter;
 
 import com.google.gson.reflect.TypeToken;
+import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,13 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Slf4j
+@SuppressWarnings("rawtypes")
 public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
-  private final Class<?> clazz;
+  private final Class clazz;
   private final MethodHandle constructor;
   private final TypedEntry[] typedEntries;
 
@@ -35,7 +38,7 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
       if (typedEntry.adapter != null) {
         val subSection = section.get(typedEntry.configName);
         val value = typedEntry.adapter.read(subSection);
-        val validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.beanName, value);
+        Set<ConstraintViolation> validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.beanName, value);
         for (val violation : validateResult) {
           exceptions.add(new ConfigException.Entry(subSection.source(), violation.getMessage()));
         }
@@ -106,7 +109,7 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
     @Override
     @SneakyThrows
     public <V> ConfigTypeAdapter<V> create(ConfigLoader configLoader, TypeToken<? super V> typeToken) {
-      val rawType = typeToken.getRawType();
+      val rawType = ((TypeToken) typeToken).getRawType();
       if(!classIsRecord(rawType)) {
         return null;
       }
