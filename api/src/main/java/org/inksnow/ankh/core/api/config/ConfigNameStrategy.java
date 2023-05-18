@@ -7,21 +7,18 @@ import org.inksnow.ankh.core.api.util.IBuilder;
 import javax.annotation.Nonnull;
 
 public interface ConfigNameStrategy {
-  @Nonnull
-  String translateName(@Nonnull String name);
-
-  static Factory factory(){
+  static Factory factory() {
     return $internal$actions$.factory.get();
   }
 
-  static Builder builder(){
+  static Builder builder() {
     return factory().builder();
   }
 
   /**
    * Using this naming strategy will ensure that the bean name is unchanged.
    */
-  static @Nonnull ConfigNameStrategy identity(){
+  static @Nonnull ConfigNameStrategy identity() {
     return factory().identity();
   }
 
@@ -35,7 +32,7 @@ public interface ConfigNameStrategy {
    *   <li>_someBeanName ---> _SomeBeanName</li>
    * </ul>
    */
-  static @Nonnull ConfigNameStrategy upperCamelCase(){
+  static @Nonnull ConfigNameStrategy upperCamelCase() {
     return factory().upperCamelCase();
   }
 
@@ -50,7 +47,7 @@ public interface ConfigNameStrategy {
    *   <li>_someBeanName ---> _Some Bean Name</li>
    * </ul>
    */
-  static @Nonnull ConfigNameStrategy upperCamelCaseWithSpaces(){
+  static @Nonnull ConfigNameStrategy upperCamelCaseWithSpaces() {
     return factory().upperCamelCaseWithSpaces();
   }
 
@@ -66,7 +63,7 @@ public interface ConfigNameStrategy {
    *   <li>aURL ---> a_u_r_l</li>
    * </ul>
    */
-  static @Nonnull ConfigNameStrategy lowerCaseWithUnderscores(){
+  static @Nonnull ConfigNameStrategy lowerCaseWithUnderscores() {
     return factory().lowerCaseWithUnderscores();
   }
 
@@ -82,17 +79,22 @@ public interface ConfigNameStrategy {
    *   <li>aURL ---> a-u-r-l</li>
    * </ul>
    */
-  static @Nonnull ConfigNameStrategy lowerCaseWithDashes(){
+  static @Nonnull ConfigNameStrategy lowerCaseWithDashes() {
     return factory().lowerCaseWithDashes();
   }
 
+  @Nonnull
+  String translateName(@Nonnull String name);
+
   interface Factory {
-    @Nonnull Builder builder();
+    @Nonnull
+    Builder builder();
 
     /**
      * Using this naming strategy will ensure that the bean name is unchanged.
      */
-    @Nonnull ConfigNameStrategy identity();
+    @Nonnull
+    ConfigNameStrategy identity();
 
     /**
      * Using this naming strategy will ensure that the first "letter" of the bean name is
@@ -104,7 +106,8 @@ public interface ConfigNameStrategy {
      *   <li>_someBeanName ---> _SomeBeanName</li>
      * </ul>
      */
-    @Nonnull ConfigNameStrategy upperCamelCase();
+    @Nonnull
+    ConfigNameStrategy upperCamelCase();
 
     /**
      * Using this naming strategy will ensure that the first "letter" of the bean name is
@@ -117,7 +120,8 @@ public interface ConfigNameStrategy {
      *   <li>_someBeanName ---> _Some Bean Name</li>
      * </ul>
      */
-    @Nonnull ConfigNameStrategy upperCamelCaseWithSpaces();
+    @Nonnull
+    ConfigNameStrategy upperCamelCaseWithSpaces();
 
     /**
      * Using this naming strategy will modify the bean name from its camel cased
@@ -131,7 +135,8 @@ public interface ConfigNameStrategy {
      *   <li>aURL ---> a_u_r_l</li>
      * </ul>
      */
-    @Nonnull ConfigNameStrategy lowerCaseWithUnderscores();
+    @Nonnull
+    ConfigNameStrategy lowerCaseWithUnderscores();
 
     /**
      * Using this naming policy with Gson will modify the bean name from its camel cased
@@ -145,7 +150,8 @@ public interface ConfigNameStrategy {
      *   <li>aURL ---> a-u-r-l</li>
      * </ul>
      */
-    @Nonnull ConfigNameStrategy lowerCaseWithDashes();
+    @Nonnull
+    ConfigNameStrategy lowerCaseWithDashes();
   }
 
   interface Builder extends IBuilder<Builder, ConfigNameStrategy> {
@@ -154,21 +160,24 @@ public interface ConfigNameStrategy {
      *
      * @return this
      */
-    @Nonnull Builder upperCaseFirstLetter();
+    @Nonnull
+    Builder upperCaseFirstLetter();
 
     /**
      * ensure all letter lower case
      *
      * @return this
      */
-    @Nonnull Builder lowerCaseAllLetter();
+    @Nonnull
+    Builder lowerCaseAllLetter();
 
     /**
      * ensure all letter upper case
      *
      * @return this
      */
-    @Nonnull Builder upperCaseAllLetter();
+    @Nonnull
+    Builder upperCaseAllLetter();
 
     /**
      * the words will be separated by separator.
@@ -176,10 +185,11 @@ public interface ConfigNameStrategy {
      * @param separator the separator
      * @return this
      */
-    @Nonnull Builder separateCamelCase(@Nonnull String separator);
+    @Nonnull
+    Builder separateCamelCase(@Nonnull String separator);
   }
 
   class $internal$actions$ {
-    private static DcLazy<Factory> factory = IocLazy.of(Factory.class);
+    private static final DcLazy<Factory> factory = IocLazy.of(Factory.class);
   }
 }

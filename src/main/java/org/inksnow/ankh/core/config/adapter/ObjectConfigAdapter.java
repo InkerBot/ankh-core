@@ -8,6 +8,8 @@ import lombok.val;
 import org.inksnow.ankh.core.api.config.ConfigLoader;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigTypeAdapter;
+import org.inksnow.ankh.core.api.config.exception.ConfigException;
+import org.inksnow.ankh.core.api.config.exception.ConfigValidateException;
 import org.inksnow.ankh.core.common.util.BootstrapUtil;
 
 import java.lang.invoke.MethodHandle;
@@ -15,6 +17,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -29,23 +32,22 @@ public class ObjectConfigAdapter<T> implements ConfigTypeAdapter<T> {
   @Override
   public T read(ConfigSection section) {
     val instance = (T) BootstrapUtil.unsafe().allocateInstance(clazz);
-    boolean success = true;
+    val exceptions = new LinkedList<ConfigException.Entry>();
     for (val typedEntry : typedEntries) {
       if (typedEntry.adapter != null) {
         val subSection = section.get(typedEntry.configName);
         val value = typedEntry.adapter.read(subSection);
         val validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.beanName, value);
         for (val violation : validateResult) {
-          logger.error("Failed to check config: {}\n\tat {}", violation.getMessage(), subSection.source());
-          success = false;
+          exceptions.add(new ConfigException.Entry(subSection.source(), violation.getMessage()));
         }
         typedEntry.setter.invoke(instance, value);
       }
     }
-    if(success) {
+    if (exceptions.isEmpty()) {
       return instance;
-    }else{
-      throw new IllegalArgumentException("Failed to check config");
+    } else {
+      throw new ConfigValidateException(exceptions);
     }
   }
 

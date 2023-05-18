@@ -1,5 +1,6 @@
 package org.inksnow.ankh.testplugin
 
+import jakarta.validation.constraints.Size
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
@@ -90,6 +91,7 @@ class TestListener @Inject private constructor(
     }
 
     interface TestInterface {
-        fun testList(): List<String>
+      @Size(min = 999)
+      fun testList(): List<String>
     }
 }

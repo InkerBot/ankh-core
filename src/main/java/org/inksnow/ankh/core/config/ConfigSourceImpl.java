@@ -5,6 +5,7 @@ import org.inksnow.ankh.core.api.config.ConfigSource;
 import org.inksnow.ankh.core.api.util.DcLazy;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.StringJoiner;
 import java.util.concurrent.Callable;
@@ -21,12 +22,12 @@ public class ConfigSourceImpl implements ConfigSource {
   private final @Nonnull DcLazy<String> path = DcLazy.ofCompleted("");
 
   @Override
-  public @Nonnull String description() {
+  public @Nullable String description() {
     return description.get();
   }
 
   @Override
-  public @Nonnull Path file() {
+  public @Nullable Path file() {
     return file.get();
   }
 
@@ -44,16 +45,17 @@ public class ConfigSourceImpl implements ConfigSource {
   public String toString() {
     val joiner = new StringJoiner(", ", "(", ")");
     if (description.get() != null) {
-      joiner.add(description.get());
+      joiner.add(description());
     }
-    if (description.get() == null && file.get() != null) {
-      joiner.add(file.get().toUri().toString());
+    if (description() == null && file() != null) {
+      joiner.add(file.get().getFileName().toString());
     }
-    if (lineNumber.get() != null && lineNumber.get() != -1) {
-      joiner.add("lineNumber=" + lineNumber.get());
+    if (lineNumber() != -1) {
+      joiner.add("lineNumber=" + lineNumber());
     }
+
     if (path.get() != null) {
-      return joiner + path.get();
+      return joiner + path();
     } else {
       return joiner.toString();
     }

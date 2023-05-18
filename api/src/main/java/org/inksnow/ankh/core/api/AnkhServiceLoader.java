@@ -136,7 +136,7 @@ public interface AnkhServiceLoader {
    */
   <T> @Nonnull List<T> serviceListImpl(@Nonnull Class<T> clazz);
 
-  public static class $internal$actions$ {
-    private static DcLazy<AnkhServiceLoader> INSTANCE = IocLazy.of(AnkhServiceLoader.class);
+  class $internal$actions$ {
+    private static final DcLazy<AnkhServiceLoader> INSTANCE = IocLazy.of(AnkhServiceLoader.class);
   }
 }

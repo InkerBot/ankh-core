@@ -8,11 +8,14 @@ import lombok.val;
 import org.inksnow.ankh.core.api.config.ConfigLoader;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigTypeAdapter;
+import org.inksnow.ankh.core.api.config.exception.ConfigException;
+import org.inksnow.ankh.core.api.config.exception.ConfigValidateException;
 import org.inksnow.ankh.core.common.util.BootstrapUtil;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Type;
+import java.util.LinkedList;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -26,7 +29,7 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
   @SuppressWarnings("unchecked")
   public T read(ConfigSection section) {
     val args = new Object[typedEntries.length];
-    boolean success = true;
+    val exceptions = new LinkedList<ConfigException.Entry>();
     for (int i = 0; i < typedEntries.length; i++) {
       val typedEntry = typedEntries[i];
       if (typedEntry.adapter != null) {
@@ -34,16 +37,15 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
         val value = typedEntry.adapter.read(subSection);
         val validateResult = ConfigVaildatorUtils.validator().validateValue(clazz, typedEntry.beanName, value);
         for (val violation : validateResult) {
-          logger.error("Failed to check config: {}\n\tat {}", violation.getMessage(), subSection.source());
-          success = false;
+          exceptions.add(new ConfigException.Entry(subSection.source(), violation.getMessage()));
         }
         args[i] = value;
       }
     }
-    if(success) {
+    if (exceptions.isEmpty()) {
       return (T) constructor.invokeWithArguments(args);
-    }else{
-      throw new IllegalArgumentException("Failed to check config");
+    } else {
+      throw new ConfigValidateException(exceptions);
     }
   }
 

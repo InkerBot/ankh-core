@@ -50,6 +50,6 @@ public interface ConfigLoader {
   }
 
   class $internal$actions$ {
-    private static DcLazy<Factory> factory = IocLazy.of(Factory.class);
+    private static final DcLazy<Factory> factory = IocLazy.of(Factory.class);
   }
 }

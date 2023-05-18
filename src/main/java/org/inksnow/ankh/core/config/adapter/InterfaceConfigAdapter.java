@@ -8,6 +8,8 @@ import lombok.val;
 import org.inksnow.ankh.core.api.config.ConfigLoader;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigTypeAdapter;
+import org.inksnow.ankh.core.api.config.exception.ConfigException;
+import org.inksnow.ankh.core.api.config.exception.ConfigValidateException;
 import org.inksnow.ankh.core.common.asm.ClassWriterWithClassLoader;
 import org.inksnow.ankh.core.common.asm.CodeDefClassLoader;
 import org.inksnow.ankh.core.common.util.BootstrapUtil;
@@ -21,6 +23,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -35,8 +38,8 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
   @SneakyThrows
   @SuppressWarnings("unchecked")
   public T read(ConfigSection section) {
-    boolean success = true;
     val args = new Object[typedEntries.length];
+    val exceptions = new LinkedList<ConfigException.Entry>();
     for (int i = 0; i < typedEntries.length; i++) {
       val typedEntry = typedEntries[i];
       if (typedEntry.adapter != null) {
@@ -44,16 +47,15 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
         val value = typedEntry.adapter.read(subSection);
         val validateResult = ConfigVaildatorUtils.validator().validateValue(generatedClass, typedEntry.beanName, value);
         for (val violation : validateResult) {
-          logger.error("Failed to check config: {}\n\tat {}", violation.getMessage(), subSection.source());
-          success = false;
+          exceptions.add(new ConfigException.Entry(subSection.source(), violation.getMessage()));
         }
         args[i] = value;
       }
     }
-    if(success) {
+    if (exceptions.isEmpty()) {
       return (T) invokeConstructor(args);
-    }else{
-      throw new IllegalArgumentException("Failed to check config");
+    } else {
+      throw new ConfigValidateException(exceptions);
     }
   }
 
