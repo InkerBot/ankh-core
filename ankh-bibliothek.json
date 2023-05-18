@@ -1,8 +1,8 @@
 {
   "projectName": "ankhcore",
   "projectFriendlyName": "Ankh Core",
-  "versionGroupName": "1.0",
-  "versionName": "1.0-SNAPSHOT",
+  "versionGroupName": "1.1",
+  "versionName": "1.1-SNAPSHOT",
   "buildChannel": "DEFAULT",
   "repositoryPath": ".",
   "downloads": [

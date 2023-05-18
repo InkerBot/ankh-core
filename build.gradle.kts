@@ -21,9 +21,9 @@ allprojects {
 
   val buildNumber = System.getenv("BUILD_NUMBER")
   version = if (buildNumber == null) {
-    "1.0-dev-SNAPSHOT"
+    "1.1-dev-SNAPSHOT"
   } else {
-    "1.0"
+    "1.1-$buildNumber-SNAPSHOT"
   }
 
   repositories {
