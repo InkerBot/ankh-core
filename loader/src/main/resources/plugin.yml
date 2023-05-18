@@ -18,3 +18,4 @@ ankh-classpath:
   "org.yaml.snakeyaml.": SELF_ONLY
   "com.typesafe.config.": SELF_ONLY
   "com.google.gson.": SELF_ONLY
+  "org.hibernate.validator.": SELF_ONLY
