@@ -26,10 +26,10 @@ public interface ConfigNameStrategy {
    * Using this naming strategy will ensure that the first "letter" of the bean name is
    * capitalized when serialized to its config form.
    *
-   * <p>Here's a few examples of the form "Java Bean Name" ---> "Config Bean Name":</p>
+   * <p>Here's a few examples of the form "Java Bean Name" --- "Config Bean Name":</p>
    * <ul>
-   *   <li>someBeanName ---> SomeBeanName</li>
-   *   <li>_someBeanName ---> _SomeBeanName</li>
+   *   <li>someBeanName --- SomeBeanName</li>
+   *   <li>_someBeanName --- _SomeBeanName</li>
    * </ul>
    */
   static @Nonnull ConfigNameStrategy upperCamelCase() {
@@ -41,10 +41,10 @@ public interface ConfigNameStrategy {
    * capitalized when serialized to its config form and the words will be
    * separated by a space.
    *
-   * <p>Here's a few examples of the form "Java Bean Name" ---> "Config Field Name":</p>
+   * <p>Here's a few examples of the form "Java Bean Name" --- "Config Field Name":</p>
    * <ul>
-   *   <li>someBeanName ---> Some Bean Name</li>
-   *   <li>_someBeanName ---> _Some Bean Name</li>
+   *   <li>someBeanName --- Some Bean Name</li>
+   *   <li>_someBeanName --- _Some Bean Name</li>
    * </ul>
    */
   static @Nonnull ConfigNameStrategy upperCamelCaseWithSpaces() {
@@ -55,12 +55,12 @@ public interface ConfigNameStrategy {
    * Using this naming strategy will modify the bean name from its camel cased
    * form to a lower case field name where each word is separated by an underscore (_).
    *
-   * <p>Here's a few examples of the form "Java Bean Name" ---> "Config Bean Name":</p>
+   * <p>Here's a few examples of the form "Java Bean Name" --- "Config Bean Name":</p>
    * <ul>
-   *   <li>someBeanName ---> some_bean_name</li>
-   *   <li>_someBeanName ---> _some_bean_name</li>
-   *   <li>aStringBean ---> a_string_bean</li>
-   *   <li>aURL ---> a_u_r_l</li>
+   *   <li>someBeanName --- some_bean_name</li>
+   *   <li>_someBeanName --- _some_bean_name</li>
+   *   <li>aStringBean --- a_string_bean</li>
+   *   <li>aURL --- a_u_r_l</li>
    * </ul>
    */
   static @Nonnull ConfigNameStrategy lowerCaseWithUnderscores() {
@@ -71,12 +71,12 @@ public interface ConfigNameStrategy {
    * Using this naming policy with Gson will modify the bean name from its camel cased
    * form to a lower case field name where each word is separated by a dash (-).
    *
-   * <p>Here's a few examples of the form "Java Field Name" ---> "JSON Field Name":</p>
+   * <p>Here's a few examples of the form "Java Field Name" --- "JSON Field Name":</p>
    * <ul>
-   *   <li>someBeanName ---> some-bean-name</li>
-   *   <li>_someBeanName ---> _some-bean-name</li>
-   *   <li>aStringBean ---> a-string-bean</li>
-   *   <li>aURL ---> a-u-r-l</li>
+   *   <li>someBeanName --- some-bean-name</li>
+   *   <li>_someBeanName --- _some-bean-name</li>
+   *   <li>aStringBean --- a-string-bean</li>
+   *   <li>aURL --- a-u-r-l</li>
    * </ul>
    */
   static @Nonnull ConfigNameStrategy lowerCaseWithDashes() {
@@ -100,10 +100,10 @@ public interface ConfigNameStrategy {
      * Using this naming strategy will ensure that the first "letter" of the bean name is
      * capitalized when serialized to its config form.
      *
-     * <p>Here's a few examples of the form "Java Bean Name" ---> "Config Bean Name":</p>
+     * <p>Here's a few examples of the form "Java Bean Name" --- "Config Bean Name":</p>
      * <ul>
-     *   <li>someBeanName ---> SomeBeanName</li>
-     *   <li>_someBeanName ---> _SomeBeanName</li>
+     *   <li>someBeanName --- SomeBeanName</li>
+     *   <li>_someBeanName --- _SomeBeanName</li>
      * </ul>
      */
     @Nonnull
@@ -114,10 +114,10 @@ public interface ConfigNameStrategy {
      * capitalized when serialized to its config form and the words will be
      * separated by a space.
      *
-     * <p>Here's a few examples of the form "Java Bean Name" ---> "Config Field Name":</p>
+     * <p>Here's a few examples of the form "Java Bean Name" --- "Config Field Name":</p>
      * <ul>
-     *   <li>someBeanName ---> Some Bean Name</li>
-     *   <li>_someBeanName ---> _Some Bean Name</li>
+     *   <li>someBeanName --- Some Bean Name</li>
+     *   <li>_someBeanName --- _Some Bean Name</li>
      * </ul>
      */
     @Nonnull
@@ -127,12 +127,12 @@ public interface ConfigNameStrategy {
      * Using this naming strategy will modify the bean name from its camel cased
      * form to a lower case field name where each word is separated by an underscore (_).
      *
-     * <p>Here's a few examples of the form "Java Bean Name" ---> "Config Bean Name":</p>
+     * <p>Here's a few examples of the form "Java Bean Name" --- "Config Bean Name":</p>
      * <ul>
-     *   <li>someBeanName ---> some_bean_name</li>
-     *   <li>_someBeanName ---> _some_bean_name</li>
-     *   <li>aStringBean ---> a_string_bean</li>
-     *   <li>aURL ---> a_u_r_l</li>
+     *   <li>someBeanName --- some_bean_name</li>
+     *   <li>_someBeanName --- _some_bean_name</li>
+     *   <li>aStringBean --- a_string_bean</li>
+     *   <li>aURL --- a_u_r_l</li>
      * </ul>
      */
     @Nonnull
@@ -142,12 +142,12 @@ public interface ConfigNameStrategy {
      * Using this naming policy with Gson will modify the bean name from its camel cased
      * form to a lower case field name where each word is separated by a dash (-).
      *
-     * <p>Here's a few examples of the form "Java Field Name" ---> "JSON Field Name":</p>
+     * <p>Here's a few examples of the form "Java Field Name" --- "JSON Field Name":</p>
      * <ul>
-     *   <li>someBeanName ---> some-bean-name</li>
-     *   <li>_someBeanName ---> _some-bean-name</li>
-     *   <li>aStringBean ---> a-string-bean</li>
-     *   <li>aURL ---> a-u-r-l</li>
+     *   <li>someBeanName --- some-bean-name</li>
+     *   <li>_someBeanName --- _some-bean-name</li>
+     *   <li>aStringBean --- a-string-bean</li>
+     *   <li>aURL --- a-u-r-l</li>
      * </ul>
      */
     @Nonnull

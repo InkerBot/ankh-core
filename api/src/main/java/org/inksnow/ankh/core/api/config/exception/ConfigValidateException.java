@@ -26,7 +26,7 @@ public class ConfigValidateException extends ConfigException {
       Path sourceFile = entry.source().file();
       if (sourceFile != null) {
         builder.append(sourceFile.getFileName());
-      }else{
+      } else {
         builder.append("unknown");
       }
       builder.append(")")

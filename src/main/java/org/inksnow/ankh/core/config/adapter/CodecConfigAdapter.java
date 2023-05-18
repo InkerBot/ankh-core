@@ -30,11 +30,11 @@ public class CodecConfigAdapter<T> implements ConfigTypeAdapter<T> {
     @SneakyThrows
     public <V> ConfigTypeAdapter<V> create(ConfigLoader configLoader, TypeToken<? super V> typeToken) {
       val rawType = ((TypeToken) typeToken).getRawType();
-      if(rawType.isPrimitive()){
+      if (rawType.isPrimitive()) {
         return null;
       }
       MethodHandle codecMethod = null;
-      if((rawType.getModifiers() & Modifier.ABSTRACT) != 0 && !rawType.isInterface()) {
+      if ((rawType.getModifiers() & Modifier.ABSTRACT) != 0 && !rawType.isInterface()) {
         try {
           codecMethod = BootstrapUtil.lookup().findConstructor(rawType, MethodType.methodType(void.class, ConfigSection.class));
         } catch (NoSuchMethodException e) {
@@ -48,7 +48,7 @@ public class CodecConfigAdapter<T> implements ConfigTypeAdapter<T> {
           //
         }
       }
-      if(codecMethod == null){
+      if (codecMethod == null) {
         return null;
       }
       return new CodecConfigAdapter<>(

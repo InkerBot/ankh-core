@@ -29,6 +29,7 @@ public class ObjectConfigSectionImpl implements ConfigSection {
 
   private final DcLazy<List<ConfigSection>> sectionList = DcLazy.of(this::provideSectionList);
   private final DcLazy<Map<String, ConfigSection>> sectionMap = DcLazy.of(this::provideSectionMap);
+
   @Override
   public boolean isNull() {
     return value == null;

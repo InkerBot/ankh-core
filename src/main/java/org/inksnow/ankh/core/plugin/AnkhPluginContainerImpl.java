@@ -140,8 +140,8 @@ public class AnkhPluginContainerImpl implements AnkhPluginContainer {
 
   private static class ListenerSet {
     private static final AtomicLong loadIdAllocator = new AtomicLong();
-    private boolean loaded = false;
     private final Set<SortEntry> listeners = new TreeSet<>();
+    private boolean loaded = false;
 
     public synchronized void register(EventPriority priority, Runnable listener) {
       if (loaded) {

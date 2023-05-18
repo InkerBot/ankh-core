@@ -58,6 +58,24 @@ public final class ReadonlyChestMenu extends AbstractChestMenu {
   @lombok.Builder.Default
   private final ActionAcceptEvent<StoragePlaceEvent> acceptPlaceAction = ActionAcceptEvent.nop();
 
+  private static boolean isSameItem(ItemStack a, ItemStack b) {
+    if (a == b) {
+      return true;
+    } else if (a == null || b == null) {
+      return false;
+    } else {
+      val aClone = a.clone();
+      val bClone = a.clone();
+      aClone.setAmount(1);
+      bClone.setAmount(1);
+      return aClone.equals(b);
+    }
+  }
+
+  private static boolean isNullItem(ItemStack itemStack) {
+    return itemStack == null || itemStack.getType() == Material.AIR;
+  }
+
   @Override
   public boolean safeMode() {
     return safeMode;
@@ -103,7 +121,7 @@ public final class ReadonlyChestMenu extends AbstractChestMenu {
 
   @Override
   public void acceptDragEvent(@Nonnull InventoryDragEvent event) {
-    for (int entry : event.getRawSlots()){
+    for (int entry : event.getRawSlots()) {
       if (isInventorySlot(entry)) {
         event.setCancelled(true);
         return;
@@ -118,7 +136,7 @@ public final class ReadonlyChestMenu extends AbstractChestMenu {
 
   @Override
   public void acceptClickEvent(@Nonnull InventoryClickEvent event) {
-    if(!isInventorySlot(event.getRawSlot())){
+    if (!isInventorySlot(event.getRawSlot())) {
       super.acceptClickEvent(event);
       return;
     }
@@ -143,9 +161,9 @@ public final class ReadonlyChestMenu extends AbstractChestMenu {
         if (isInventorySlot(event.getRawSlot())) {
           event.setCancelled(true);
           val cursorItem = event.getCursor();
-          if(isSameItem(cursorItem, currentItem)){
+          if (isSameItem(cursorItem, currentItem)) {
             cursorItem.setAmount(cursorItem.getAmount() + currentItem.getAmount());
-          }else if (isNullItem(cursorItem)){
+          } else if (isNullItem(cursorItem)) {
             val currentClone = currentItem.clone();
             event.setCursor(currentClone);
           }
@@ -168,9 +186,9 @@ public final class ReadonlyChestMenu extends AbstractChestMenu {
         if (isInventorySlot(event.getRawSlot())) {
           event.setCancelled(true);
           val cursorItem = event.getCursor();
-          if(isSameItem(cursorItem, currentItem)){
+          if (isSameItem(cursorItem, currentItem)) {
             cursorItem.setAmount(cursorItem.getAmount() + 1);
-          }else if (isNullItem(cursorItem)){
+          } else if (isNullItem(cursorItem)) {
             val currentClone = currentItem.clone();
             currentClone.setAmount(1);
             event.setCursor(currentClone);
@@ -239,7 +257,7 @@ public final class ReadonlyChestMenu extends AbstractChestMenu {
         }
         break;
       }
-      default:{
+      default: {
         super.acceptClickEvent(event);
       }
     }
@@ -255,25 +273,7 @@ public final class ReadonlyChestMenu extends AbstractChestMenu {
     super.acceptCloseEvent(event);
   }
 
-  private static boolean isSameItem(ItemStack a, ItemStack b){
-    if(a == b){
-      return true;
-    }else if(a == null || b == null){
-      return false;
-    }else{
-      val aClone = a.clone();
-      val bClone = a.clone();
-      aClone.setAmount(1);
-      bClone.setAmount(1);
-      return aClone.equals(b);
-    }
-  }
-
-  private static boolean isNullItem(ItemStack itemStack){
-    return itemStack == null || itemStack.getType() == Material.AIR;
-  }
-
-  private boolean isInventorySlot(int rawSlot){
+  private boolean isInventorySlot(int rawSlot) {
     return rawSlot < getInventory().getSize();
   }
 }

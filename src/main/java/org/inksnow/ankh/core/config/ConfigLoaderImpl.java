@@ -152,10 +152,10 @@ public class ConfigLoaderImpl implements ConfigLoader {
   @RequiredArgsConstructor
   public static class Builder implements ConfigLoader.Builder {
     private final ConfigService configService;
-    @Setter
-    private Path baseDirectory;
     private final List<ConfigTypeAdapter.Factory<?>> userFactories = new LinkedList<>();
     private final Map<Class<?>, Class<?>> userImplementationMap = new HashMap<>();
+    @Setter
+    private Path baseDirectory;
     @Setter
     private ConfigNameStrategy nameStrategy = ConfigNameStrategy.identity();
 

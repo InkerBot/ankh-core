@@ -8,13 +8,13 @@ import taboolib.common.platform.Awake
 import taboolib.module.kether.Kether
 
 object AnkhKetherSupport {
-    @Awake(LifeCycle.LOAD)
-    fun load() {
-        Kether.isAllowToleranceParser = true
-        AnkhServiceLoader.registerService(
-            Key.key("ankh-kether", "kether"),
-            AnkhScriptEngine::class.java,
-            KetherEngine.instance()
-        )
-    }
+  @Awake(LifeCycle.LOAD)
+  fun load() {
+    Kether.isAllowToleranceParser = true
+    AnkhServiceLoader.registerService(
+      Key.key("ankh-kether", "kether"),
+      AnkhScriptEngine::class.java,
+      KetherEngine.instance()
+    )
+  }
 }

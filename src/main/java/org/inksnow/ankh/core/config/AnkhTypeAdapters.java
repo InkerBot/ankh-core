@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.*;
 
 @SuppressWarnings("unused")
 public final class AnkhTypeAdapters {
-  public static final ConfigTypeAdapter.Factory<ConfigSection> CONFIG_SECTION = createFactory(ConfigSection.class, it->it);
+  public static final ConfigTypeAdapter.Factory<ConfigSection> CONFIG_SECTION = createFactory(ConfigSection.class, it -> it);
   public static final ConfigTypeAdapter.Factory<Number> NUMBER = createFactory(Number.class, ConfigSection::asNumber);
   public static final ConfigTypeAdapter.Factory<Integer> INTEGER = createFactory(int.class, Integer.class, ConfigSection::asInteger);
   public static final ConfigTypeAdapter.Factory<Byte> BYTE = createFactory(byte.class, Byte.class, ConfigSection::asByte);

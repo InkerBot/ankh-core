@@ -56,10 +56,10 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
     private static final ConfigTypeAdapter.Factory<Object> delegate = provideDelegate();
 
     private static ConfigTypeAdapter.Factory<Object> provideDelegate() {
-      try{
+      try {
         Class.forName("java.lang.Record", false, null);
         return new ImplFactory();
-      }catch (ClassNotFoundException e){
+      } catch (ClassNotFoundException e) {
         return null;
       }
     }
@@ -82,27 +82,27 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
         .asType(MethodType.methodType(String.class, Object.class));
 
     @SneakyThrows
-    public boolean classIsRecord(Class<?> clazz){
+    public boolean classIsRecord(Class<?> clazz) {
       return (boolean) classIsRecord.invokeExact(clazz);
     }
 
     @SneakyThrows
-    public Object[] classGetRecordComponents(Class<?> clazz){
+    public Object[] classGetRecordComponents(Class<?> clazz) {
       return (Object[]) classGetRecordComponents.invokeExact(clazz);
     }
 
     @SneakyThrows
-    public Class<?> recordComponentGetType(Object recordComponent){
+    public Class<?> recordComponentGetType(Object recordComponent) {
       return (Class<?>) recordComponentGetType.invokeExact(recordComponent);
     }
 
     @SneakyThrows
-    public Type recordComponentGetGenericType(Object recordComponent){
+    public Type recordComponentGetGenericType(Object recordComponent) {
       return (Type) recordComponentGetGenericType.invokeExact(recordComponent);
     }
 
     @SneakyThrows
-    public String recordComponentGetName(Object recordComponent){
+    public String recordComponentGetName(Object recordComponent) {
       return (String) recordComponentGetName.invokeExact(recordComponent);
     }
 
@@ -110,7 +110,7 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
     @SneakyThrows
     public <V> ConfigTypeAdapter<V> create(ConfigLoader configLoader, TypeToken<? super V> typeToken) {
       val rawType = ((TypeToken) typeToken).getRawType();
-      if(!classIsRecord(rawType)) {
+      if (!classIsRecord(rawType)) {
         return null;
       }
       val recordComponents = classGetRecordComponents(rawType);

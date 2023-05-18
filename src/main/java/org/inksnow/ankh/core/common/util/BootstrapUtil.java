@@ -11,7 +11,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "unchecked"})
 @UtilityClass
 public class BootstrapUtil {
   private static final Unsafe unsafe = createUnsafe();

@@ -59,7 +59,7 @@ public class ObjectConfigAdapter<T> implements ConfigTypeAdapter<T> {
     @SneakyThrows
     public <V> ConfigTypeAdapter<V> create(ConfigLoader configLoader, TypeToken<? super V> typeToken) {
       val rawType = ((TypeToken) typeToken).getRawType();
-      if((rawType.getModifiers() & Modifier.ABSTRACT) != 0 || rawType.isPrimitive() || rawType.isInterface()){
+      if ((rawType.getModifiers() & Modifier.ABSTRACT) != 0 || rawType.isPrimitive() || rawType.isInterface()) {
         return null;
       }
       val typedEntries = Stream.concat(Stream.of(rawType), Arrays.stream(rawType.getInterfaces()))

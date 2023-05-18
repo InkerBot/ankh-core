@@ -22,12 +22,12 @@ public class CacheMapUtil {
     if (performance.cacheKeyWeak()) {
       mapMaker.weakKeys();
     }
-    if(performance.cacheValueWeak()){
+    if (performance.cacheValueWeak()) {
       mapMaker.weakValues();
     }
   }
 
-  public static <K, V> ConcurrentMap<K, V> make(){
+  public static <K, V> ConcurrentMap<K, V> make() {
     return mapMaker.makeMap();
   }
 }

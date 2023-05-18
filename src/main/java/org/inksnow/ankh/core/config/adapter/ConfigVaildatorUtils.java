@@ -16,8 +16,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @UtilityClass
 public class ConfigVaildatorUtils {
@@ -30,7 +30,7 @@ public class ConfigVaildatorUtils {
   @Getter
   private static final Validator validator = Validation.byProvider(HibernateValidator.class)
       .configure()
-      .getterPropertySelectionStrategy(new GetterPropertySelectionStrategy(){
+      .getterPropertySelectionStrategy(new GetterPropertySelectionStrategy() {
         @Override
         @SneakyThrows
         public Optional<String> getProperty(ConstrainableExecutable executable) {
@@ -45,8 +45,8 @@ public class ConfigVaildatorUtils {
         }
 
         @Override
-        public List<String> getGetterMethodNameCandidates(String propertyName) {
-          return Collections.singletonList(propertyName);
+        public Set<String> getGetterMethodNameCandidates(String propertyName) {
+          return Collections.singleton(propertyName);
         }
       })
       .messageInterpolator(new ParameterMessageInterpolator())
@@ -56,7 +56,7 @@ public class ConfigVaildatorUtils {
 
   @SneakyThrows
   @SuppressWarnings("unchecked")
-  private static <T> Class<T> sneakyClassForName(String name){
+  private static <T> Class<T> sneakyClassForName(String name) {
     return (Class<T>) Class.forName(name);
   }
 }

@@ -63,7 +63,7 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
   }
 
   @SneakyThrows
-  private Object invokeConstructor(Object[] args){
+  private Object invokeConstructor(Object[] args) {
     return constructorHandle.invokeExact(args);
   }
 
@@ -107,7 +107,7 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
     }
 
     private void writeClass(Class<?> interfaceClass, String internalName, ClassWriter cw, TypedEntry[] entries) {
-      cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, internalName, null, "java/lang/Object", new String[]{ Type.getInternalName(interfaceClass) });
+      cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, internalName, null, "java/lang/Object", new String[]{Type.getInternalName(interfaceClass)});
       for (int i = 0; i < entries.length; i++) {
         writeField(cw, i, entries[i]);
         writeMethod(cw, internalName, i, entries[i]);
@@ -115,20 +115,20 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
       writeInit(cw, internalName, entries);
     }
 
-    private void writeField(ClassWriter cw, int index, TypedEntry entry){
+    private void writeField(ClassWriter cw, int index, TypedEntry entry) {
       if (entry.method.getReturnType() != void.class) {
         val fw = cw.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, entry.beanName + "$" + index, Type.getDescriptor(entry.typeToken.getRawType()), null, null);
         fw.visitEnd();
       }
     }
 
-    private void writeMethod(ClassWriter cw, String ownerName, int index, TypedEntry entry){
+    private void writeMethod(ClassWriter cw, String ownerName, int index, TypedEntry entry) {
       val type = Type.getType(entry.method);
       val rType = type.getReturnType();
       val mw = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, entry.beanName, type.getDescriptor(), null, null);
-      if(rType == Type.VOID_TYPE){
+      if (rType == Type.VOID_TYPE) {
         mw.visitInsn(Opcodes.RETURN);
-      }else {
+      } else {
         mw.visitVarInsn(Opcodes.ALOAD, 0);
         mw.visitFieldInsn(Opcodes.GETFIELD, ownerName, entry.beanName + "$" + index, rType.getDescriptor());
         mw.visitInsn(rType.getOpcode(Opcodes.IRETURN));
@@ -143,7 +143,7 @@ public class InterfaceConfigAdapter<T> implements ConfigTypeAdapter<T> {
       mw.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
       for (int i = 0; i < entries.length; i++) {
         val entry = entries[i];
-        if(entry.method.getReturnType() != void.class) {
+        if (entry.method.getReturnType() != void.class) {
           mw.visitVarInsn(Opcodes.ALOAD, 0);
           mw.visitVarInsn(Opcodes.ALOAD, 1);
           mw.visitLdcInsn(i);

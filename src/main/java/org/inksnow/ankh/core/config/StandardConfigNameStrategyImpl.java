@@ -13,28 +13,6 @@ public class StandardConfigNameStrategyImpl implements ConfigNameStrategy {
   private final @Nonnull CaseType caseType;
   private final @Nullable String separator;
 
-  @Nonnull
-  @Override
-  public String translateName(@Nonnull String name) {
-    if(separator != null){
-      name = separateCamelCase(name, separator);
-    }
-    switch (caseType){
-      case UPPER_FIRST:{
-        name = upperCaseFirstLetter(name);
-        break;
-      }
-      case LOWER_ALL: {
-        name = name.toLowerCase(Locale.ENGLISH);
-        break;
-      }
-      case UPPER_ALL: {
-        name = name.toUpperCase(Locale.ENGLISH);
-      }
-    }
-    return name;
-  }
-
   private static String upperCaseFirstLetter(String name) {
     StringBuilder fieldNameBuilder = new StringBuilder();
     int index = 0;
@@ -79,7 +57,29 @@ public class StandardConfigNameStrategyImpl implements ConfigNameStrategy {
         : String.valueOf(firstCharacter);
   }
 
-  private enum CaseType{
+  @Nonnull
+  @Override
+  public String translateName(@Nonnull String name) {
+    if (separator != null) {
+      name = separateCamelCase(name, separator);
+    }
+    switch (caseType) {
+      case UPPER_FIRST: {
+        name = upperCaseFirstLetter(name);
+        break;
+      }
+      case LOWER_ALL: {
+        name = name.toLowerCase(Locale.ENGLISH);
+        break;
+      }
+      case UPPER_ALL: {
+        name = name.toUpperCase(Locale.ENGLISH);
+      }
+    }
+    return name;
+  }
+
+  private enum CaseType {
     UPPER_FIRST,
     LOWER_ALL,
     UPPER_ALL,
