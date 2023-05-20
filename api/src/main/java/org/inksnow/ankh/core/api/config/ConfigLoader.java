@@ -45,7 +45,7 @@ public interface ConfigLoader {
     Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> factory);
 
     @Nonnull
-    Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> ...factories);
+    Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?>... factories);
 
     @Nonnull
     Builder registerFactory(@Nonnull Collection<ConfigTypeAdapter.Factory<?>> factories);

@@ -55,7 +55,7 @@ public class HdsHologramTask implements HologramTask {
     @Nonnull
     @Override
     public InnerContentBuilder content() {
-      return null;
+      return new InnerContentBuilder(this);
     }
 
     @Override

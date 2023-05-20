@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.hibernate.validator.internal.util.annotation.AnnotationFactory;
 import org.inksnow.ankh.core.api.config.*;
 import org.inksnow.ankh.core.common.util.BootstrapUtil;
 import org.inksnow.ankh.core.common.util.CacheMapUtil;

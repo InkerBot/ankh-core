@@ -34,7 +34,7 @@ public class CodecConfigAdapter<T> implements ConfigTypeAdapter<T> {
         return null;
       }
       MethodHandle codecMethod = null;
-      if ((rawType.getModifiers() & Modifier.ABSTRACT) != 0 && !rawType.isInterface()) {
+      if ((rawType.getModifiers() & Modifier.ABSTRACT) == 0 && !rawType.isInterface()) {
         try {
           codecMethod = BootstrapUtil.lookup().findConstructor(rawType, MethodType.methodType(void.class, ConfigSection.class));
         } catch (NoSuchMethodException e) {

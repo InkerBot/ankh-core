@@ -65,6 +65,7 @@ public class ObjectConfigAdapter<T> implements ConfigTypeAdapter<T> {
       val typedEntries = Stream.concat(Stream.of(rawType), Arrays.stream(rawType.getInterfaces()))
           .filter(it -> it != Object.class)
           .flatMap(it -> Arrays.stream(it.getDeclaredFields()))
+          .filter(it -> !Modifier.isStatic(it.getModifiers()))
           .map(new Function<Field, TypedEntry>() {
             @Override
             @SneakyThrows
