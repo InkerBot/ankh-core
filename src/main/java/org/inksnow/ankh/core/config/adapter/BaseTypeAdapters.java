@@ -1,4 +1,4 @@
-package org.inksnow.ankh.core.config;
+package org.inksnow.ankh.core.config.adapter;
 
 import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
@@ -7,7 +7,7 @@ import org.inksnow.ankh.core.api.config.ConfigLoader;
 import org.inksnow.ankh.core.api.config.ConfigSection;
 import org.inksnow.ankh.core.api.config.ConfigTypeAdapter;
 import org.inksnow.ankh.core.common.util.UUIDUtil;
-import org.inksnow.ankh.core.config.adapter.*;
+import org.inksnow.ankh.core.config.adapter.base.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -17,8 +17,10 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
+import static org.inksnow.ankh.core.config.adapter.AdaptersUtils.createFactory;
+
 @SuppressWarnings("unused")
-public final class AnkhTypeAdapters {
+public final class BaseTypeAdapters {
   public static final ConfigTypeAdapter.Factory<ConfigSection> CONFIG_SECTION = createFactory(ConfigSection.class, it -> it);
   public static final ConfigTypeAdapter.Factory<Number> NUMBER = createFactory(Number.class, ConfigSection::asNumber);
   public static final ConfigTypeAdapter.Factory<Integer> INTEGER = createFactory(int.class, Integer.class, ConfigSection::asInteger);
@@ -159,27 +161,7 @@ public final class AnkhTypeAdapters {
     }
   };
 
-  private AnkhTypeAdapters() {
+  private BaseTypeAdapters() {
     throw new UnsupportedOperationException();
-  }
-
-  private static <T> ConfigTypeAdapter.Factory<T> createFactory(Class<T> clazz, ConfigTypeAdapter<? super T> adapter) {
-    return new ConfigTypeAdapter.Factory<T>() {
-      @SuppressWarnings("unchecked") // we use a runtime check to make sure the 'T's equal
-      @Override
-      public <V extends T> ConfigTypeAdapter<V> create(ConfigLoader configLoader, TypeToken<? super V> typeToken) {
-        return typeToken.getRawType() == clazz ? (ConfigTypeAdapter<V>) adapter : null;
-      }
-    };
-  }
-
-  private static <T> ConfigTypeAdapter.Factory<T> createFactory(Class<T> base, Class<? extends T> sub, ConfigTypeAdapter<? super T> adapter) {
-    return new ConfigTypeAdapter.Factory<T>() {
-      @SuppressWarnings("unchecked") // we use a runtime check to make sure the 'T's equal
-      @Override
-      public <V extends T> ConfigTypeAdapter<V> create(ConfigLoader configLoader, TypeToken<? super V> typeToken) {
-        return (typeToken.getRawType() == base || typeToken.getRawType() == sub) ? (ConfigTypeAdapter<V>) adapter : null;
-      }
-    };
   }
 }

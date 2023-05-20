@@ -140,6 +140,10 @@ dependencies {
     exclude("org.checkerframework", "checker-qual")
     exclude("org.jetbrains", "annotations")
   }
+  compileOnly("net.kyori:adventure-text-minimessage:4.13.1") {
+    exclude("org.checkerframework", "checker-qual")
+    exclude("org.jetbrains", "annotations")
+  }
   compileOnly("net.kyori:adventure-platform-bukkit:4.3.0") {
     exclude("org.checkerframework", "checker-qual")
     exclude("org.jetbrains", "annotations")

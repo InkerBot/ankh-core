@@ -10,6 +10,7 @@ import lombok.val;
 import org.inksnow.ankh.core.api.config.*;
 import org.inksnow.ankh.core.common.util.BootstrapUtil;
 import org.inksnow.ankh.core.common.util.CacheMapUtil;
+import org.inksnow.ankh.core.config.adapter.BaseTypeAdapters;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -185,21 +186,21 @@ public class ConfigLoaderImpl implements ConfigLoader {
       val factoryListBuilder = ImmutableList.<ConfigTypeAdapter.Factory<?>>builder();
       val implementationMapBuilder = ImmutableMap.<Class<?>, Class<?>>builder();
 
-      factoryListBuilder.add(AnkhTypeAdapters.CONFIG_SECTION);
+      factoryListBuilder.add(BaseTypeAdapters.CONFIG_SECTION);
 
       factoryListBuilder.addAll(userFactories);
 
       factoryListBuilder.add(
-          AnkhTypeAdapters.NUMBER, AnkhTypeAdapters.INTEGER, AnkhTypeAdapters.BYTE, AnkhTypeAdapters.CHARACTER,
-          AnkhTypeAdapters.BOOLEAN, AnkhTypeAdapters.DOUBLE, AnkhTypeAdapters.FLOAT, AnkhTypeAdapters.LONG,
-          AnkhTypeAdapters.BIG_DECIMAL, AnkhTypeAdapters.BIG_INTEGER, AnkhTypeAdapters.STRING,
-          AnkhTypeAdapters.ATOMIC_BOOLEAN, AnkhTypeAdapters.ATOMIC_INTEGER, AnkhTypeAdapters.ATOMIC_INTEGER_ARRAY,
-          AnkhTypeAdapters.ATOMIC_LONG, AnkhTypeAdapters.ATOMIC_LONG_ARRAY, AnkhTypeAdapters.STRING_BUFFER,
-          AnkhTypeAdapters.STRING_BUILDER, AnkhTypeAdapters.URL, AnkhTypeAdapters.URI, AnkhTypeAdapters.UUID,
-          AnkhTypeAdapters.CURRENCY, AnkhTypeAdapters.LOCALE, AnkhTypeAdapters.INET_ADDRESS, AnkhTypeAdapters.BIT_SET,
-          AnkhTypeAdapters.DATE, AnkhTypeAdapters.CALENDAR, AnkhTypeAdapters.ARRAY, AnkhTypeAdapters.COLLECTION,
-          AnkhTypeAdapters.MAP, AnkhTypeAdapters.CODEC, AnkhTypeAdapters.ENUM, AnkhTypeAdapters.INTERFACE,
-          AnkhTypeAdapters.RECORD, AnkhTypeAdapters.OBJECT, AnkhTypeAdapters.NULL
+          BaseTypeAdapters.NUMBER, BaseTypeAdapters.INTEGER, BaseTypeAdapters.BYTE, BaseTypeAdapters.CHARACTER,
+          BaseTypeAdapters.BOOLEAN, BaseTypeAdapters.DOUBLE, BaseTypeAdapters.FLOAT, BaseTypeAdapters.LONG,
+          BaseTypeAdapters.BIG_DECIMAL, BaseTypeAdapters.BIG_INTEGER, BaseTypeAdapters.STRING,
+          BaseTypeAdapters.ATOMIC_BOOLEAN, BaseTypeAdapters.ATOMIC_INTEGER, BaseTypeAdapters.ATOMIC_INTEGER_ARRAY,
+          BaseTypeAdapters.ATOMIC_LONG, BaseTypeAdapters.ATOMIC_LONG_ARRAY, BaseTypeAdapters.STRING_BUFFER,
+          BaseTypeAdapters.STRING_BUILDER, BaseTypeAdapters.URL, BaseTypeAdapters.URI, BaseTypeAdapters.UUID,
+          BaseTypeAdapters.CURRENCY, BaseTypeAdapters.LOCALE, BaseTypeAdapters.INET_ADDRESS, BaseTypeAdapters.BIT_SET,
+          BaseTypeAdapters.DATE, BaseTypeAdapters.CALENDAR, BaseTypeAdapters.ARRAY, BaseTypeAdapters.COLLECTION,
+          BaseTypeAdapters.MAP, BaseTypeAdapters.CODEC, BaseTypeAdapters.ENUM, BaseTypeAdapters.INTERFACE,
+          BaseTypeAdapters.RECORD, BaseTypeAdapters.OBJECT, BaseTypeAdapters.NULL
       );
 
       implementationMapBuilder.putAll(userImplementationMap);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.inksnow.ankh.core.config.adapter;
+package org.inksnow.ankh.core.config.adapter.base;
 
 import java.io.Serializable;
 import java.lang.reflect.*;

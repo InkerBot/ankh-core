@@ -1,4 +1,4 @@
-package org.inksnow.ankh.core.config.adapter;
+package org.inksnow.ankh.core.config.adapter.base;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
