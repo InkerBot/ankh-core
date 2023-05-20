@@ -1,7 +1,7 @@
 group = "org.inksnow.ankh.neigeitems"
 
 repositories {
-  maven("https://r2.blobs.inksnow.org/maven/")
+  maven("https://r.irepo.space/maven/")
 }
 
 dependencies {
