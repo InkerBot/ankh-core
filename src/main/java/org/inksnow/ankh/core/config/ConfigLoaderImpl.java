@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.hibernate.validator.internal.util.annotation.AnnotationFactory;
 import org.inksnow.ankh.core.api.config.*;
 import org.inksnow.ankh.core.common.util.BootstrapUtil;
 import org.inksnow.ankh.core.common.util.CacheMapUtil;
@@ -162,6 +163,18 @@ public class ConfigLoaderImpl implements ConfigLoader {
 
     public @Nonnull Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> factory) {
       userFactories.add(factory);
+      return this;
+    }
+
+    @Override
+    public @Nonnull Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?>... factories) {
+      userFactories.addAll(Arrays.asList(factories));
+      return this;
+    }
+
+    @Override
+    public @Nonnull Builder registerFactory(@Nonnull Collection<ConfigTypeAdapter.Factory<?>> factories) {
+      userFactories.addAll(factories);
       return this;
     }
 

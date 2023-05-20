@@ -7,6 +7,7 @@ import org.inksnow.ankh.core.api.util.IBuilder;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.function.Supplier;
 
 public interface ConfigLoader {
@@ -42,6 +43,12 @@ public interface ConfigLoader {
 
     @Nonnull
     Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> factory);
+
+    @Nonnull
+    Builder registerFactory(@Nonnull ConfigTypeAdapter.Factory<?> ...factories);
+
+    @Nonnull
+    Builder registerFactory(@Nonnull Collection<ConfigTypeAdapter.Factory<?>> factories);
 
     @Nonnull
     Builder nameStrategy(@Nonnull ConfigNameStrategy nameStrategy);
