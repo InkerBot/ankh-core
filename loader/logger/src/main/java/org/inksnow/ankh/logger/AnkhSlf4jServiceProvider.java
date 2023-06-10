@@ -1,6 +1,10 @@
 package org.inksnow.ankh.logger;
 
+import lombok.val;
+import org.inksnow.ankh.cloud.AnkhCloudLoader;
+import org.inksnow.ankh.logger.cloud.AnkhCloudLoggerFactory;
 import org.inksnow.ankh.logger.delegate.DelegateLoggerFactory;
+import org.inksnow.ankh.logger.simple.SimpleNamePrefixLoggerFactory;
 import org.inksnow.ankh.logger.simple.StdoutSlf4jServiceProvider;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.IMarkerFactory;
@@ -47,7 +51,14 @@ public class AnkhSlf4jServiceProvider implements SLF4JServiceProvider {
 
   @Override
   public void initialize() {
-    loggerFactory = new DelegateLoggerFactory(delegate.getLoggerFactory());
+    val prefixLoggerFactory = new SimpleNamePrefixLoggerFactory("ankh:", delegate.getLoggerFactory());
+
+    if (AnkhCloudLoader.enabled()) {
+      loggerFactory = new DelegateLoggerFactory(new AnkhCloudLoggerFactory(), prefixLoggerFactory);
+    } else {
+      loggerFactory = new DelegateLoggerFactory(prefixLoggerFactory);
+    }
+
     markerFactory = delegate.getMarkerFactory();
     mdcAdapter = delegate.getMDCAdapter();
   }
@@ -61,7 +72,7 @@ public class AnkhSlf4jServiceProvider implements SLF4JServiceProvider {
         continue;
       }
       try {
-        SLF4JServiceProvider instance = clazz.getConstructor().newInstance();
+        val instance = clazz.getConstructor().newInstance();
         instance.initialize();
         return instance;
       } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

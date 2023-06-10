@@ -15,3 +15,5 @@ include("services:service-groovy")
 include("services:service-js-nashorn")
 include("services:service-kether")
 include("services:service-neigeitems")
+include("loader:cloud")
+findProject(":loader:cloud")?.name = "cloud"

@@ -23,17 +23,20 @@ public abstract class AnkhBukkitPlugin extends JavaPlugin implements Listener {
 
   @Override
   public final void onLoad() {
+    acceptLoad();
     getContainer().callLoad();
   }
 
   @Override
-  public final void onDisable() {
-    getContainer().callDisable();
+  public final void onEnable() {
+    acceptEnable();
+    getContainer().callEnable();
   }
 
   @Override
-  public void onEnable() {
-    getContainer().callEnable();
+  public final void onDisable() {
+    acceptDisable();
+    getContainer().callDisable();
   }
 
   @Override
@@ -44,6 +47,18 @@ public abstract class AnkhBukkitPlugin extends JavaPlugin implements Listener {
   @Override
   public final List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
     return super.onTabComplete(sender, command, alias, args);
+  }
+
+  protected void acceptLoad() {
+    //
+  }
+
+  protected void acceptEnable() {
+    //
+  }
+
+  protected void acceptDisable() {
+    //
   }
 
   public interface $internal$actions$ {

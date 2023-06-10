@@ -7,10 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class DelegateLoggerFactory implements ILoggerFactory {
-  private final ILoggerFactory delegate;
+  private final ILoggerFactory[] delegate;
   private final ConcurrentMap<String, Logger> loggerMap = new ConcurrentHashMap<>();
 
-  public DelegateLoggerFactory(ILoggerFactory delegate) {
+  public DelegateLoggerFactory(ILoggerFactory... delegate) {
     this.delegate = delegate;
   }
 
@@ -20,12 +20,10 @@ public class DelegateLoggerFactory implements ILoggerFactory {
   }
 
   private Logger createLogger(String name) {
-    if (name.contains(".")) {
-      name = name.substring(name.lastIndexOf('.') + 1);
+    Logger[] delegateLogger = new Logger[delegate.length];
+    for (int i = 0; i < delegate.length; i++) {
+      delegateLogger[i] = delegate[i].getLogger(name);
     }
-    if (name.contains("$")) {
-      name = name.substring(0, name.indexOf('$'));
-    }
-    return new DelegateLogger(name, delegate.getLogger("ankh:" + name));
+    return new DelegateLogger(name, delegateLogger);
   }
 }

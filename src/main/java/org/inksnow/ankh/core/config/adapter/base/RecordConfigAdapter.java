@@ -71,14 +71,14 @@ public class RecordConfigAdapter<T> implements ConfigTypeAdapter<T> {
   }
 
   private static class ImplFactory implements ConfigTypeAdapter.Factory<Object> {
-    private final MethodHandle classIsRecord = BootstrapUtil.ofVirtual("Ljava/lang/Class;isRecord()Z");
-    private final MethodHandle classGetRecordComponents = BootstrapUtil.ofVirtual("Ljava/lang/Class;getRecordComponents()[Ljava/lang/reflect/RecordComponent;")
+    private static final MethodHandle classIsRecord = BootstrapUtil.ofVirtual("Ljava/lang/Class;isRecord()Z");
+    private static final MethodHandle classGetRecordComponents = BootstrapUtil.ofVirtual("Ljava/lang/Class;getRecordComponents()[Ljava/lang/reflect/RecordComponent;")
         .asType(MethodType.methodType(Object[].class, Class.class));
-    private final MethodHandle recordComponentGetType = BootstrapUtil.ofVirtual("Ljava/lang/reflect/RecordComponent;getType()Ljava/lang/Class;")
+    private static final MethodHandle recordComponentGetType = BootstrapUtil.ofVirtual("Ljava/lang/reflect/RecordComponent;getType()Ljava/lang/Class;")
         .asType(MethodType.methodType(Class.class, Object.class));
-    private final MethodHandle recordComponentGetGenericType = BootstrapUtil.ofVirtual("Ljava/lang/reflect/RecordComponent;getGenericType()Ljava/lang/reflect/Type;")
+    private static final MethodHandle recordComponentGetGenericType = BootstrapUtil.ofVirtual("Ljava/lang/reflect/RecordComponent;getGenericType()Ljava/lang/reflect/Type;")
         .asType(MethodType.methodType(Type.class, Object.class));
-    private final MethodHandle recordComponentGetName = BootstrapUtil.ofVirtual("Ljava/lang/reflect/RecordComponent;getName()Ljava/lang/String;")
+    private static final MethodHandle recordComponentGetName = BootstrapUtil.ofVirtual("Ljava/lang/reflect/RecordComponent;getName()Ljava/lang/String;")
         .asType(MethodType.methodType(String.class, Object.class));
 
     @SneakyThrows
