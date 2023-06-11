@@ -1,5 +1,6 @@
 package org.inksnow.ankh.cloud;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.bukkit.plugin.Plugin;
 import org.inksnow.ankh.cloud.bean.LogBean;
@@ -14,7 +17,6 @@ import org.inksnow.ankh.cloud.endpoint.*;
 import org.inksnow.ankh.cloud.util.PluginSchedulerExecutor;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +34,6 @@ import java.util.logging.Logger;
 
 public final class AnkhCloudLoader {
   private static final Logger logger = Logger.getLogger("ankh-cloud");
-  private static final String METHOD_POST = "POST";
   private static final String HEADER_CONTENT_TYPE = "Content-Type";
   private static final String CONTENT_TYPE_JSON = "application/json; charset=UTF-8";
   private static final Gson GSON = new GsonBuilder().create();
@@ -226,22 +227,27 @@ public final class AnkhCloudLoader {
 
   private static <T> T sendPostJson(URI url, Object data, Class<T> responseType) throws IOException {
     byte[] contentBytes = encodeContent(data);
-    URLConnection connection = url.toURL().openConnection();
-    try {
-      HttpURLConnection httpConnection = (HttpURLConnection) connection;
-      httpConnection.setRequestMethod(METHOD_POST);
-      httpConnection.setDoOutput(true);
-      httpConnection.setFixedLengthStreamingMode(contentBytes.length);
-      httpConnection.setRequestProperty(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON);
-      httpConnection.connect();
-      try (OutputStream os = httpConnection.getOutputStream()) {
-        os.write(contentBytes);
+
+    val request = new HttpPost(url);
+    request.setEntity(new ByteArrayEntity(contentBytes));
+    request.setHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON);
+    val response = httpClient.execute(request);
+    val statusCode = response.getStatusLine().getStatusCode();
+    if (statusCode != 200 && statusCode != 204) {
+      String content = "";
+      try (val contentInput = response.getEntity().getContent()) {
+        content = new String(ByteStreams.toByteArray(contentInput), StandardCharsets.UTF_8);
+      } catch (Exception e) {
+        //
       }
-      try (Reader reader = new InputStreamReader(httpConnection.getInputStream(), StandardCharsets.UTF_8)) {
-        return responseType == null ? null : GSON.fromJson(reader, responseType);
+      throw new IOException("AnkhCloud return non-2xx response: " + content);
+    }
+    if (response.getEntity() != null) {
+      try (val contentInput = new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8)) {
+        return responseType == null ? null : GSON.fromJson(contentInput, responseType);
       }
-    } finally {
-      safeCloseConnection(connection);
+    } else {
+      return null;
     }
   }
 

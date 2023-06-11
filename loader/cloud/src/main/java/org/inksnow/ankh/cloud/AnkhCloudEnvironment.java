@@ -7,5 +7,5 @@ public final class AnkhCloudEnvironment {
   public static final int WARN_INT = 30;
   public static final int ERROR_INT = 40;
 
-  public static String BASE_URL = "http://localhost/ankhcore";
+  public static String BASE_URL = "https://ankhcloud.k8s.server.inker.bot/ankhcore";
 }
