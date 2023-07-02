@@ -6,6 +6,7 @@ import com.google.inject.name.Names;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.bukkit.Bukkit;
+import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.AnkhServiceLoader;
 import org.inksnow.ankh.core.api.hologram.HologramService;
 import org.inksnow.ankh.core.api.util.DcLazy;
@@ -38,7 +39,7 @@ public class HologramProvider extends DcLazy<HologramService> implements Provide
 
     // test and use support service
     if (Bukkit.getPluginManager().getPlugin("HolographicDisplays") != null) {
-      return injector.getInstance(Key.get(HologramService.class, Names.named("hds")));
+      return injector.getInstance(Key.get(HologramService.class, Names.named(AnkhCore.PLUGIN_ID + ":hds")));
     }
 
     // no support service found, use nop
@@ -47,6 +48,6 @@ public class HologramProvider extends DcLazy<HologramService> implements Provide
     logger.info("We recommend bukkit plugin 'HolographicDisplays' to support it");
     logger.info("You can download it from https://dev.bukkit.org/projects/holographic-displays");
     logger.info("====================================================");
-    return injector.getInstance(Key.get(HologramService.class, Names.named("nop")));
+    return injector.getInstance(Key.get(HologramService.class, Names.named(AnkhCore.PLUGIN_ID + ":nop")));
   }
 }

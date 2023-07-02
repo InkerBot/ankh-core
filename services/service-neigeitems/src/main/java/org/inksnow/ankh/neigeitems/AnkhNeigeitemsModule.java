@@ -9,6 +9,6 @@ import org.inksnow.ankh.core.api.plugin.annotations.PluginModule;
 public class AnkhNeigeitemsModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(ItemFetcher.class).annotatedWith(Names.named("neigeitems")).to(NeigeItemFetcher.class);
+    bind(ItemFetcher.class).annotatedWith(Names.named(AnkhNeigeitems.PLUGIN_ID + ":neigeitems")).to(NeigeItemFetcher.class);
   }
 }

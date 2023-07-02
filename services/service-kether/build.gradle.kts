@@ -30,6 +30,7 @@ taboolib {
 }
 
 dependencies {
+  compileOnly(project(":"))
   compileOnly(kotlin("stdlib"))
   compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
   compileOnly(project(":api"))
@@ -40,10 +41,6 @@ tasks.compileKotlin {
     jvmTarget = "1.8"
     freeCompilerArgs = listOf("-Xjvm-default=all")
   }
-}
-
-tasks.publish {
-  enabled = false
 }
 
 tasks.javadocJar {

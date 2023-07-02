@@ -10,10 +10,6 @@ dependencies {
   compileOnly("pers.neige.neigeitems:NeigeItems:1.12.9")
 }
 
-tasks.publish {
-  enabled = false
-}
-
 tasks.javadocJar {
   enabled = false
 }

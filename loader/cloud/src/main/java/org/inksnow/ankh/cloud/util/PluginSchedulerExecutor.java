@@ -27,7 +27,7 @@ public final class PluginSchedulerExecutor implements Executor {
 
   @Override
   public void execute(Runnable command) {
-    if (Bukkit.isPrimaryThread()) {
+    if (Bukkit.isPrimaryThread() || !plugin.isEnabled()) {
       command.run();
     } else {
       Bukkit.getScheduler().runTask(plugin, command);

@@ -9,7 +9,7 @@ import org.inksnow.ankh.core.api.script.AnkhScriptEngine;
 public class AnkhJsNashornModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(AnkhScriptEngine.class).annotatedWith(Names.named("js")).to(JsNashornEngine.class);
-    bind(AnkhScriptEngine.class).annotatedWith(Names.named("nashorn")).to(JsNashornEngine.class);
+    bind(AnkhScriptEngine.class).annotatedWith(Names.named(AnkhJsNashorn.PLUGIN_ID + ":js")).to(JsNashornEngine.class);
+    bind(AnkhScriptEngine.class).annotatedWith(Names.named(AnkhJsNashorn.PLUGIN_ID + ":nashorn")).to(JsNashornEngine.class);
   }
 }

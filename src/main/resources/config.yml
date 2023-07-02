@@ -11,6 +11,12 @@ item:
     mark-start: '@ankh-item '
     mark-end: '@'
 
+performance:
+  cache-concurrency-level: -1
+  cache-initial-capacity: -1
+  cache-key-weak: true
+  cache-value-weak: false
+
 # select service
 service:
   # hologram service, empty to auto-detect

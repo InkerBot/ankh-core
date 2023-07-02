@@ -13,3 +13,9 @@ tasks.shadowJar {
 tasks.assemble {
   dependsOn(tasks.shadowJar)
 }
+
+ext["publishAction"] = Action<MavenPublication> {
+  artifact(tasks.shadowJar) {
+    classifier = ""
+  }
+}

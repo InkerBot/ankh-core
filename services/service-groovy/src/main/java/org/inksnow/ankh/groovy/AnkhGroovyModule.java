@@ -9,6 +9,6 @@ import org.inksnow.ankh.core.api.script.AnkhScriptEngine;
 public class AnkhGroovyModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(AnkhScriptEngine.class).annotatedWith(Names.named("groovy")).to(GroovyEngine.class);
+    bind(AnkhScriptEngine.class).annotatedWith(Names.named(AnkhGroovy.PLUGIN_ID + ":groovy")).to(GroovyEngine.class);
   }
 }

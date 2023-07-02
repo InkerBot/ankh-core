@@ -1,11 +1,13 @@
 package org.inksnow.ankh.core.api.plugin;
 
 import org.bukkit.event.EventPriority;
+import org.bukkit.plugin.Plugin;
+import org.inksnow.ankh.core.api.AnkhCoreLoader;
 
 public interface AnkhPluginContainer {
   void callClinit();
 
-  void callInit(AnkhBukkitPlugin bukkitPlugin);
+  void callInit(AnkhCoreLoader bukkitPlugin);
 
   void callLoad();
 
@@ -23,5 +25,5 @@ public interface AnkhPluginContainer {
 
   void onDisable(EventPriority priority, Runnable listener);
 
-  AnkhBukkitPlugin plugin();
+  Plugin plugin();
 }

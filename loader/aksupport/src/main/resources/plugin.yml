@@ -1,0 +1,8 @@
+name: ankh-core
+version: 1.0-SNAPSHOT
+main: org.inksnow.ankh.loader.AnkhCoreLoaderPlugin
+load: STARTUP
+api-version: 1.13
+authors:
+  - InkerBot
+softdepend: [ HolographicDisplays ]

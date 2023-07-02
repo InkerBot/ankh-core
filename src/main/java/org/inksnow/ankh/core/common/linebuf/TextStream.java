@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 public interface TextStream {
   /**
    * Called when some chunk of text is available.
+   *
+   * @param text the text to send, may endsWith '\n'
    */
   void text(String text);
 

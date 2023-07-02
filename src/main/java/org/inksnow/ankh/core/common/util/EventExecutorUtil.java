@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.plugin.EventExecutor;
 import org.inksnow.ankh.core.common.asm.ClassWriterWithClassLoader;
 import org.inksnow.ankh.core.common.asm.CodeDefClassLoader;

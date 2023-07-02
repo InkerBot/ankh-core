@@ -1,5 +1,6 @@
 package org.inksnow.ankh.jsnashorn;
 
+import lombok.SneakyThrows;
 import org.inksnow.ankh.core.api.script.AnkhScriptEngine;
 import org.inksnow.ankh.core.api.script.PreparedScript;
 import org.inksnow.ankh.core.api.script.ScriptContext;
@@ -16,7 +17,8 @@ public class JsNashornEngine implements AnkhScriptEngine {
   private static final Logger logger = LoggerFactory.getLogger("ankh-js-nashorn");
   private static final MethodHandle nashornFactory = createFactory();
 
-  private static <T extends Throwable> ScriptEngineFactory getFactory() throws T {
+  @SneakyThrows
+  private static ScriptEngineFactory getFactory() {
     try {
       return (ScriptEngineFactory) Class.forName("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory")
           .getConstructor()
@@ -28,8 +30,6 @@ public class JsNashornEngine implements AnkhScriptEngine {
           .filter(it -> it.getNames().contains("nashorn"))
           .findFirst()
           .orElse(null);
-    } catch (Exception e) {
-      throw (T) e;
     }
   }
 

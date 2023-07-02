@@ -17,6 +17,8 @@ public interface ConfigNameStrategy {
 
   /**
    * Using this naming strategy will ensure that the bean name is unchanged.
+   *
+   * @return the strategy
    */
   static @Nonnull ConfigNameStrategy identity() {
     return factory().identity();
@@ -31,6 +33,8 @@ public interface ConfigNameStrategy {
    *   <li>someBeanName --- SomeBeanName</li>
    *   <li>_someBeanName --- _SomeBeanName</li>
    * </ul>
+   *
+   * @return the strategy
    */
   static @Nonnull ConfigNameStrategy upperCamelCase() {
     return factory().upperCamelCase();
@@ -46,6 +50,8 @@ public interface ConfigNameStrategy {
    *   <li>someBeanName --- Some Bean Name</li>
    *   <li>_someBeanName --- _Some Bean Name</li>
    * </ul>
+   *
+   * @return the strategy
    */
   static @Nonnull ConfigNameStrategy upperCamelCaseWithSpaces() {
     return factory().upperCamelCaseWithSpaces();
@@ -62,6 +68,8 @@ public interface ConfigNameStrategy {
    *   <li>aStringBean --- a_string_bean</li>
    *   <li>aURL --- a_u_r_l</li>
    * </ul>
+   *
+   * @return the strategy
    */
   static @Nonnull ConfigNameStrategy lowerCaseWithUnderscores() {
     return factory().lowerCaseWithUnderscores();
@@ -78,6 +86,8 @@ public interface ConfigNameStrategy {
    *   <li>aStringBean --- a-string-bean</li>
    *   <li>aURL --- a-u-r-l</li>
    * </ul>
+   *
+   * @return the strategy
    */
   static @Nonnull ConfigNameStrategy lowerCaseWithDashes() {
     return factory().lowerCaseWithDashes();
@@ -92,6 +102,8 @@ public interface ConfigNameStrategy {
 
     /**
      * Using this naming strategy will ensure that the bean name is unchanged.
+     *
+     * @return the strategy
      */
     @Nonnull
     ConfigNameStrategy identity();
@@ -105,6 +117,8 @@ public interface ConfigNameStrategy {
      *   <li>someBeanName --- SomeBeanName</li>
      *   <li>_someBeanName --- _SomeBeanName</li>
      * </ul>
+     *
+     * @return the strategy
      */
     @Nonnull
     ConfigNameStrategy upperCamelCase();
@@ -119,6 +133,8 @@ public interface ConfigNameStrategy {
      *   <li>someBeanName --- Some Bean Name</li>
      *   <li>_someBeanName --- _Some Bean Name</li>
      * </ul>
+     *
+     * @return the strategy
      */
     @Nonnull
     ConfigNameStrategy upperCamelCaseWithSpaces();
@@ -134,6 +150,8 @@ public interface ConfigNameStrategy {
      *   <li>aStringBean --- a_string_bean</li>
      *   <li>aURL --- a_u_r_l</li>
      * </ul>
+     *
+     * @return the strategy
      */
     @Nonnull
     ConfigNameStrategy lowerCaseWithUnderscores();
@@ -149,6 +167,8 @@ public interface ConfigNameStrategy {
      *   <li>aStringBean --- a-string-bean</li>
      *   <li>aURL --- a-u-r-l</li>
      * </ul>
+     *
+     * @return the strategy
      */
     @Nonnull
     ConfigNameStrategy lowerCaseWithDashes();

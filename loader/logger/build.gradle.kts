@@ -8,9 +8,6 @@ dependencies {
     exclude("*")
   }
   implementation("org.slf4j:slf4j-api:2.0.6")
-  // lombok
-  compileOnly("org.projectlombok:lombok:1.18.26")
-  annotationProcessor("org.projectlombok:lombok:1.18.26")
 }
 
 tasks.publish {

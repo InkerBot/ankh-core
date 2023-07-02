@@ -8,6 +8,7 @@ import taboolib.module.kether.KetherScriptLoader;
 import taboolib.module.kether.ScriptService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ public class KetherEngine implements AnkhScriptEngine {
   private static final DcLazy<KetherEngine> INSTANCE = DcLazy.of(KetherEngine::new);
   private final KetherScriptLoader scriptLoader = new KetherScriptLoader();
 
+  @Inject
   private KetherEngine() {
     //
   }

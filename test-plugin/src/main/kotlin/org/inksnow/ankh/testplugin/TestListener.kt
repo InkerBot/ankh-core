@@ -8,10 +8,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.inventory.ItemStack
+import org.inksnow.ankh.core.api.AnkhCoreLoader
 import org.inksnow.ankh.core.api.config.ConfigLoader
 import org.inksnow.ankh.core.api.config.ConfigNameStrategy
 import org.inksnow.ankh.core.api.config.ConfigService
-import org.inksnow.ankh.core.api.plugin.AnkhBukkitPlugin
 import org.inksnow.ankh.core.api.plugin.PluginLifeCycle
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptEvent
 import org.inksnow.ankh.core.api.plugin.annotations.SubscriptLifecycle
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TestListener @Inject private constructor(
-  private val plugin: AnkhBukkitPlugin,
+  private val plugin: AnkhCoreLoader,
   private val testItem: TestItem,
   private val configService: ConfigService
 ) {

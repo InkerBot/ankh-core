@@ -1,5 +1,7 @@
 package org.inksnow.ankh.core.api.util;
 
+import lombok.SneakyThrows;
+
 import java.util.concurrent.Callable;
 
 /**
@@ -84,6 +86,7 @@ public abstract class DcLazy<T> {
    *
    * @return the object initialized by this {@link DcLazy}
    */
+  @SneakyThrows
   public T get() {
     // use a temporary variable to reduce the number of reads of the
     // volatile field
@@ -93,20 +96,12 @@ public abstract class DcLazy<T> {
       synchronized (this) {
         result = object;
         if (result == NO_INIT) {
-          object = result = callInitialize();
+          object = result = initialize();
         }
       }
     }
 
     return result;
-  }
-
-  private <E extends Throwable> T callInitialize() throws E {
-    try {
-      return initialize();
-    } catch (Throwable e) {
-      throw (E) e;
-    }
   }
 
   /**
@@ -117,6 +112,7 @@ public abstract class DcLazy<T> {
    * handled by {@code get()}.
    *
    * @return the managed data object
+   * @throws Throwable any throwable during initialize
    */
   protected abstract T initialize() throws Throwable;
 
@@ -141,7 +137,7 @@ public abstract class DcLazy<T> {
     }
 
     @Override
-    protected T initialize() throws Throwable {
+    protected T initialize() {
       return value;
     }
   }

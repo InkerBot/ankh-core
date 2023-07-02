@@ -2,6 +2,7 @@ package org.inksnow.ankh.core.script;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.plugin.annotations.PluginModule;
 import org.inksnow.ankh.core.api.script.AnkhScriptEngine;
 import org.inksnow.ankh.core.api.script.AnkhScriptService;
@@ -16,6 +17,6 @@ public class AnkhScriptModule extends AbstractModule {
 
     bind(AnkhScriptService.class).to(ScriptServiceImpl.class);
     bind(AnkhScriptEngine.class).toProvider(ScriptServiceImpl.class);
-    bind(AnkhScriptEngine.class).annotatedWith(Names.named("bsh")).to(BeanShellEngine.class);
+    bind(AnkhScriptEngine.class).annotatedWith(Names.named(AnkhCore.PLUGIN_ID + ":bsh")).to(BeanShellEngine.class);
   }
 }

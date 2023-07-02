@@ -3,6 +3,7 @@ package org.inksnow.ankh.core.item;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import lombok.SneakyThrows;
+import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.item.AnkhItemRegistry;
 import org.inksnow.ankh.core.api.item.AnkhItemService;
 import org.inksnow.ankh.core.api.item.ItemFetcher;
@@ -22,22 +23,11 @@ public class AnkhItemModule extends AbstractModule {
     bind(AnkhItemService.class).to(AnkhItemServiceImpl.class);
 
     bind(ItemTagger.class).toProvider(SpiProvider.service(ItemTagger.class));
-    bind(ItemTagger.class).annotatedWith(Names.named("pdc")).to(PdcItemTagger.class);
-    bind(ItemTagger.class).annotatedWith(Names.named("nbt")).to(NbtItemTagger.class);
+    bind(ItemTagger.class).annotatedWith(Names.named(AnkhCore.PLUGIN_ID + ":pdc")).to(PdcItemTagger.class);
+    bind(ItemTagger.class).annotatedWith(Names.named(AnkhCore.PLUGIN_ID + ":nbt")).to(NbtItemTagger.class);
 
     bind(ItemFetcher.class).toProvider(SpiProvider.service(ItemFetcher.class));
-    bind(ItemFetcher.class).annotatedWith(Names.named("tag")).to(TagItemFetcher.class);
-    bind(ItemFetcher.class).annotatedWith(Names.named("lore")).to(LoreItemFetcher.class);
-  }
-
-  @SneakyThrows
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  private void bindIfExist(String requireClassName, Class<?> serviceClass, String name, String targetClass) {
-    try {
-      Class.forName(requireClassName);
-    } catch (ClassNotFoundException e) {
-      return;
-    }
-    bind(serviceClass).annotatedWith(Names.named(name)).to((Class) Class.forName(targetClass));
+    bind(ItemFetcher.class).annotatedWith(Names.named(AnkhCore.PLUGIN_ID + ":tag")).to(TagItemFetcher.class);
+    bind(ItemFetcher.class).annotatedWith(Names.named(AnkhCore.PLUGIN_ID + ":lore")).to(LoreItemFetcher.class);
   }
 }
