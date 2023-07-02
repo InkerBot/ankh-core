@@ -13,7 +13,7 @@ include("gradle-plugin")
 include("libs:shadow-bsh")
 include("libs:shadow-spring-boot-loader")
 include("libs:shadow-paper-lib")
-// include("libs:shadow-callsite-nbt")
+include("libs:shadow-callsite-nbt")
 
 include("services:service-groovy")
 include("services:service-js-nashorn")

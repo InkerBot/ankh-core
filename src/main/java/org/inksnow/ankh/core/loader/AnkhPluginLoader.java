@@ -1,5 +1,6 @@
 package org.inksnow.ankh.core.loader;
 
+import org.inksnow.ankh.core.nbt.loader.CallSiteNbt;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;

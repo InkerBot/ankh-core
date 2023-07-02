@@ -1,11 +1,11 @@
 package org.inksnow.ankh.core.item.tagger;
 
-import bot.inker.bukkit.nbt.NbtItemStack;
 import lombok.val;
 import net.kyori.adventure.key.Key;
 import org.bukkit.inventory.ItemStack;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.item.ItemTagger;
+import org.inksnow.ankh.core.nbt.NbtItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -163,7 +163,6 @@ dependencies {
     exclude("org.checkerframework", "checker-qual")
     exclude("org.jetbrains", "annotations")
   }
-  api("bot.inker.bukkit:callsite-nbt:1.0-27")
 
   // adventure
   compileOnly("net.kyori:adventure-api:4.13.1") {
@@ -206,6 +205,7 @@ dependencies {
 
   // shadow depends
   api(project(":libs:shadow-paper-lib", configuration = "shadow"))
+  api(project(":libs:shadow-callsite-nbt", configuration = "shadow"))
 
   // other plugins (api usage)
   compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")

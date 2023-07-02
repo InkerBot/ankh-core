@@ -19,6 +19,6 @@ public class NopHologramService implements HologramService {
 
   @Override
   public HologramTask.Builder builder() {
-    return null;
+    return new NopHologramTask.Builder();
   }
 }

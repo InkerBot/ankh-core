@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.inksnow.ankh.cloud.AnkhCloudLoader;
 import org.inksnow.ankh.core.api.AnkhCoreLoader;
 import org.inksnow.ankh.core.api.plugin.AnkhPluginContainer;
+import org.inksnow.ankh.core.nbt.loader.CallSiteNbt;
 import org.inksnow.asteroid.AkConfigLoader;
 import org.inksnow.asteroid.AkDeployResult;
 import org.inksnow.asteroid.AkLoader;
@@ -13,6 +14,10 @@ import org.inksnow.asteroid.AkLoader;
 import java.util.logging.Level;
 
 public final class AnkhCoreLoaderPlugin extends JavaPlugin implements AnkhCoreLoader {
+  static {
+    CallSiteNbt.install(AnkhCoreLoaderPlugin.class);
+  }
+
   private AnkhPluginContainer container;
 
   @Override

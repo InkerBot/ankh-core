@@ -1,7 +1,7 @@
 package org.inksnow.ankh.core.item;
 
-import bot.inker.bukkit.nbt.NbtItemStack;
-import bot.inker.bukkit.nbt.api.NbtComponentLike;
+import org.inksnow.ankh.core.nbt.NbtItemStack;
+import org.inksnow.ankh.core.nbt.api.NbtComponentLike;
 import lombok.val;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
