@@ -1,5 +1,7 @@
 package org.inksnow.ankh.core.item;
 
+import bot.inker.bukkit.nbt.NbtItemStack;
+import bot.inker.bukkit.nbt.api.NbtComponentLike;
 import lombok.val;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -10,7 +12,6 @@ import org.inksnow.ankh.core.api.item.AnkhItem;
 import org.inksnow.ankh.core.api.item.ItemTagger;
 import org.inksnow.ankh.core.api.util.DcLazy;
 import org.inksnow.ankh.core.common.AdventureAudiences;
-import org.inksnow.ankh.core.libs.nbtapi.NBTItem;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -34,9 +35,8 @@ public abstract class AbstractAnkhItem implements AnkhItem {
   public final void updateItem(ItemStack item) {
     item.setType(material());
     itemTagger.get().setTag(item, key());
-    NBTItem nbtItem = new NBTItem(item);
-    onUpdateItemNbt(nbtItem);
-    nbtItem.applyNBT(item);
+    val nbtItem = new NbtItemStack(item);
+    onUpdateItemNbt(nbtItem.getDirectTag());
     {
       val meta = item.getItemMeta();
       meta.setDisplayName(AdventureAudiences.serialize(itemName()));
@@ -52,7 +52,7 @@ public abstract class AbstractAnkhItem implements AnkhItem {
     //
   }
 
-  protected void onUpdateItemNbt(NBTItem nbtItem) {
+  protected void onUpdateItemNbt(NbtComponentLike nbtItem) {
     //
   }
 

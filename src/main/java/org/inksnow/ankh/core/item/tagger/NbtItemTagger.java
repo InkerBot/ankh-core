@@ -1,11 +1,11 @@
 package org.inksnow.ankh.core.item.tagger;
 
+import bot.inker.bukkit.nbt.NbtItemStack;
 import lombok.val;
 import net.kyori.adventure.key.Key;
 import org.bukkit.inventory.ItemStack;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.item.ItemTagger;
-import org.inksnow.ankh.core.libs.nbtapi.NBTItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,19 +17,18 @@ public class NbtItemTagger implements ItemTagger {
 
   @Override
   public void setTag(@Nonnull ItemStack itemStack, @Nullable Key itemId) {
-    val nbtItem = new NBTItem(itemStack);
+    val nbtItem = new NbtItemStack(itemStack);
     if (itemId == null) {
-      nbtItem.removeKey(ITEM_ID_KEY);
+      nbtItem.getDirectTag().remove(ITEM_ID_KEY);
     } else {
-      nbtItem.setString(ITEM_ID_KEY, itemId.asString());
+      nbtItem.getDirectTag().putString(ITEM_ID_KEY, itemId.asString());
     }
-    nbtItem.applyNBT(itemStack);
   }
 
   @Override
   public @Nullable Key getTag(@Nonnull ItemStack itemStack) {
-    val nbtItem = new NBTItem(itemStack);
-    val idString = nbtItem.getString(ITEM_ID_KEY);
+    val nbtItem = new NbtItemStack(itemStack);
+    val idString = nbtItem.getDirectTag().getString("ITEM_ID_KEY");
     if (idString == null) {
       return null;
     }
