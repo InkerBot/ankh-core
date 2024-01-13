@@ -1,7 +1,5 @@
 package org.inksnow.ankh.core.item;
 
-import org.inksnow.ankh.core.nbt.NbtItemStack;
-import org.inksnow.ankh.core.nbt.api.NbtComponentLike;
 import lombok.val;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -12,6 +10,8 @@ import org.inksnow.ankh.core.api.item.AnkhItem;
 import org.inksnow.ankh.core.api.item.ItemTagger;
 import org.inksnow.ankh.core.api.util.DcLazy;
 import org.inksnow.ankh.core.common.AdventureAudiences;
+import org.inksnow.ankh.core.nbt.NbtItemStack;
+import org.inksnow.ankh.core.nbt.api.NbtComponentLike;
 
 import javax.annotation.Nonnull;
 import java.util.List;

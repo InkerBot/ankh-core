@@ -6,7 +6,6 @@ import lombok.val;
 import org.bukkit.event.EventPriority;
 import org.inksnow.ankh.core.api.block.AnkhBlock;
 import org.inksnow.ankh.core.api.item.AnkhItem;
-import org.inksnow.ankh.core.api.plugin.AnkhPluginContainer;
 import org.inksnow.ankh.core.block.BlockRegisterService;
 import org.inksnow.ankh.core.item.ItemRegisterService;
 import org.inksnow.ankh.core.loader.AnkhPluginLoader;

@@ -1,6 +1,5 @@
 package org.inksnow.ankh.core.loader;
 
-import org.inksnow.ankh.core.nbt.loader.CallSiteNbt;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -15,8 +14,6 @@ import org.inksnow.ankh.core.api.AnkhCoreLoader;
 import org.inksnow.ankh.core.api.plugin.AnkhPluginContainer;
 import org.inksnow.ankh.core.common.config.AnkhConfig;
 import org.inksnow.ankh.core.ioc.BridgerInjector;
-import org.inksnow.asteroid.AkEnvironment;
-import org.inksnow.asteroid.AkLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +35,7 @@ public class AnkhPluginLoader implements AnkhPluginContainer {
   @Getter
   private AnkhCoreLoader plugin;
 
-  private AnkhPluginLoader(){
+  private AnkhPluginLoader() {
     //
   }
 
@@ -46,16 +43,7 @@ public class AnkhPluginLoader implements AnkhPluginContainer {
     return instance;
   }
 
-  public static AnkhPluginContainer load(AnkhCoreLoader pluginInstance) {
-    val ankhCoreEnvironment = AkLoader.getOrCreateEnvironment("ankh-core-impl");
-    val scannerInjector = Guice.createInjector(binder -> {
-      binder.bind(Plugin.class).to(AnkhCoreLoader.class);
-      binder.bind(AnkhCoreLoader.class).toInstance(pluginInstance);
-      binder.bind(AnkhConfig.class).toProvider(AnkhConfig.provider());
-      binder.bind(AkEnvironment.class).toInstance(ankhCoreEnvironment);
-      binder.bind(ClassLoader.class).toInstance(ankhCoreEnvironment.classLoader());
-    });
-    scannerInjector.getInstance(AnkhPluginScanner.class).run();
+  public static AnkhPluginContainer load() {
     return AnkhPluginLoader.instance();
   }
 
@@ -93,6 +81,16 @@ public class AnkhPluginLoader implements AnkhPluginContainer {
   @SneakyThrows
   public void callInit(AnkhCoreLoader plugin) {
     this.plugin = plugin;
+
+    val scannerInjector = Guice.createInjector(binder -> {
+      binder.bind(ClassLoader.class).toInstance(AnkhPluginLoader.class.getClassLoader());
+      binder.bind(AnkhCoreLoader.class).toInstance(plugin);
+      binder.bind(Plugin.class).to(AnkhCoreLoader.class);
+      binder.bind(AnkhConfig.class).toProvider(AnkhConfig.provider());
+    });
+
+    scannerInjector.getInstance(AnkhPluginScanner.class).run();
+
     val modules = new Module[pluginModules.size()];
     for (int i = 0; i < pluginModules.size(); i++) {
       modules[i] = createModule(pluginModules.get(i));

@@ -1,7 +1,5 @@
 package org.inksnow.ankh.core.common;
 
-import com.google.inject.Binding;
-import com.google.inject.name.Names;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.kyori.adventure.key.Key;
@@ -36,7 +34,7 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
       throw new IllegalArgumentException("service class must be interface");
     }
     val byInstanceMap = stringInstanceMap.get().get(key);
-    if(byInstanceMap != null){
+    if (byInstanceMap != null) {
       return byInstanceMap;
     }
     val injector = AnkhPluginLoader.instance().injector();
@@ -45,10 +43,10 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
         continue;
       }
       val named = getNamedAnnotation(entry.getKey().getAnnotation());
-      if(named == null){
+      if (named == null) {
         continue;
       }
-      if(named[1].equals(key.key)){
+      if (named[1].equals(key.key)) {
         return entry.getValue().getProvider().get();
       }
     }
@@ -68,10 +66,10 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
         continue;
       }
       val named = getNamedAnnotation(entry.getKey().getAnnotation());
-      if(named == null){
+      if (named == null) {
         continue;
       }
-      if(named[0].equals(key.namespace) && named[1].equals(key.value)){
+      if (named[0].equals(key.namespace) && named[1].equals(key.value)) {
         return entry.getValue().getProvider().get();
       }
     }
@@ -103,11 +101,11 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
           continue;
         }
         val named = getNamedAnnotation(entry.getKey().getAnnotation());
-        if(named == null){
+        if (named == null) {
           continue;
         }
-        if(nullOrTrue(config.service().get(serviceName + "@" + named[1]))
-            && nullOrTrue(config.service().get(serviceName + "@" + named[0] + ":" + named[1]))){
+        if (nullOrTrue(config.service().get(serviceName + "@" + named[1]))
+            && nullOrTrue(config.service().get(serviceName + "@" + named[0] + ":" + named[1]))) {
           resultList.add(entry.getValue().getProvider().get());
         }
       }
@@ -177,11 +175,11 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
     return (List<T>) configListService.computeIfAbsent(clazz, configListLoadFunction);
   }
 
-  private static boolean nullOrTrue(String value){
+  private static boolean nullOrTrue(String value) {
     return value == null || Boolean.parseBoolean(value);
   }
 
-  private static String[] getNamedAnnotation(Annotation annotation){
+  private static String[] getNamedAnnotation(Annotation annotation) {
     String name;
     if (annotation instanceof javax.inject.Named) {
       name = ((javax.inject.Named) annotation).value();
@@ -191,9 +189,9 @@ public class AnkhServiceLoaderImpl implements AnkhServiceLoader {
       return null;
     }
     val key = StringUtils.split(name, ':');
-    if(key.length == 2){
+    if (key.length == 2) {
       return key;
-    }else{
+    } else {
       logger.warn("named annotation key failed to match");
       return null;
     }

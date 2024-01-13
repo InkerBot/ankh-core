@@ -14,14 +14,14 @@ public class AnkhHologramModule extends AbstractModule {
   protected void configure() {
     bind(HologramService.class).toProvider(HologramProvider.class);
 
-    if(hasClass("me.filoghost.holographicdisplays.api.HolographicDisplaysAPI")) {
+    if (hasClass("me.filoghost.holographicdisplays.api.HolographicDisplaysAPI")) {
       bind(HologramService.class).annotatedWith(Names.named(AnkhCore.PLUGIN_ID + ":hds")).to(HdsHologramService.class);
     }
 
     bind(HologramService.class).annotatedWith(Names.named(AnkhCore.PLUGIN_ID + ":nop")).to(NopHologramService.class);
   }
 
-  private boolean hasClass(String name){
+  private boolean hasClass(String name) {
     try {
       Class.forName(name);
       return true;

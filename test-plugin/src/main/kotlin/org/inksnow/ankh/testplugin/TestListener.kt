@@ -24,74 +24,74 @@ import javax.inject.Singleton
 
 @Singleton
 class TestListener @Inject private constructor(
-  private val plugin: AnkhCoreLoader,
-  private val testItem: TestItem,
-  private val configService: ConfigService
+    private val plugin: AnkhCoreLoader,
+    private val testItem: TestItem,
+    private val configService: ConfigService
 ) {
-  private val logger = LoggerFactory.getLogger(this.javaClass)
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
-  @SubscriptEvent
-  private fun onAsyncPlayerChat(event: AsyncPlayerChatEvent) {
-    if (!event.message.startsWith("@")) {
-      return
-    }
-    Bukkit.getScheduler().runTask(plugin, Runnable {
-      runSimpleCommand(event.player, event.message.substring(1))
-    })
-  }
-
-  private fun runSimpleCommand(player: Player, command: String) {
-    when (command) {
-      "a" -> {
-        player.inventory.addItem(
-          testItem.createItem()
-        ).values.forEach {
-          player.world.dropItemNaturally(player.location, it)
+    @SubscriptEvent
+    private fun onAsyncPlayerChat(event: AsyncPlayerChatEvent) {
+        if (!event.message.startsWith("@")) {
+            return
         }
-      }
-
-      "b" -> {
-        StorageChestMenu.builder().apply {
-          createInventory {
-            Bukkit.createInventory(it, 54, Component.text("Hello, world.", NamedTextColor.RED)).apply {
-              for (i in 0 until 54) {
-                setItem(i, ItemStack(Material.STONE).apply {
-                  editMeta {
-                    it.displayName(Component.text("TEST_ITEM", NamedTextColor.BLUE))
-                  }
-                })
-              }
-            }
-          }
-
-          canPlaceAction { event, cancelToken ->
-            //
-          }
-
-          canPickupAction { event, cancelToken ->
-            //
-          }
-
-          canDropFromCursorAction { event, cancelToken ->
-            //
-          }
-        }.build().openForPlayer(player)
-      }
+        Bukkit.getScheduler().runTask(plugin, Runnable {
+            runSimpleCommand(event.player, event.message.substring(1))
+        })
     }
-  }
 
-  @SubscriptLifecycle(PluginLifeCycle.LOAD)
-  private fun onLoad() {
-    val configLoader = ConfigLoader.builder()
-      .baseDirectory(Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config"))
-      .nameStrategy(ConfigNameStrategy.lowerCaseWithDashes())
-      .build()
-    val value = configLoader.parse("test.yml", TestInterface::class.java)
-    println()
-  }
+    private fun runSimpleCommand(player: Player, command: String) {
+        when (command) {
+            "a" -> {
+                player.inventory.addItem(
+                    testItem.createItem()
+                ).values.forEach {
+                    player.world.dropItemNaturally(player.location, it)
+                }
+            }
 
-  interface TestInterface {
-    @Size(min = 999)
-    fun testList(): List<String>
-  }
+            "b" -> {
+                StorageChestMenu.builder().apply {
+                    createInventory {
+                        Bukkit.createInventory(it, 54, Component.text("Hello, world.", NamedTextColor.RED)).apply {
+                            for (i in 0 until 54) {
+                                setItem(i, ItemStack(Material.STONE).apply {
+                                    editMeta {
+                                        it.displayName(Component.text("TEST_ITEM", NamedTextColor.BLUE))
+                                    }
+                                })
+                            }
+                        }
+                    }
+
+                    canPlaceAction { event, cancelToken ->
+                        //
+                    }
+
+                    canPickupAction { event, cancelToken ->
+                        //
+                    }
+
+                    canDropFromCursorAction { event, cancelToken ->
+                        //
+                    }
+                }.build().openForPlayer(player)
+            }
+        }
+    }
+
+    @SubscriptLifecycle(PluginLifeCycle.LOAD)
+    private fun onLoad() {
+        val configLoader = ConfigLoader.builder()
+            .baseDirectory(Paths.get("/Users/inkerbot/IdeaProjects/AnkhCore/run/paper-1-19-3/config"))
+            .nameStrategy(ConfigNameStrategy.lowerCaseWithDashes())
+            .build()
+        val value = configLoader.parse("test.yml", TestInterface::class.java)
+        println()
+    }
+
+    interface TestInterface {
+        @Size(min = 999)
+        fun testList(): List<String>
+    }
 }

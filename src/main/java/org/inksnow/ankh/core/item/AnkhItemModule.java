@@ -2,7 +2,6 @@ package org.inksnow.ankh.core.item;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import lombok.SneakyThrows;
 import org.inksnow.ankh.core.api.AnkhCore;
 import org.inksnow.ankh.core.api.item.AnkhItemRegistry;
 import org.inksnow.ankh.core.api.item.AnkhItemService;

@@ -1,21 +1,21 @@
 plugins {
-  id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 dependencies {
-  api("io.papermc:paperlib:1.0.7")
+    api("io.papermc:paperlib:1.0.7")
 }
 
 tasks.shadowJar {
-  relocate("io.papermc.lib", "org.inksnow.ankh.core.libs.paperlib")
+    relocate("io.papermc.lib", "org.inksnow.ankh.core.libs.paperlib")
 }
 
 tasks.assemble {
-  dependsOn(tasks.shadowJar)
+    dependsOn(tasks.shadowJar)
 }
 
 ext["publishAction"] = Action<MavenPublication> {
-  artifact(tasks.shadowJar) {
-    classifier = ""
-  }
+    artifact(tasks.shadowJar) {
+        classifier = ""
+    }
 }

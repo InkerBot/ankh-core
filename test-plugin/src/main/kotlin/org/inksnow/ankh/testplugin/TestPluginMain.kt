@@ -5,7 +5,7 @@ import org.inksnow.ankh.core.api.plugin.annotations.PluginModule
 
 @PluginModule
 class TestPluginMain : PrivateModule() {
-  override fun configure() {
+    override fun configure() {
 
-  }
+    }
 }

@@ -10,6 +10,5 @@ public class AnkhKetherModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(AnkhScriptEngine.class).annotatedWith(Names.named("ankh-core:kether")).to(KetherEngine.class);
-    bind(AnkhScriptEngine.class).annotatedWith(Names.named("ankh-core:nashorn")).to(KetherEngine.class);
   }
 }

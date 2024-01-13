@@ -13,8 +13,8 @@ public abstract class Command<Sender> implements Described {
 
   public static final Input<?> BEHAVIOR_DEFAULT_LAPSE = (sender, arguments) -> CommandResult.NO_BEHAVIOUR;
   private static final ThreadLocal<Object> context = new ThreadLocal<>();
+  private final DcLazy<Behaviour> behaviour;
   protected String description;
-  private DcLazy<Behaviour> behaviour;
 
   protected Command() {
     this.behaviour = DcLazy.of(this::create);

@@ -19,44 +19,44 @@ import javax.inject.Singleton
 @Singleton
 @AutoRegistered
 class TestItem @Inject private constructor(
-  private val pluginContainer: AnkhPluginContainer,
-  private val worldService: WorldService,
-  private val testBlockFactory: TestBlock.Factory,
+    private val pluginContainer: AnkhPluginContainer,
+    private val worldService: WorldService,
+    private val testBlockFactory: TestBlock.Factory,
 ) : AbstractAnkhItem() {
-  private val logger = LoggerFactory.getLogger(this.javaClass)
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
-  override fun key(): Key = Key.key(pluginContainer.plugin().name, "test-item")
-  override fun material(): Material = Material.STONE
+    override fun key(): Key = Key.key(pluginContainer.plugin().name, "test-item")
+    override fun material(): Material = Material.STONE
 
-  override fun itemName(): Component = Component.text()
-    .append(Component.text("测", NamedTextColor.BLUE))
-    .append(Component.text("试", NamedTextColor.RED))
-    .append(Component.text("物", NamedTextColor.GREEN))
-    .append(Component.text("品", NamedTextColor.YELLOW))
-    .build()
+    override fun itemName(): Component = Component.text()
+        .append(Component.text("测", NamedTextColor.BLUE))
+        .append(Component.text("试", NamedTextColor.RED))
+        .append(Component.text("物", NamedTextColor.GREEN))
+        .append(Component.text("品", NamedTextColor.YELLOW))
+        .build()
 
-  override fun lores(): List<Component> = listOf(
-    Component.text()
-      .append(Component.text("测试物品，点击放置 测试方块"))
-      .build()
-  )
+    override fun lores(): List<Component> = listOf(
+        Component.text()
+            .append(Component.text("测试物品，点击放置 测试方块"))
+            .build()
+    )
 
-  override fun onBlockPlace(event: BlockPlaceEvent) {
-    worldService.setBlock(event.blockPlaced.location, testBlockFactory.create())
-  }
-
-  override fun onUseItem(event: PlayerInteractEvent) {
-    event.player.sendMessage("You use test block as action ${event.action.name}")
-    when (event.action) {
-      Action.RIGHT_CLICK_BLOCK -> {
-        val clickedBlock = event.clickedBlock ?: return
-        worldService.setBlock(
-          clickedBlock.location.add(event.blockFace.direction),
-          testBlockFactory.create()
-        )
-      }
-
-      else -> {}
+    override fun onBlockPlace(event: BlockPlaceEvent) {
+        worldService.setBlock(event.blockPlaced.location, testBlockFactory.create())
     }
-  }
+
+    override fun onUseItem(event: PlayerInteractEvent) {
+        event.player.sendMessage("You use test block as action ${event.action.name}")
+        when (event.action) {
+            Action.RIGHT_CLICK_BLOCK -> {
+                val clickedBlock = event.clickedBlock ?: return
+                worldService.setBlock(
+                    clickedBlock.location.add(event.blockFace.direction),
+                    testBlockFactory.create()
+                )
+            }
+
+            else -> {}
+        }
+    }
 }
