@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.hongyuncloud.hcloader.gradle") version "1.0-7"
+    alias(libs.plugins.hcloader)
 }
 
 group = "org.inksnow.ankh.neigeitems"
@@ -13,7 +13,7 @@ configurations {
 dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly(project(":"))
-    compileOnly("pers.neige.neigeitems:NeigeItems:1.12.9")
+    compileOnly(libs.neigeitems)
 }
 
 tasks.hcLoaderJar {

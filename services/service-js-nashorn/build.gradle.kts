@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.hongyuncloud.hcloader.gradle") version "1.0-7"
+    alias(libs.plugins.hcloader)
 }
 
 group = "org.inksnow.ankh.js-nashorn"
@@ -11,7 +11,7 @@ configurations {
 }
 
 dependencies {
-    implementation("org.openjdk.nashorn:nashorn-core:15.4") {
+    implementation(libs.nashorn.core) {
         exclude("org.ow2.asm:asm")
     }
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")

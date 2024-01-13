@@ -1,0 +1,49 @@
+[versions]
+asm = "9.6"
+kotlin = "1.9.22"
+slf4j = "2.0.6"
+adventure = "4.14.0"
+hcloader = "1.0-7"
+taboolib = "6.0.12-69"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+
+glob = { module = "com.hrakaroo:glob", version = "0.9.0" }
+fastutil = { module = "it.unimi.dsi:fastutil", version = "8.5.12" }
+guice = { module = "com.google.inject:guice", version = "5.1.0" }
+hcloader = { module = "io.github.hongyuncloud.hcloader:hcloader", version.ref = "hcloader" }
+
+typesafe-config = { module = "com.typesafe:config", version = "1.4.3" }
+gson = { module = "com.google.code.gson:gson", version = "2.10.1" }
+
+snakeyaml = { module = "org.yaml:snakeyaml", version = "2.2" }
+
+nashorn-core = { module = "org.openjdk.nashorn:nashorn-core", version = "15.4" }
+neigeitems = { module = "pers.neige.neigeitems:NeigeItems", version = "1.16.17" }
+
+groovy = { module = "org.apache.groovy:groovy", version = "4.0.17" }
+
+hibernate-validator = { module = "org.hibernate.validator:hibernate-validator", version = "8.0.1.Final" }
+jobss-logging = { module = "org.jboss.logging:jboss-logging", version = "3.5.3.Final" }
+
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
+asm-analysis = { module = "org.ow2.asm:asm-analysis", version.ref = "asm" }
+asm-commons = { module = "org.ow2.asm:asm-commons", version.ref = "asm" }
+asm-tree = { module = "org.ow2.asm:asm-tree", version.ref = "asm" }
+asm-util = { module = "org.ow2.asm:asm-util", version.ref = "asm" }
+
+adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventure-text-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
+adventure-platform-bukkit = { module = "net.kyori:adventure-platform-bukkit", version = "4.3.1" }
+
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+slf4j-jdk14 = { module = "org.slf4j:slf4j-jdk14", version.ref = "slf4j" }
+
+[bundles]
+asm = ["asm", "asm-analysis", "asm-commons", "asm-tree", "asm-util"]
+adventure = ["adventure-api", "adventure-text-minimessage", "adventure-platform-bukkit"]
+
+[plugins]
+hcloader = { id = "io.github.hongyuncloud.hcloader.gradle", version = "1.0-7" }
+versions = { id = "com.github.ben-manes.versions", version = "0.45.0" }

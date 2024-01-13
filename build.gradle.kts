@@ -135,7 +135,7 @@ dependencies {
     api(project(":api"))
 
     // kotlin
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.8.20") {
+    api(libs.kotlin.stdlib) {
         exclude("org.jetbrains", "annotations")
     }
 
@@ -148,43 +148,32 @@ dependencies {
     }
 
     // adventure
-    compileOnly("net.kyori:adventure-api:4.13.1") {
-        exclude("org.checkerframework", "checker-qual")
-        exclude("org.jetbrains", "annotations")
-    }
-    compileOnly("net.kyori:adventure-text-minimessage:4.13.1") {
-        exclude("org.checkerframework", "checker-qual")
-        exclude("org.jetbrains", "annotations")
-    }
-    compileOnly("net.kyori:adventure-platform-bukkit:4.3.0") {
+    compileOnly(libs.bundles.adventure) {
         exclude("org.checkerframework", "checker-qual")
         exclude("org.jetbrains", "annotations")
     }
 
     // base utils
-    api("it.unimi.dsi:fastutil:8.5.12")
-    api("com.google.inject:guice:5.1.0") {
+    api(libs.fastutil)
+    api(libs.guice) {
         exclude("com.google.guava", "guava")  // we use our version
     }
-    api("com.hrakaroo:glob:0.9.0")
-    api("org.ow2.asm:asm:9.4")
-    api("org.ow2.asm:asm-analysis:9.4")
-    api("org.ow2.asm:asm-commons:9.4")
-    api("org.ow2.asm:asm-tree:9.4")
-    api("org.ow2.asm:asm-util:9.4")
+    api(libs.glob)
+
+    api(libs.bundles.asm)
 
     // script
     api(project(":libs:shadow-bsh"))
 
     // config
-    api("com.typesafe:config:1.4.2")
-    api("com.google.code.gson:gson:2.10.1")
-    api("org.yaml:snakeyaml:2.0")
-    api("org.hibernate.validator:hibernate-validator:7.0.5.Final") {
+    api(libs.typesafe.config)
+    api(libs.gson)
+    api(libs.snakeyaml)
+    api(libs.hibernate.validator) {
         exclude("jakarta.validation", "jakarta.validation-api") // use the version in api
         exclude("org.jboss.logging", "jboss-logging") // don't expose logger
     }
-    runtimeOnly("org.jboss.logging:jboss-logging:3.4.1.Final")
+    runtimeOnly(libs.jobss.logging)
 
     // shadow depends
     api(project(":libs:shadow-paper-lib", configuration = "shadow"))
@@ -194,6 +183,6 @@ dependencies {
     compileOnly("me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0")
 
     // logger binding
-    implementation("org.slf4j:slf4j-jdk14:2.0.6")
-    api("org.slf4j:slf4j-api:2.0.6")
+    api(libs.slf4j.api)
+    runtimeOnly(libs.slf4j.jdk14)
 }

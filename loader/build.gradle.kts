@@ -1,7 +1,7 @@
 import ink.bgp.hcloader.gradle.HcLoaderConfigEntry
 
 plugins {
-    id("io.github.hongyuncloud.hcloader.gradle") version "1.0-7"
+    alias(libs.plugins.hcloader)
 }
 
 configurations {
@@ -16,9 +16,7 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":libs:shadow-callsite-nbt", configuration = "shadow"))
 
-    implementation("net.kyori:adventure-api:4.13.1")
-    implementation("net.kyori:adventure-text-minimessage:4.13.1")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
+    implementation(libs.bundles.adventure)
 
     // minecraft
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
@@ -27,7 +25,7 @@ dependencies {
         exclude("org.checkerframework", "checker-qual")
         exclude("org.jetbrains", "annotations")
     }
-    compileOnly("io.github.hongyuncloud.hcloader:hcloader:1.0-5")
+    compileOnly(libs.hcloader)
 }
 
 tasks.hcLoaderJar {

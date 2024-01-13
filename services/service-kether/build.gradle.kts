@@ -1,6 +1,7 @@
 plugins {
     id("io.izzel.taboolib") version "1.56"
-    id("org.jetbrains.kotlin.jvm") version "1.8.10"
+    kotlin("jvm") version libs.versions.kotlin
+    alias(libs.plugins.hcloader)
 }
 
 group = "org.inksnow.ankh.kether"
@@ -26,7 +27,7 @@ taboolib {
     install("module-nms-util")
     install("module-lang")
 
-    version = "6.0.10-98"
+    version = libs.versions.taboolib.get()
 }
 
 dependencies {

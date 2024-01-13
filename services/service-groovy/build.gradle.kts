@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.hongyuncloud.hcloader.gradle") version "1.0-7"
+    alias(libs.plugins.hcloader)
 }
 
 group = "org.inksnow.ankh.groovy"
@@ -11,7 +11,7 @@ configurations {
 }
 
 dependencies {
-    implementation("org.apache.groovy:groovy:4.0.10")
+    implementation(libs.groovy)
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly(project(":"))
 }
