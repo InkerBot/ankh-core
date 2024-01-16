@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 public class DebugChunkFixItem extends AbstractDebugItem {
   private static final Component SUCCESS_MESSAGE = Component.text()
       .append(AnkhCore.PLUGIN_NAME_COMPONENT)
-      .append(Component.text("All ankh-block have been removed"))
+      .append(Component.text("All ankh-block in this chunk have been removed"))
       .build();
 
   private final PdcWorldService worldService;

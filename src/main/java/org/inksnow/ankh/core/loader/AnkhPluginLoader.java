@@ -95,7 +95,7 @@ public class AnkhPluginLoader implements AnkhPluginContainer {
     for (int i = 0; i < pluginModules.size(); i++) {
       modules[i] = createModule(pluginModules.get(i));
     }
-    this.injector = Guice.createInjector(modules);
+    this.injector = scannerInjector.createChildInjector(modules);
     AnkhCore.$internal$actions$.setInjector(new BridgerInjector(injector));
     initListeners.call();
   }

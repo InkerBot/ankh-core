@@ -42,15 +42,18 @@ allprojects {
     }
 
     java {
-        if (path != ":services:service-js-nashorn") {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
-        }
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+
         withSourcesJar()
         withJavadocJar()
     }
 
     afterEvaluate {
+        tasks.withType<Jar> {
+            exclude("classpath.index")
+        }
+
         publishing {
             repositories {
                 if (System.getenv("BUILD_NUMBER")?.isNotEmpty() == true) {
@@ -134,11 +137,6 @@ dependencies {
     // project base
     api(project(":api"))
 
-    // kotlin
-    api(libs.kotlin.stdlib) {
-        exclude("org.jetbrains", "annotations")
-    }
-
     // minecraft
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
         exclude("com.google.code.gson", "gson") // we use our version
@@ -148,17 +146,19 @@ dependencies {
     }
 
     // adventure
-    compileOnly(libs.bundles.adventure) {
+    api(libs.bundles.adventure) {
         exclude("org.checkerframework", "checker-qual")
         exclude("org.jetbrains", "annotations")
     }
 
     // base utils
+    api(libs.commandapi)
     api(libs.fastutil)
     api(libs.guice) {
         exclude("com.google.guava", "guava")  // we use our version
     }
     api(libs.glob)
+    api("bot.inker.acj:runtime:1.5")
 
     api(libs.bundles.asm)
 

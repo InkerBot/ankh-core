@@ -16,8 +16,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @UtilityClass
 public class ConfigVaildatorUtils {
@@ -45,8 +45,8 @@ public class ConfigVaildatorUtils {
         }
 
         @Override
-        public Set<String> getGetterMethodNameCandidates(String propertyName) {
-          return Collections.singleton(propertyName);
+        public List<String> getGetterMethodNameCandidates(String propertyName) {
+          return Collections.singletonList(propertyName);
         }
       })
       .messageInterpolator(new ParameterMessageInterpolator())

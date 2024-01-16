@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api("bot.inker.bukkit:callsite-nbt-fat:1.1-3")
+    api("bot.inker.bukkit:callsite-nbt-fat:1.1-4")
 }
 
 tasks.shadowJar {

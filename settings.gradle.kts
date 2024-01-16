@@ -16,6 +16,8 @@ include("api")
 
 include("loader:logger")
 include("loader:cloud")
+include("loader:hcloader")
+include("loader:extraloader")
 
 // include("test-plugin")
 include("gradle-plugin")
@@ -28,3 +30,4 @@ include("services:service-groovy")
 include("services:service-js-nashorn")
 include("services:service-kether")
 include("services:service-neigeitems")
+include("services:service-kotlin-script")

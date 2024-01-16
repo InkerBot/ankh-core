@@ -8,6 +8,10 @@ taboolib = "6.0.12-69"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-scripting-common = { module = "org.jetbrains.kotlin:kotlin-scripting-common", version.ref = "kotlin" }
+kotlin-scripting-jvm = { module = "org.jetbrains.kotlin:kotlin-scripting-jvm", version.ref = "kotlin" }
+kotlin-scripting-jvm-host = { module = "org.jetbrains.kotlin:kotlin-scripting-jvm-host", version.ref = "kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.7.3" }
 
 glob = { module = "com.hrakaroo:glob", version = "0.9.0" }
 fastutil = { module = "it.unimi.dsi:fastutil", version = "8.5.12" }
@@ -21,6 +25,7 @@ snakeyaml = { module = "org.yaml:snakeyaml", version = "2.2" }
 
 nashorn-core = { module = "org.openjdk.nashorn:nashorn-core", version = "15.4" }
 neigeitems = { module = "pers.neige.neigeitems:NeigeItems", version = "1.16.17" }
+commandapi = { module = "dev.jorel:commandapi-bukkit-shade", version = "9.3.0" }
 
 groovy = { module = "org.apache.groovy:groovy", version = "4.0.17" }
 
@@ -43,6 +48,7 @@ slf4j-jdk14 = { module = "org.slf4j:slf4j-jdk14", version.ref = "slf4j" }
 [bundles]
 asm = ["asm", "asm-analysis", "asm-commons", "asm-tree", "asm-util"]
 adventure = ["adventure-api", "adventure-text-minimessage", "adventure-platform-bukkit"]
+kotlin-scripting = ["kotlin-scripting-common", "kotlin-scripting-jvm", "kotlin-scripting-jvm-host", "kotlinx-coroutines-core"]
 
 [plugins]
 hcloader = { id = "io.github.hongyuncloud.hcloader.gradle", version = "1.0-7" }
